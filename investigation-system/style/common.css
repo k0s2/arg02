@@ -1,0 +1,157 @@
+:root {
+    --color-main: #08f;
+    --color-font: #e0e0ff;
+    --color-evidence: #242;
+    --color-person: #422;
+}
+
+body#investigation-system {
+
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 100svh;
+    background: #224;
+    color: var(--color-font);
+
+    /* -------------------------------------------------- */
+    /* ヘッダー＆フッター */
+    /* -------------------------------------------------- */
+
+    header,
+    footer {
+
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 16px;
+        background: #000;
+        color: var(--color-main);
+
+    }
+
+    /* -------------------------------------------------- */
+    /* ヘッダー */
+    /* -------------------------------------------------- */
+
+    header {}
+
+    /* -------------------------------------------------- */
+    /* メイン */
+    /* -------------------------------------------------- */
+
+    main {
+
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+
+        /* パネル：左 */
+        .pannel-left {
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            width: 20%;
+            background: var(--color-evidence);
+
+            /* タイトル */
+            .listTitle {
+                left: 100%;
+            }
+
+            /* アイテムリスト */
+            .itemList {
+
+                direction: rtl;
+
+                >* {
+                    direction: ltr;
+                }
+
+            }
+
+        }
+
+        /* パネル：中央 */
+        .pannel-middle {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+
+            /* 詳細エリア */
+            [class|="detail"] {
+                flex: 1;
+                padding: 24px;
+            }
+
+            /* 詳細エリア：証拠 */
+            .detail-evidence {
+                background: var(--color-evidence);
+                border-radius: 0 0 8px 0;
+                margin-right: 16px;
+            }
+
+            /* 詳細エリア：人物 */
+            .detail-person {
+                background: var(--color-person);
+                border-radius: 8px 0 0 0;
+                margin-left: 16px;
+            }
+
+            /* 「推理」ボタン */
+            .inference {
+                margin: 32px 0;
+                text-align: center;
+
+                /* ボタン */
+                button {
+                    padding: 12px 32px;
+                    background: var(--color-font);
+                    border: none;
+                    border-radius: 100px;
+                    color: #000;
+                    font-size: 24px;
+                    font-weight: bold;
+                    transition: background-color 0.25s;
+                    cursor: pointer;
+
+                    /* ホバー */
+                    @media (hover: hover) {
+                        &:hover {
+                            background: #0df;
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        /* パネル：右 */
+        .pannel-right {
+            display: flex;
+            justify-content: end;
+            position: relative;
+            flex-direction: column;
+            width: 20%;
+            background: var(--color-person);
+
+            /* タイトル */
+            .listTitle {
+                bottom: 0;
+                right: 100%;
+            }
+
+        }
+
+    }
+
+    /* -------------------------------------------------- */
+    /* フッター */
+    /* -------------------------------------------------- */
+
+    footer {
+        font-size: 12px;
+
+    }
+
+}

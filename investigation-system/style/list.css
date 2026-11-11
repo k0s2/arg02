@@ -1,0 +1,60 @@
+/* タイトル */
+.listTitle {
+    position: absolute;
+    z-index: 1;
+    text-shadow: 0 0 16px #224;
+    white-space: nowrap;
+}
+
+/* 証拠リスト */
+.itemList {
+
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-font) transparent;
+    scroll-behavior: smooth;
+
+    /* リスト */
+    ul {
+
+        list-style: none;
+        margin: 0;
+        padding: 8px;
+
+        /* アイテム */
+        li {
+
+            min-height: 2em;
+            padding: 8px;
+            background: #00000080;
+            border-radius: 8px;
+            transition: background-color 0.25s;
+            cursor: pointer;
+
+            /* 名称 */
+            .name {
+                color: var(--color-font);
+            }
+
+            /* 簡易説明 */
+            .note {
+                color: var(--color-font);
+                font-size: 0.5em;
+            }
+
+            /* ホバー */
+            @media (hover: hover) {
+                &:hover {
+                    background: #008;
+                }
+            }
+
+            /* 間隔 */
+            &+& {
+                margin-top: 8px;
+            }
+
+        }
+    }
+
+}
