@@ -1,14 +1,31 @@
 /* タイトル */
 .listTitle {
-    position: absolute;
-    z-index: 1;
-    text-shadow: 0 0 16px #224;
-    white-space: nowrap;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-left: solid 4px var(--color-main);
+    margin: 0 0 8px 8px;
+    padding-left: 8px;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.25em;
+
+    /* 英字 */
+    .subTitle {
+        font-family: "smartFont";
+        font-size: 0.5em;
+        opacity: 0.75;
+        line-height: normal;
+    }
+
 }
 
 /* 証拠リスト */
 .itemList {
 
+    border-top: solid 1px #448;
+    border-bottom: solid 1px #448;
     overflow: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--color-font) transparent;
@@ -24,34 +41,53 @@
         /* アイテム */
         li {
 
-            min-height: 2em;
-            padding: 8px;
-            background: #00000080;
-            border-radius: 8px;
-            transition: background-color 0.25s;
-            cursor: pointer;
-
-            /* 名称 */
-            .name {
-                color: var(--color-font);
-            }
-
-            /* 簡易説明 */
-            .note {
-                color: var(--color-font);
-                font-size: 0.5em;
-            }
-
-            /* ホバー */
-            @media (hover: hover) {
-                &:hover {
-                    background: #008;
-                }
-            }
-
             /* 間隔 */
             &+& {
                 margin-top: 8px;
+            }
+
+            /* ボタン */
+            button {
+
+                width: 100%;
+                min-height: 2em;
+                padding: 8px;
+                background: linear-gradient(90deg, #000, #004);
+                border: solid 1px #448;
+                border-radius: 8px;
+                color: var(--color-font);
+                text-align: left;
+                transition: background-color 0.25s;
+                cursor: pointer;
+                transition:
+                    background-color 0.25s,
+                    border-color 0.25s;
+
+                /* アクティブ */
+                &.active {
+                    background: linear-gradient(90deg, var(--color-focus-1), var(--color-focus-2));
+                    color: #004;
+                    cursor: initial;
+                }
+
+                /* ホバー */
+                @media (hover: hover) {
+                    &:not(.active):hover {
+                        background: linear-gradient(90deg, #004, #008);
+                        border-color: var(--color-focus-1);
+                    }
+                }
+
+                /* 名称 */
+                .name {
+                    font-size: 18px;
+                }
+
+                /* 簡易説明 */
+                .note {
+                    opacity: 0.75;
+                    font-size: 12px;
+                }
             }
 
         }

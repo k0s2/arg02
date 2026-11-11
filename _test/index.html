@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REMAINS13</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body id="investigation-system">
+
+    <header>
+        <div class="logo">REMAINS<span>13</span></div>
+        <nav>
+            <span>INVESTIGATION</span>
+            <span class="active">EVIDENCE</span>
+            <span>VICTIMS</span>
+        </nav>
+    </header>
+
+    <main class="investigation-view">
+
+        <!-- 背景装飾 -->
+        <div class="diagonal-line"></div>
+        <div class="center-mark">
+            <div class="ring ring-outer"></div>
+            <div class="ring ring-inner"></div>
+            <div class="center-point"></div>
+        </div>
+
+        <!-- 左上：証拠 -->
+        <section class="evidence-panel">
+
+            <div class="section-heading">
+                <span class="heading-mark"></span>
+                <span class="heading-title">EVIDENCE</span>
+                <span class="heading-count">12 ITEMS</span>
+            </div>
+
+            <div class="evidence-list">
+
+                <button class="evidence-item is-selected">
+                    <span class="item-icon">▤</span>
+                    <span class="item-content">
+                        <span class="item-name">登山届のコピー</span>
+                        <span class="item-note">遭難者の提出した登山届の写し</span>
+                    </span>
+                    <span class="item-number">01</span>
+                </button>
+
+                <button class="evidence-item">
+                    <span class="item-icon">◎</span>
+                    <span class="item-content">
+                        <span class="item-name">現場写真</span>
+                        <span class="item-note">雪山で撮影された写真</span>
+                    </span>
+                    <span class="item-number">02</span>
+                </button>
+
+                <button class="evidence-item">
+                    <span class="item-icon">⌖</span>
+                    <span class="item-content">
+                        <span class="item-name">登山ルートの記録</span>
+                        <span class="item-note">GPSの軌跡データ</span>
+                    </span>
+                    <span class="item-number">03</span>
+                </button>
+
+                <button class="evidence-item">
+                    <span class="item-icon">▣</span>
+                    <span class="item-content">
+                        <span class="item-name">リュックサック</span>
+                        <span class="item-note">被害者のものと思われるリュック</span>
+                    </span>
+                    <span class="item-number">04</span>
+                </button>
+
+                <button class="evidence-item">
+                    <span class="item-icon">◇</span>
+                    <span class="item-content">
+                        <span class="item-name">ジャケット</span>
+                        <span class="item-note">現場で発見された上着</span>
+                    </span>
+                    <span class="item-number">05</span>
+                </button>
+
+            </div>
+
+            <div class="panel-footer">
+                <span>ARCHIVED MATERIALS</span>
+                <span>01 — 12</span>
+            </div>
+
+        </section>
+
+        <!-- 右下：犠牲者 -->
+        <section class="victim-panel">
+
+            <div class="victim-profile">
+
+                <div class="victim-photo">
+                    <div class="photo-placeholder">
+                        <span>NO IMAGE</span>
+                    </div>
+                    <span class="photo-label">SUBJECT 01</span>
+                </div>
+
+                <div class="victim-info">
+
+                    <div class="section-heading">
+                        <span class="heading-mark"></span>
+                        <span class="heading-title">VICTIM</span>
+                    </div>
+
+                    <div class="victim-name">矢戸 亮介</div>
+                    <div class="victim-name-en">YATO RYOSUKE</div>
+
+                    <div class="victim-data">
+                        <div><span>年齢</span><strong>27歳（推定）</strong></div>
+                        <div><span>性別</span><strong>男性</strong></div>
+                        <div><span>職業</span><strong>大学生</strong></div>
+                        <div><span>所属</span><strong>北星大学 山岳部</strong></div>
+                    </div>
+
+                    <p class="victim-description">
+                        登山経験が豊富で、サークルの中心的存在だった。
+                        明るく人当たりの良い性格で、仲間からの信頼も厚い。
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="victim-selector">
+
+                <button class="victim-item is-selected">
+                    <span class="victim-index">01</span>
+                    <span class="victim-item-name">矢戸 亮介</span>
+                    <span class="victim-status">IDENTIFIED</span>
+                </button>
+
+                <button class="victim-item">
+                    <span class="victim-index">02</span>
+                    <span class="victim-item-name">小森川 由紀子</span>
+                    <span class="victim-status">UNKNOWN</span>
+                </button>
+
+                <button class="victim-item">
+                    <span class="victim-index">03</span>
+                    <span class="victim-item-name">土井 美奈</span>
+                    <span class="victim-status">UNKNOWN</span>
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <span>INVESTIGATION SYSTEM</span>
+        <span class="system-status">SYSTEM ONLINE <i></i></span>
+    </footer>
+
+</body>
+
+</html>

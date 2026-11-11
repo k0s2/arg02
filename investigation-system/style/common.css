@@ -1,8 +1,9 @@
 :root {
-    --color-main: #08f;
+    --color-main: #3af;
     --color-font: #e0e0ff;
-    --color-evidence: #242;
-    --color-person: #422;
+
+    --color-focus-1: #4df;
+    --color-focus-2: #2ad;
 }
 
 body#investigation-system {
@@ -11,8 +12,22 @@ body#investigation-system {
     flex-direction: column;
     margin: 0;
     height: 100svh;
-    background: #224;
+    background: radial-gradient(#112, #224);
     color: var(--color-font);
+    font-family: "nano";
+
+    /* 背景グリッド */
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        opacity: 0.1;
+        background-image:
+            linear-gradient(#22c 1px, transparent 1px),
+            linear-gradient(90deg, #22c 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
 
     /* -------------------------------------------------- */
     /* ヘッダー＆フッター */
@@ -23,7 +38,7 @@ body#investigation-system {
 
         display: flex;
         justify-content: space-between;
-        padding: 8px 16px;
+        padding: 0 16px;
         background: #000;
         color: var(--color-main);
 
@@ -33,7 +48,56 @@ body#investigation-system {
     /* ヘッダー */
     /* -------------------------------------------------- */
 
-    header {}
+    header {
+
+        /* タイトル */
+        h1 {
+
+            margin: 8px 0;
+            font-family: "smartFont";
+            letter-spacing: 0.1em;
+
+        }
+
+        /* リンクボタン */
+        .buttons {
+
+            display: flex;
+            align-items: center;
+            gap: 32px;
+
+            /* リンク */
+            a {
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: stretch;
+                padding: 0 16px;
+                text-align: center;
+
+                /* アクティブ */
+                &.active {
+                    opacity: 1;
+                    border-bottom: solid 2px currentColor;
+                }
+            }
+
+            /* セパレーター */
+            .separator {
+                content: "";
+                display: inline-block;
+                width: 1px;
+                height: 40px;
+                border-right: 1px solid var(--color-main);
+                transform: rotate(30deg);
+                vertical-align: middle;
+                opacity: 0.6;
+            }
+
+        }
+
+    }
 
     /* -------------------------------------------------- */
     /* メイン */
@@ -43,20 +107,21 @@ body#investigation-system {
 
         display: flex;
         flex: 1;
+        padding: 8px 0;
         overflow: hidden;
 
-        /* パネル：左 */
-        .pannel-left {
+        /* パネル：左／左 */
+        .pannel-left,
+        .pannel-right {
             display: flex;
             position: relative;
             flex-direction: column;
             width: 20%;
-            background: var(--color-evidence);
+            padding: 16px 8px;
+        }
 
-            /* タイトル */
-            .listTitle {
-                left: 100%;
-            }
+        /* パネル：左 */
+        .pannel-left {
 
             /* アイテムリスト */
             .itemList {
@@ -73,74 +138,17 @@ body#investigation-system {
 
         /* パネル：中央 */
         .pannel-middle {
+
             display: flex;
             flex-direction: column;
             flex: 1;
-
-            /* 詳細エリア */
-            [class|="detail"] {
-                flex: 1;
-                padding: 24px;
-            }
-
-            /* 詳細エリア：証拠 */
-            .detail-evidence {
-                background: var(--color-evidence);
-                border-radius: 0 0 8px 0;
-                margin-right: 16px;
-            }
-
-            /* 詳細エリア：人物 */
-            .detail-person {
-                background: var(--color-person);
-                border-radius: 8px 0 0 0;
-                margin-left: 16px;
-            }
-
-            /* 「推理」ボタン */
-            .inference {
-                margin: 32px 0;
-                text-align: center;
-
-                /* ボタン */
-                button {
-                    padding: 12px 32px;
-                    background: var(--color-font);
-                    border: none;
-                    border-radius: 100px;
-                    color: #000;
-                    font-size: 24px;
-                    font-weight: bold;
-                    transition: background-color 0.25s;
-                    cursor: pointer;
-
-                    /* ホバー */
-                    @media (hover: hover) {
-                        &:hover {
-                            background: #0df;
-                        }
-                    }
-
-                }
-            }
+            overflow: hidden;
 
         }
 
         /* パネル：右 */
         .pannel-right {
-            display: flex;
             justify-content: end;
-            position: relative;
-            flex-direction: column;
-            width: 20%;
-            background: var(--color-person);
-
-            /* タイトル */
-            .listTitle {
-                bottom: 0;
-                right: 100%;
-            }
-
         }
 
     }
@@ -150,7 +158,14 @@ body#investigation-system {
     /* -------------------------------------------------- */
 
     footer {
-        font-size: 12px;
+
+        justify-content: right;
+
+        /* 注意書き */
+        p {
+            margin: 8px 0;
+            font-size: 12px;
+        }
 
     }
 
