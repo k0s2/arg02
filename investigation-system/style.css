@@ -1,0 +1,142 @@
+:root {
+    --color-main: #08f;
+    --color-font: #e0e0ff;
+}
+
+body#investigation-system {
+
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 100svh;
+    background: #224;
+    color: var(--color-font);
+
+    /* -------------------------------------------------- */
+    /* ヘッダー＆フッター */
+    /* -------------------------------------------------- */
+
+    header,
+    footer {
+
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 16px;
+        background: #000;
+        color: var(--color-main);
+
+    }
+
+    /* -------------------------------------------------- */
+    /* ヘッダー */
+    /* -------------------------------------------------- */
+
+    header {}
+
+    /* -------------------------------------------------- */
+    /* メイン */
+    /* -------------------------------------------------- */
+
+    main {
+
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+
+        /* パネル：左 */
+        .pannel-left {
+
+            display: flex;
+            flex-direction: column;
+            width: 20%;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+
+            /* タイトル */
+            .listTitle {
+                position: sticky;
+                top: 0;
+                padding: 8px;
+                padding-left: 16px;
+            }
+
+            /* 証拠リスト */
+            #evidenceList {
+
+                overflow: auto;
+                direction: rtl;
+                mask-image: linear-gradient(to bottom, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+
+                /* 描画順変更 */
+                >* {
+                    direction: ltr;
+                }
+
+                ul {
+
+                    list-style: none;
+                    margin: 0;
+                    padding: 8px;
+
+                    /* アイテム */
+                    li.evidence {
+
+                        min-height: 2em;
+                        padding: 8px;
+                        background: var(--color-font);
+                        border-radius: 8px;
+                        transition: background-color 0.25s;
+                        cursor: pointer;
+
+                        /* 名称 */
+                        .name {
+                            color: #224;
+                        }
+
+                        /* 簡易説明 */
+                        .note {
+                            color: #448;
+                            font-size: 0.5em;
+                        }
+
+                        /* ホバー */
+                        @media (hover: hover) {
+                            &:hover {
+                                background: #bbf;
+                            }
+                        }
+
+                        /* 間隔 */
+                        &+& {
+                            margin-top: 8px;
+                        }
+
+                    }
+                }
+
+            }
+
+        }
+
+        /* パネル：中央 */
+        .pannel-middle {
+            flex: 1;
+        }
+
+        /* パネル：右 */
+        .pannel-right {
+            width: 20%;
+        }
+
+    }
+
+    /* -------------------------------------------------- */
+    /* フッター */
+    /* -------------------------------------------------- */
+
+    footer {
+        font-size: 12px;
+
+    }
+
+}

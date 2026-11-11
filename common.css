@@ -1,0 +1,5 @@
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-font) transparent;
+}
