@@ -1,9 +1,9 @@
 :root {
-    --color-main: #3af;
-    --color-font: #e0e0ff;
+    --color-main: rgb(50, 170, 255);
+    --color-font: rgb(220, 220, 255);
 
-    --color-focus-1: #4df;
-    --color-focus-2: #2ad;
+    --color-focus-1: rgb(70, 220, 255);
+    --color-focus-2: rgb(35, 110, 128);
 }
 
 body#investigation-system {
@@ -14,7 +14,6 @@ body#investigation-system {
     height: 100svh;
     background: radial-gradient(#112, #224);
     color: var(--color-font);
-    font-family: "nano";
 
     /* 背景グリッド */
     &::before {
@@ -107,7 +106,7 @@ body#investigation-system {
 
         display: flex;
         flex: 1;
-        padding: 8px 0;
+        padding: 16px 0;
         overflow: hidden;
 
         /* パネル：左／左 */
@@ -117,7 +116,7 @@ body#investigation-system {
             position: relative;
             flex-direction: column;
             width: 20%;
-            padding: 16px 8px;
+            padding: 0 8px;
         }
 
         /* パネル：左 */
@@ -142,6 +141,7 @@ body#investigation-system {
             display: flex;
             flex-direction: column;
             flex: 1;
+            margin: 0 24px;
             overflow: hidden;
 
         }

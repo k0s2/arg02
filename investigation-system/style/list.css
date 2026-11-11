@@ -5,7 +5,7 @@
     align-items: center;
     gap: 8px;
     border-left: solid 4px var(--color-main);
-    margin: 0 0 8px 8px;
+    margin: 0 0 16px 8px;
     padding-left: 8px;
     font-size: 16px;
     line-height: 1;
@@ -67,7 +67,6 @@
                 &.active {
                     background: linear-gradient(90deg, var(--color-focus-1), var(--color-focus-2));
                     color: #004;
-                    cursor: initial;
                 }
 
                 /* ホバー */
