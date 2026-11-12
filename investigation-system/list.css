@@ -33,7 +33,6 @@
     &,
     & * {
         interpolate-size: allow-keywords;
-        transition: height 0.25s ease;
     }
 
     /* リスト */
@@ -46,6 +45,21 @@
 
         /* アイテム */
         li {
+
+            /* 通常状態 */
+            height: auto;
+            overflow: clip;
+            transition:
+                height 0.25s ease,
+                opacity 0.25s ease,
+                transform 0.25s ease;
+
+            /* 追加直後 */
+            &.slide-in {
+                height: 0;
+                opacity: 0;
+                transform: translateX(-24px);
+            }
 
             /* 新規 */
             &.new {
@@ -157,27 +171,37 @@
 /* アニメーション */
 /* -------------------------------------------------- */
 
-/* 「証拠」追加 */
+/* 証拠追加 */
+.pannel-left .itemList li.slide-in {
+    animation: slideInLeft 0.25s ease both;
+}
+
+/* 人物追加 */
+.pannel-right .itemList li.slide-in {
+    animation: slideInRight 0.25s ease both;
+}
+
+/* 左からスライドイン */
 @keyframes slideInLeft {
-    0% {
+    from {
         opacity: 0;
-        transform: translateX(-100%);
+        transform: translateX(-24px);
     }
 
-    50% {
+    to {
         opacity: 1;
         transform: translateX(0);
     }
 }
 
-/* 「人物」追加 */
+/* 右からスライドイン */
 @keyframes slideInRight {
-    0% {
+    from {
         opacity: 0;
-        transform: translateX(100%);
+        transform: translateX(24px);
     }
 
-    50% {
+    to {
         opacity: 1;
         transform: translateX(0);
     }

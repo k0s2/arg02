@@ -237,7 +237,6 @@ function createEmptyListItem() {
 
     return li;
 }
-
 // --------------------------------------------------
 // リスト項目追加アニメーション
 // --------------------------------------------------
@@ -256,46 +255,15 @@ function appendListItem(list, li) {
         emptyItem.remove();
     }
 
-    // 初期状態を設定
-    li.classList.add("hidden");
-    li.style.height = "0px";
-    li.style.overflow = "hidden";
+    // 初期状態
+    li.classList.add("slide-in");
 
     // リストに追加
     list.appendChild(li);
 
-    // 高さ0の状態を確定させる。
-    li.getBoundingClientRect();
-
-    // 本来の高さを取得
-    const targetHeight = li.scrollHeight;
-
-    // 高さをアニメーションさせる。
+    // アニメーション開始
     requestAnimationFrame(() => {
-        li.style.height = targetHeight + "px";
-    });
-
-    // 高さのアニメーションが終了したらスライドイン
-    li.addEventListener("transitionend", function onTransitionEnd(event) {
-
-        // height以外のtransitionは無視
-        if (event.propertyName !== "height") {
-            return;
-        }
-
-        // イベントを解除
-        li.removeEventListener("transitionend", onTransitionEnd);
-
-        // 高さをautoに戻す。
-        li.style.transition = "opacity 0.25s ease, transform 0.25s ease";
-        li.style.height = "auto";
-        li.style.overflow = "";
-
-        // 次のフレームでhiddenを解除
-        requestAnimationFrame(() => {
-            li.classList.remove("hidden");
-        });
-
+        li.classList.remove("slide-in");
     });
 }
 
