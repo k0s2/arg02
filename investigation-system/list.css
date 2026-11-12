@@ -41,6 +41,10 @@
         /* グループ */
         .itemGroup {
 
+            height: auto;
+            overflow: clip;
+            transition: height 0.25s ease;
+
             /* タイトル */
             .groupTitle {
 
@@ -152,6 +156,7 @@
                     color: var(--color-focus-1);
                     font-size: 12px;
                     font-weight: bold;
+                    pointer-events: none;
                     animation: new-color 0.25s ease-in-out infinite alternate;
                 }
             }
@@ -244,6 +249,19 @@
             }
 
         }
+    }
+
+}
+
+/* 新規追加時の初期高さ */
+@starting-style {
+
+    .itemList .groups .itemGroup.slide-in {
+        height: 0;
+    }
+
+    .itemList .groups li.slide-in {
+        height: 0;
     }
 
 }

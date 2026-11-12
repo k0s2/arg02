@@ -268,7 +268,7 @@ function createListItem(item, selectedId, type, selectFunction) {
  * @param {number|string|null} selectedId 選択中のID
  * @param {function(number|string): void} selectFunction 選択時に呼び出す関数
  * @param {string[]} openGroupIds 展開するグループID
- * @param {number|string|undefined} animatedId アニメーションさせるアイテムID
+ * @param {number|string[]} animatedIds アニメーションさせるアイテムID
  * @returns {void}
  */
 function renderGroupedList(
@@ -278,7 +278,7 @@ function renderGroupedList(
     selectedId,
     selectFunction,
     openGroupIds,
-    animatedId
+    animatedIds
 ) {
     list.innerHTML = "";
 
@@ -310,11 +310,13 @@ function renderGroupedList(
 
         // アイテムが存在する場合
         if (items.length > 0) {
+
             // 新規グループ
-            if (
-                items.length === 1
-                && items[0].id === animatedId
-            ) {
+            const isNewGroup = items.every((item) => {
+                return animatedIds.includes(item.id);
+            });
+
+            if (isNewGroup) {
                 groupElement.classList.add("slide-in");
             }
 
@@ -337,12 +339,8 @@ function renderGroupedList(
                 );
 
                 // 新規取得アニメーション
-                if (item.id === animatedId) {
+                if (animatedIds.includes(item.id)) {
                     li.classList.add("slide-in");
-
-                    requestAnimationFrame(() => {
-                        li.classList.remove("slide-in");
-                    });
                 }
 
                 ul.appendChild(li);
@@ -382,12 +380,16 @@ function renderGroupedList(
 /**
  * 解放済みの証拠リストを描画
  * @param {string[]|undefined} openGroupIds 展開するグループID
- * @param {string|undefined} animatedId アニメーションさせる証拠ID
+ * @param {string[]|undefined} animatedIds アニメーションさせる証拠ID
  * @returns {void}
  */
-function renderEvidenceList(openGroupIds, animatedId) {
+function renderEvidenceList(openGroupIds, animatedIds) {
     if (openGroupIds === undefined) {
         openGroupIds = getInitialOpenGroupIds(evidenceData, "evidence");
+    }
+
+    if (animatedIds === undefined) {
+        animatedIds = [];
     }
 
     renderGroupedList(
@@ -397,7 +399,7 @@ function renderEvidenceList(openGroupIds, animatedId) {
         selectedEvidenceId,
         selectEvidence,
         openGroupIds,
-        animatedId
+        animatedIds
     );
 }
 
@@ -408,12 +410,16 @@ function renderEvidenceList(openGroupIds, animatedId) {
 /**
  * 解放済みの人物リストを描画
  * @param {string[]|undefined} openGroupIds 展開するグループID
- * @param {string|undefined} animatedId アニメーションさせる人物ID
+ * @param {string[]|undefined} animatedIds アニメーションさせる人物ID
  * @returns {void}
  */
-function renderPersonList(openGroupIds, animatedId) {
+function renderPersonList(openGroupIds, animatedIds) {
     if (openGroupIds === undefined) {
         openGroupIds = getInitialOpenGroupIds(personData, "person");
+    }
+
+    if (animatedIds === undefined) {
+        animatedIds = [];
     }
 
     renderGroupedList(
@@ -423,7 +429,7 @@ function renderPersonList(openGroupIds, animatedId) {
         selectedPersonId,
         selectPerson,
         openGroupIds,
-        animatedId
+        animatedIds
     );
 }
 
@@ -433,50 +439,66 @@ function renderPersonList(openGroupIds, animatedId) {
 
 /**
  * 解放された証拠をリストに追加
- * @param {Object} item 追加する証拠データ
+ * @param {Object[]} items 追加する証拠データ
  * @returns {void}
  */
-function addEvidence(item) {
+function addEvidence(items) {
     const openGroupIds = getOpenGroupIds(evidenceList);
 
     // 取得したアイテムが属するグループを展開
-    evidenceData.forEach((group) => {
+    items.forEach((item) => {
 
-        const exists = group.items.some((groupItem) => {
-            return groupItem.id === item.id;
+        evidenceData.forEach((group) => {
+
+            const exists = group.items.some((groupItem) => {
+                return groupItem.id === item.id;
+            });
+
+            if (exists && !openGroupIds.includes(String(group.id))) {
+                openGroupIds.push(String(group.id));
+            }
+
         });
-
-        if (exists && !openGroupIds.includes(String(group.id))) {
-            openGroupIds.push(String(group.id));
-        }
 
     });
 
-    renderEvidenceList(openGroupIds, item.id);
+    const animatedIds = items.map((item) => {
+        return item.id;
+    });
+
+    renderEvidenceList(openGroupIds, animatedIds);
 }
 
 /**
  * 解放された人物をリストに追加
- * @param {Object} item 追加する人物データ
+ * @param {Object[]} items 追加する人物データ
  * @returns {void}
  */
-function addPerson(item) {
+function addPerson(items) {
     const openGroupIds = getOpenGroupIds(personList);
 
     // 取得したアイテムが属するグループを展開
-    personData.forEach((group) => {
+    items.forEach((item) => {
 
-        const exists = group.items.some((groupItem) => {
-            return groupItem.id === item.id;
+        personData.forEach((group) => {
+
+            const exists = group.items.some((groupItem) => {
+                return groupItem.id === item.id;
+            });
+
+            if (exists && !openGroupIds.includes(String(group.id))) {
+                openGroupIds.push(String(group.id));
+            }
+
         });
-
-        if (exists && !openGroupIds.includes(String(group.id))) {
-            openGroupIds.push(String(group.id));
-        }
 
     });
 
-    renderPersonList(openGroupIds, item.id);
+    const animatedIds = items.map((item) => {
+        return item.id;
+    });
+
+    renderPersonList(openGroupIds, animatedIds);
 }
 
 // --------------------------------------------------
@@ -931,9 +953,14 @@ function selectPerson(id) {
  * 指定したアイテムを解放
  * @param {string} type データの種類
  * @param {number|string} id アイテムID
+ * @param {boolean|undefined} render 画面に反映するか
  * @returns {boolean} 新規解放されたか
  */
-function acquireItem(type, id) {
+function acquireItem(type, id, render) {
+
+    if (render === undefined) {
+        render = true;
+    }
 
     // データを取得
     const item = getItemData(type, id);
@@ -952,12 +979,16 @@ function acquireItem(type, id) {
     }
 
     // 画面に反映
-    if (type === "evidence") {
-        addEvidence(item);
-    }
+    if (render) {
 
-    if (type === "person") {
-        addPerson(item);
+        if (type === "evidence") {
+            addEvidence([item]);
+        }
+
+        if (type === "person") {
+            addPerson([item]);
+        }
+
     }
 
     return true;
@@ -1005,6 +1036,9 @@ function executeInference() {
     // 解放処理
     // ----------------------------------------------
 
+    const newEvidence = [];
+    const newPersons = [];
+
     results.forEach((rule) => {
 
         if (!Array.isArray(rule.newInfo)) {
@@ -1013,11 +1047,39 @@ function executeInference() {
 
         rule.newInfo.forEach((info) => {
 
-            acquireItem(info.type, info.id);
+            const item = getItemData(info.type, info.id);
+
+            // アイテムを解放
+            const unlocked = acquireItem(info.type, info.id, false);
+
+            // 新規解放された場合
+            if (unlocked) {
+
+                if (info.type === "evidence") {
+                    newEvidence.push(item);
+                }
+
+                if (info.type === "person") {
+                    newPersons.push(item);
+                }
+
+            }
 
         });
 
     });
+
+    // ----------------------------------------------
+    // リスト描画
+    // ----------------------------------------------
+
+    if (newEvidence.length > 0) {
+        addEvidence(newEvidence);
+    }
+
+    if (newPersons.length > 0) {
+        addPerson(newPersons);
+    }
 
 }
 
