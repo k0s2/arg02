@@ -74,6 +74,17 @@ personData.forEach((item) => {
 
 
 // --------------------------------------------------
+// 未読データ
+// --------------------------------------------------
+
+// 未読の証拠ID
+const unreadEvidenceIds = [];
+
+// 未読の人物ID
+const unreadPersonIds = [];
+
+
+// --------------------------------------------------
 // 選択中のデータ
 // --------------------------------------------------
 
@@ -137,6 +148,110 @@ function getUnlockedPerson() {
 
 
 // --------------------------------------------------
+// リスト項目生成
+// --------------------------------------------------
+
+function createListItem(item, selectedId, unreadIds, selectFunction) {
+
+    // リスト項目
+    const li = document.createElement("li");
+
+    li.dataset.id = String(item.id);
+
+    // 未読ならnewを付ける。
+    if (unreadIds.includes(item.id)) {
+        li.classList.add("new");
+    }
+
+    // 選択ボタン
+    const button = document.createElement("button");
+
+    // 証拠名・人物名
+    const name = document.createElement("div");
+    name.className = "name";
+    name.textContent = item.name;
+
+    // 補足情報
+    const note = document.createElement("div");
+    note.className = "note";
+    note.textContent = item.note;
+
+    // ボタンに内容を追加する。
+    button.appendChild(name);
+    button.appendChild(note);
+
+    // 選択中ならactiveを付ける。
+    if (item.id === selectedId) {
+        button.classList.add("active");
+    }
+
+    // クリック時に選択状態を変更する。
+    button.addEventListener("click", () => {
+        selectFunction(item.id);
+    });
+
+    // リストに追加する。
+    li.appendChild(button);
+
+    return li;
+}
+
+
+// --------------------------------------------------
+// リスト項目追加アニメーション
+// --------------------------------------------------
+
+function appendListItem(list, li) {
+
+    // 初期状態を設定する。
+    li.classList.add("hidden");
+    li.style.height = "0px";
+    li.style.overflow = "hidden";
+
+    // リストに追加する。
+    list.appendChild(li);
+
+    // 高さ0の状態を確定させる。
+    li.getBoundingClientRect();
+
+    // 本来の高さを取得する。
+    const targetHeight = li.scrollHeight;
+
+    // 高さをアニメーションさせる。
+    requestAnimationFrame(() => {
+
+        li.style.height = targetHeight + "px";
+
+    });
+
+    // 高さのアニメーションが終了したらスライドインする。
+    li.addEventListener("transitionend", function onTransitionEnd(event) {
+
+        // height以外のtransitionは無視する。
+        if (event.propertyName !== "height") {
+            return;
+        }
+
+        // イベントを解除する。
+        li.removeEventListener("transitionend", onTransitionEnd);
+
+        // 高さをautoに戻す。
+        li.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+        li.style.height = "auto";
+        li.style.overflow = "";
+
+        // 次のフレームでhiddenを解除する。
+        requestAnimationFrame(() => {
+
+            li.classList.remove("hidden");
+
+        });
+
+    });
+}
+
+
+// --------------------------------------------------
 // 証拠リスト描画
 // --------------------------------------------------
 
@@ -151,41 +266,15 @@ function renderEvidenceList() {
     // 解放済みの証拠を順番に描画する。
     items.forEach((item) => {
 
-        // リスト項目
-        const li = document.createElement("li");
+        const li = createListItem(
+            item,
+            selectedEvidenceId,
+            unreadEvidenceIds,
+            selectEvidence
+        );
 
-        li.classList.add("new");
-
-        // 選択ボタン
-        const button = document.createElement("button");
-
-        // 証拠名
-        const name = document.createElement("div");
-        name.className = "name";
-        name.textContent = item.name;
-
-        // 補足情報
-        const note = document.createElement("div");
-        note.className = "note";
-        note.textContent = item.note;
-
-        // ボタンに内容を追加する。
-        button.appendChild(name);
-        button.appendChild(note);
-
-        // 選択中の証拠にはactiveを付ける。
-        if (item.id === selectedEvidenceId) {
-            button.classList.add("active");
-        }
-
-        // クリック時に選択状態を変更する。
-        button.addEventListener("click", () => {
-            selectEvidence(item.id);
-        });
-
-        // リストに追加する。
-        li.appendChild(button);
         evidenceList.appendChild(li);
+
     });
 }
 
@@ -205,41 +294,131 @@ function renderPersonList() {
     // 解放済みの人物を順番に描画する。
     items.forEach((item) => {
 
-        // リスト項目
-        const li = document.createElement("li");
+        const li = createListItem(
+            item,
+            selectedPersonId,
+            unreadPersonIds,
+            selectPerson
+        );
 
-        li.classList.add("new");
+        personList.appendChild(li);
 
-        // 選択ボタン
-        const button = document.createElement("button");
+    });
+}
 
-        // 人物名
-        const name = document.createElement("div");
-        name.className = "name";
-        name.textContent = item.name;
 
-        // 補足情報
-        const note = document.createElement("div");
-        note.className = "note";
-        note.textContent = item.note;
+// --------------------------------------------------
+// リストへの新規項目追加
+// --------------------------------------------------
 
-        // ボタンに内容を追加する。
-        button.appendChild(name);
-        button.appendChild(note);
+// 新しい証拠を追加する。
+function addEvidence(item) {
 
-        // 選択中の人物にはactiveを付ける。
-        if (item.id === selectedPersonId) {
+    const li = createListItem(
+        item,
+        selectedEvidenceId,
+        unreadEvidenceIds,
+        selectEvidence
+    );
+
+    appendListItem(evidenceList, li);
+}
+
+
+// 新しい人物を追加する。
+function addPerson(item) {
+
+    const li = createListItem(
+        item,
+        selectedPersonId,
+        unreadPersonIds,
+        selectPerson
+    );
+
+    appendListItem(personList, li);
+}
+
+
+// --------------------------------------------------
+// 既読処理
+// --------------------------------------------------
+
+// 証拠を既読にする。
+function markEvidenceRead(id) {
+
+    const index = unreadEvidenceIds.indexOf(id);
+
+    if (index !== -1) {
+        unreadEvidenceIds.splice(index, 1);
+    }
+
+    const li = evidenceList.querySelector(
+        'li[data-id="' + id + '"]'
+    );
+
+    if (li !== null) {
+        li.classList.remove("new");
+    }
+}
+
+
+// 人物を既読にする。
+function markPersonRead(id) {
+
+    const index = unreadPersonIds.indexOf(id);
+
+    if (index !== -1) {
+        unreadPersonIds.splice(index, 1);
+    }
+
+    const li = personList.querySelector(
+        'li[data-id="' + id + '"]'
+    );
+
+    if (li !== null) {
+        li.classList.remove("new");
+    }
+}
+
+
+// --------------------------------------------------
+// 選択状態の更新
+// --------------------------------------------------
+
+// 証拠リストの選択状態を更新する。
+function updateEvidenceSelection() {
+
+    const buttons = evidenceList.querySelectorAll("button");
+
+    buttons.forEach((button) => {
+
+        const id = Number(button.parentElement.dataset.id);
+
+        if (id === selectedEvidenceId) {
             button.classList.add("active");
+        } else {
+            button.classList.remove("active");
         }
 
-        // クリック時に選択状態を変更する。
-        button.addEventListener("click", () => {
-            selectPerson(item.id);
-        });
+    });
+}
 
-        // リストに追加する。
-        li.appendChild(button);
-        personList.appendChild(li);
+
+// 人物リストの選択状態を更新する。
+function updatePersonSelection() {
+
+    const buttons = personList.querySelectorAll("button");
+
+    buttons.forEach((button) => {
+
+        const id = Number(button.parentElement.dataset.id);
+
+        if (id === selectedPersonId) {
+            button.classList.add("active");
+        } else {
+            button.classList.remove("active");
+        }
+
     });
 }
 
@@ -265,13 +444,17 @@ function renderEvidenceDetail() {
 
     // 詳細を設定する。
     let detail = '';
-    item.detail.forEach(text => {
-        if (detail != '') {
-            detail += '<br>'
+
+    item.detail.forEach((text) => {
+
+        if (detail !== '') {
+            detail += '<br>';
         }
 
         detail += text;
-    })
+
+    });
+
     evidenceDetail.innerHTML = detail;
 }
 
@@ -293,13 +476,17 @@ function renderPersonDetail() {
 
     // 詳細を設定する。
     let detail = '';
-    item.detail.forEach(text => {
-        if (detail != '') {
-            detail += '<br>'
+
+    item.detail.forEach((text) => {
+
+        if (detail !== '') {
+            detail += '<br>';
         }
 
         detail += text;
-    })
+
+    });
+
     personDetail.innerHTML = detail;
 }
 
@@ -313,8 +500,13 @@ function selectEvidence(id) {
 
     selectedEvidenceId = id;
 
-    // リストと詳細を更新する。
-    renderEvidenceList();
+    // 既読にする。
+    markEvidenceRead(id);
+
+    // 選択状態を更新する。
+    updateEvidenceSelection();
+
+    // 詳細を更新する。
     renderEvidenceDetail();
 }
 
@@ -324,8 +516,13 @@ function selectPerson(id) {
 
     selectedPersonId = id;
 
-    // リストと詳細を更新する。
-    renderPersonList();
+    // 既読にする。
+    markPersonRead(id);
+
+    // 選択状態を更新する。
+    updatePersonSelection();
+
+    // 詳細を更新する。
     renderPersonDetail();
 }
 
@@ -334,8 +531,6 @@ function selectPerson(id) {
 // 推理処理
 // --------------------------------------------------
 
-// 選択中の証拠と人物の組み合わせから、
-// conditionが一致するデータを解放する。
 function executeInference() {
 
     // どちらかが未選択なら処理しない。
@@ -380,6 +575,13 @@ function executeInference() {
 
         // 証拠を解放する。
         unlockedEvidenceIds.push(item.id);
+
+        // 未読として登録する。
+        unreadEvidenceIds.push(item.id);
+
+        // 証拠を追加する。
+        addEvidence(item);
+
     });
 
 
@@ -415,15 +617,14 @@ function executeInference() {
 
         // 人物を解放する。
         unlockedPersonIds.push(item.id);
+
+        // 未読として登録する。
+        unreadPersonIds.push(item.id);
+
+        // 人物を追加する。
+        addPerson(item);
+
     });
-
-
-    // ----------------------------------------------
-    // 解放結果を画面に反映
-    // ----------------------------------------------
-
-    renderEvidenceList();
-    renderPersonList();
 
 }
 

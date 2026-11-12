@@ -69,6 +69,8 @@
             /* ボタン */
             button {
 
+                position: relative;
+                isolation: isolate;
                 width: 100%;
                 min-height: 2em;
                 padding: 8px;
@@ -77,23 +79,48 @@
                 border-radius: 8px;
                 color: var(--color-font);
                 text-align: left;
+                overflow: clip;
                 transition: background-color 0.25s;
                 cursor: pointer;
                 transition:
-                    background-color 0.25s,
-                    border-color 0.25s;
+                    border-color 0.25s,
+                    color 0.25s;
+
+                /* グラデーションカバー */
+                &::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    z-index: -1;
+                    opacity: 0;
+                    transition: opacity 0.25s ease;
+                }
 
                 /* アクティブ */
                 &.active {
-                    background: linear-gradient(90deg, var(--color-focus-1), var(--color-focus-2));
+
                     color: #004;
+
+                    /* グラデーションカバー */
+                    &::before {
+                        background: linear-gradient(90deg, var(--color-focus-1), var(--color-focus-2));
+                        opacity: 1;
+                    }
+
                 }
 
                 /* ホバー */
                 @media (hover: hover) {
                     &:not(.active):hover {
-                        background: linear-gradient(90deg, #004, #008);
+
                         border-color: var(--color-focus-1);
+
+                        /* グラデーションカバー */
+                        &::before {
+                            background: linear-gradient(90deg, #004, #008);
+                            opacity: 1;
+                        }
+
                     }
                 }
 
@@ -107,6 +134,7 @@
                     opacity: 0.75;
                     font-size: 12px;
                 }
+
             }
 
         }

@@ -38,8 +38,8 @@ a {
     text-decoration: none;
 }
 
-/* フォーカス */
-*:focus {
+/* タブフォーカス */
+*:focus-visible {
     outline: solid 2px #888;
     outline-offset: 4px;
 }
