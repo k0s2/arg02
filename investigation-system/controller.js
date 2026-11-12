@@ -27,17 +27,35 @@ const evidenceList = document.querySelector(".pannel-left .itemList ul");
 const personList = document.querySelector(".pannel-right .itemList ul");
 
 // 証拠詳細
+const evidencePanel = document.querySelector(".detail-evidence");
+
 const evidenceTitle = document.querySelector(".detail-evidence h2");
 
 const evidenceDetail = document.querySelector(".detail-evidence .text");
 
 // 人物詳細
+const personPanel = document.querySelector(".detail-person");
+
 const personTitle = document.querySelector(".detail-person h2");
 
 const personDetail = document.querySelector(".detail-person .text");
 
 // 推理ボタン
 const inferenceButton = document.querySelector(".inference button");
+
+// --------------------------------------------------
+// 詳細アニメーション
+// --------------------------------------------------
+
+const evidenceDetailAnimation = {
+    sequence: 0,
+    animation: null
+};
+
+const personDetailAnimation = {
+    sequence: 0,
+    animation: null
+};
 
 // --------------------------------------------------
 // 解放済みデータ
@@ -70,7 +88,6 @@ const unreadEvidenceIds = [];
 
 // 未読の人物ID
 const unreadPersonIds = [];
-
 
 // --------------------------------------------------
 // 選択中のデータ
@@ -206,6 +223,22 @@ function createListItem(item, selectedId, unreadIds, selectFunction) {
 }
 
 // --------------------------------------------------
+// 空リスト表示
+// --------------------------------------------------
+
+/**
+ * 空リスト項目を生成
+ * @returns {HTMLLIElement} 生成したリスト項目
+ */
+function createEmptyListItem() {
+    const li = document.createElement("li");
+    li.className = "empty";
+    li.textContent = "NO DATA";
+
+    return li;
+}
+
+// --------------------------------------------------
 // リスト項目追加アニメーション
 // --------------------------------------------------
 
@@ -216,6 +249,13 @@ function createListItem(item, selectedId, unreadIds, selectFunction) {
  * @returns {void}
  */
 function appendListItem(list, li) {
+    // 空表示を削除
+    const emptyItem = list.querySelector("li.empty");
+
+    if (emptyItem !== null) {
+        emptyItem.remove();
+    }
+
     // 初期状態を設定
     li.classList.add("hidden");
     li.style.height = "0px";
@@ -253,14 +293,11 @@ function appendListItem(list, li) {
 
         // 次のフレームでhiddenを解除
         requestAnimationFrame(() => {
-
             li.classList.remove("hidden");
-
         });
 
     });
 }
-
 
 // --------------------------------------------------
 // 証拠リスト描画
@@ -278,6 +315,12 @@ function renderEvidenceList() {
     // 解放済みの証拠を取得
     const items = getUnlockedEvidence();
 
+    // 空の場合
+    if (items.length === 0) {
+        evidenceList.appendChild(createEmptyListItem());
+        return;
+    }
+
     // 解放済みの証拠を順番に描画
     items.forEach((item) => {
 
@@ -292,7 +335,6 @@ function renderEvidenceList() {
 
     });
 }
-
 
 // --------------------------------------------------
 // 人物リスト描画
@@ -310,6 +352,12 @@ function renderPersonList() {
     // 解放済みの人物を取得
     const items = getUnlockedPerson();
 
+    // 空の場合
+    if (items.length === 0) {
+        personList.appendChild(createEmptyListItem());
+        return;
+    }
+
     // 解放済みの人物を順番に描画
     items.forEach((item) => {
 
@@ -324,7 +372,6 @@ function renderPersonList() {
 
     });
 }
-
 
 // --------------------------------------------------
 // リストへの新規項目追加
@@ -391,7 +438,6 @@ function markEvidenceRead(id) {
     }
 }
 
-
 // 人物を既読に
 /**
  * 人物を既読状態に
@@ -420,8 +466,10 @@ function markPersonRead(id) {
 // 選択状態の更新
 // --------------------------------------------------
 
-// 証拠リストの選択状態を更新
-/** 証拠リストの選択状態を更新 @returns {void} */
+/**
+ * 証拠リストの選択状態を更新します。
+ * @returns {void}
+ */
 function updateEvidenceSelection() {
 
     const buttons = evidenceList.querySelectorAll("button");
@@ -439,9 +487,10 @@ function updateEvidenceSelection() {
     });
 }
 
-
-// 人物リストの選択状態を更新
-/** 人物リストの選択状態を更新 @returns {void} */
+/**
+ * 人物リストの選択状態を更新します。
+ * @returns {void}
+ */
 function updatePersonSelection() {
 
     const buttons = personList.querySelectorAll("button");
@@ -458,18 +507,12 @@ function updatePersonSelection() {
 
     });
 }
-
-
 // --------------------------------------------------
 // 詳細表示
 // --------------------------------------------------
 
 // 選択中の証拠の詳細を表示
-/** 選択中の証拠の詳細を表示 @returns {void} */
-function renderEvidenceDetail() {
-
-    const item = getEvidence(selectedEvidenceId);
-
+function renderEvidenceDetail(item) {
     // 選択中のデータが存在しない場合は空に
     if (item === undefined) {
         evidenceTitle.textContent = "";
@@ -496,13 +539,8 @@ function renderEvidenceDetail() {
     evidenceDetail.innerHTML = detail;
 }
 
-
 // 選択中の人物の詳細を表示
-/** 選択中の人物の詳細を表示 @returns {void} */
-function renderPersonDetail() {
-
-    const item = getPerson(selectedPersonId);
-
+function renderPersonDetail(item) {
     // 選択中のデータが存在しない場合は空に
     if (item === undefined) {
         personTitle.textContent = "";
@@ -529,81 +567,238 @@ function renderPersonDetail() {
     personDetail.innerHTML = detail;
 }
 
+// --------------------------------------------------
+// 詳細切り替えアニメーション
+// --------------------------------------------------
+
+/**
+ * 詳細をアニメーション付きで切り替え
+ * @param {HTMLElement} panel 詳細パネル
+ * @param {HTMLElement} title タイトル
+ * @param {HTMLElement} detail 詳細本文
+ * @param {Object|undefined} item 表示するデータ
+ * @param {string} side リストの位置
+ * @param {Object} state アニメーション状態
+ * @param {function(Object): void} renderFunction 描画関数
+ * @returns {Promise<void>}
+ */
+async function transitionDetail(
+    panel,
+    title,
+    detail,
+    item,
+    side,
+    state,
+    renderFunction
+) {
+    // アニメーション番号を更新
+    state.sequence++;
+
+    const sequence = state.sequence;
+
+    // 現在の表示状態を取得
+    const computedStyle = getComputedStyle(panel);
+
+    const startTransform = computedStyle.transform;
+    const startOpacity = computedStyle.opacity;
+
+    // 実行中のアニメーションを停止
+    if (state.animation !== null) {
+        state.animation.cancel();
+        state.animation = null;
+    }
+
+    // 現在詳細が表示されているか
+    const hasContent = (
+        title.textContent !== ""
+        || detail.innerHTML !== ""
+    );
+
+    // ----------------------------------------------
+    // 古い詳細をスライドアウト
+    // ----------------------------------------------
+
+    if (hasContent) {
+
+        // リストと反対側へ移動
+        let exitTransform = "translateX(24px)";
+
+        if (side === "right") {
+            exitTransform = "translateX(-24px)";
+        }
+
+        const exitAnimation = panel.animate(
+            [
+                {
+                    transform: startTransform,
+                    opacity: startOpacity
+                },
+                {
+                    transform: exitTransform,
+                    opacity: 0
+                }
+            ],
+            {
+                duration: 180,
+                easing: "ease-in",
+                fill: "forwards"
+            }
+        );
+
+        state.animation = exitAnimation;
+
+        try {
+            await exitAnimation.finished;
+        } catch (error) {
+            return;
+        }
+
+        // 途中で別の選択が行われていたら終了
+        if (sequence !== state.sequence) {
+            return;
+        }
+
+        exitAnimation.cancel();
+        state.animation = null;
+
+    }
+
+    // ----------------------------------------------
+    // 新しい詳細を設定
+    // ----------------------------------------------
+
+    renderFunction(item);
+
+    // 選択解除ならここで終了
+    if (item === undefined) {
+        return;
+    }
+
+    // ----------------------------------------------
+    // 新しい詳細をスライドイン
+    // ----------------------------------------------
+
+    // リスト側から移動
+    let enterTransform = "translateX(-24px)";
+
+    if (side === "right") {
+        enterTransform = "translateX(24px)";
+    }
+
+    const enterAnimation = panel.animate(
+        [
+            {
+                transform: enterTransform,
+                opacity: 0
+            },
+            {
+                transform: "translateX(0)",
+                opacity: 1
+            }
+        ],
+        {
+            duration: 220,
+            easing: "ease-out",
+            fill: "both"
+        }
+    );
+
+    state.animation = enterAnimation;
+
+    try {
+        await enterAnimation.finished;
+    } catch (error) {
+        return;
+    }
+
+    // 途中で別の選択が行われていたら終了
+    if (sequence !== state.sequence) {
+        return;
+    }
+
+    // アニメーションを解除して通常状態に戻す
+    enterAnimation.cancel();
+    state.animation = null;
+}
 
 // --------------------------------------------------
 // 選択状態の更新
 // --------------------------------------------------
 
-// 証拠を選択
 /**
- * 証拠を選択して既読状態と詳細表示を更新
- * @param {number} id 証拠ID
- * @returns {void}
+ * 証拠を選択
+ * @param {*} id
  */
 function selectEvidence(id) {
     // ●アクティブ変更
-    if (selectedEvidenceId != id) {
-        //
+    if (selectedEvidenceId !== id) {
+
         selectedEvidenceId = id;
 
         // 既読に
         markEvidenceRead(id);
 
-        // 選択状態を更新
-        updateEvidenceSelection();
-
-        // 詳細を更新
-        renderEvidenceDetail();
     }
     // ●アクティブ解除
     else {
-        //
+
         selectedEvidenceId = null;
 
-        // 選択状態を更新
-        updateEvidenceSelection();
-
-        // 詳細を更新
-        renderEvidenceDetail();
     }
+
+    // 選択状態を更新
+    updateEvidenceSelection();
+
+    // 詳細をアニメーション付きで更新
+    transitionDetail(
+        evidencePanel,
+        evidenceTitle,
+        evidenceDetail,
+        getEvidence(selectedEvidenceId),
+        "left",
+        evidenceDetailAnimation,
+        renderEvidenceDetail
+    );
+
 }
 
-
-// 人物を選択
 /**
- * 人物を選択して既読状態と詳細表示を更新
- * @param {number} id 人物ID
- * @returns {void}
+ * 人物を選択
+ * @param {*} id
  */
 function selectPerson(id) {
+
     // ●アクティブ変更
-    if (selectedPersonId != id) {
-        //
+    if (selectedPersonId !== id) {
+
         selectedPersonId = id;
 
         // 既読に
         markPersonRead(id);
 
-        // 選択状態を更新
-        updatePersonSelection();
-
-        // 詳細を更新
-        renderPersonDetail();
     }
     // ●アクティブ解除
     else {
-        //
-        selectedEvidenceId = null;
 
-        // 選択状態を更新
-        updatePersonSelection();
-
-        // 詳細を更新
-        renderPersonDetail();
+        selectedPersonId = null;
 
     }
-}
 
+    // 選択状態を更新
+    updatePersonSelection();
+
+    // 詳細をアニメーション付きで更新
+    transitionDetail(
+        personPanel,
+        personTitle,
+        personDetail,
+        getPerson(selectedPersonId),
+        "right",
+        personDetailAnimation,
+        renderPersonDetail
+    );
+
+}
 
 // --------------------------------------------------
 // 推理処理
@@ -620,7 +815,6 @@ function executeInference() {
     if (selectedPersonId === null) {
         return;
     }
-
 
     // ----------------------------------------------
     // 証拠の解放判定

@@ -62,9 +62,12 @@
             }
 
             /* 空 */
-            .empty {
-                background: rgba(0, 0, 0, 0.5);
-                color: #aaa;
+            &.empty {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: var(--color-line);
+                font-family: "smartFont";
             }
 
             /* 間隔 */
@@ -78,7 +81,7 @@
                 position: relative;
                 isolation: isolate;
                 width: 100%;
-                min-height: 2em;
+                height: 100%;
                 padding: 8px;
                 background: linear-gradient(90deg, #000, #004);
                 border: solid 1px var(--color-line);
