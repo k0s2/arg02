@@ -35,11 +35,11 @@ import {
 // 要素取得
 // --------------------------------------------------
 
-// 証拠リスト
-const evidenceList = document.querySelector(".pannel-left .itemList ul");
+// 証拠グループ
+const evidenceList = document.querySelector(".pannel-left .itemList .groups");
 
-// 人物リスト
-const personList = document.querySelector(".pannel-right .itemList ul");
+// 人物グループ
+const personList = document.querySelector(".pannel-right .itemList .groups");
 
 // 証拠詳細
 const evidencePanel = document.querySelector(".detail-evidence");
@@ -86,14 +86,24 @@ let selectedPersonId = null;
 
 /**
  * 証拠データを取得
- * @param {number} id 証拠ID
+ * @param {string} id 証拠ID
  * @returns {Object|undefined} 該当する証拠データ
  */
 function getEvidence(id) {
 
-    return evidenceData.find((item) => {
-        return item.id === id;
-    });
+    for (const group of evidenceData) {
+
+        const item = group.items.find((item) => {
+            return item.id === id;
+        });
+
+        if (item !== undefined) {
+            return item;
+        }
+
+    }
+
+    return undefined;
 
 }
 
@@ -104,9 +114,19 @@ function getEvidence(id) {
  */
 function getPerson(id) {
 
-    return personData.find((item) => {
-        return item.id === id;
-    });
+    for (const group of personData) {
+
+        const item = group.items.find((item) => {
+            return item.id === id;
+        });
+
+        if (item !== undefined) {
+            return item;
+        }
+
+    }
+
+    return undefined;
 
 }
 
@@ -135,34 +155,45 @@ function getItemData(type, id) {
 }
 
 // --------------------------------------------------
-// 表示対象の取得
+// グループ状態取得
 // --------------------------------------------------
 
 /**
- * 解放済みの証拠を取得
- * @returns {Object[]} 解放済みの証拠データ
+ * 展開中のグループIDを取得
+ * @param {HTMLElement} list 対象リスト
+ * @returns {string[]} 展開中のグループID
  */
-function getUnlockedEvidence() {
+function getOpenGroupIds(list) {
 
-    const ids = getUnlockedIds("evidence");
+    const groups = list.querySelectorAll("details[data-group-id][open]");
 
-    return evidenceData.filter((item) => {
-        return ids.includes(item.id);
+    return Array.from(groups).map((group) => {
+        return group.dataset.groupId;
     });
 
 }
 
 /**
- * 解放済みの人物を取得
- * @returns {Object[]} 解放済みの人物データ
+ * 初期状態で展開するグループIDを取得
+ * @param {Object[]} groups グループデータ
+ * @param {string} type データの種類
+ * @returns {string[]} 展開するグループID
  */
-function getUnlockedPerson() {
+function getInitialOpenGroupIds(groups, type) {
 
-    const ids = getUnlockedIds("person");
+    const unreadIds = getUnreadIds(type);
 
-    return personData.filter((item) => {
-        return ids.includes(item.id);
-    });
+    return groups
+        .filter((group) => {
+
+            return group.items.some((item) => {
+                return unreadIds.includes(item.id);
+            });
+
+        })
+        .map((group) => {
+            return String(group.id);
+        });
 
 }
 
@@ -228,52 +259,115 @@ function createListItem(item, selectedId, type, selectFunction) {
 }
 
 // --------------------------------------------------
-// 空リスト表示
+// グループリスト描画
 // --------------------------------------------------
 
 /**
- * 空リスト項目を生成
- * @returns {HTMLLIElement} 生成したリスト項目
- */
-function createEmptyListItem() {
-
-    const li = document.createElement("li");
-    li.className = "empty";
-    li.textContent = "NO DATA";
-
-    return li;
-
-}
-
-// --------------------------------------------------
-// リスト項目追加アニメーション
-// --------------------------------------------------
-
-/**
- * リスト項目をアニメーション付きで追加
- * @param {HTMLElement} list 追加先のリスト
- * @param {HTMLLIElement} li 追加するリスト項目
+ * グループリストを描画
+ * @param {HTMLElement} list 描画先
+ * @param {Object[]} groups グループデータ
+ * @param {string} type データの種類
+ * @param {number|string|null} selectedId 選択中のID
+ * @param {function(number|string): void} selectFunction 選択時に呼び出す関数
+ * @param {string[]} openGroupIds 展開するグループID
+ * @param {number|string|undefined} animatedId アニメーションさせるアイテムID
  * @returns {void}
  */
-function appendListItem(list, li) {
+function renderGroupedList(
+    list,
+    groups,
+    type,
+    selectedId,
+    selectFunction,
+    openGroupIds,
+    animatedId
+) {
 
-    // 空表示を削除
-    const emptyItem = list.querySelector("li.empty");
+    list.innerHTML = "";
 
-    if (emptyItem !== null) {
-        emptyItem.remove();
-    }
+    const unlockedIds = getUnlockedIds(type);
 
-    // 初期状態
-    li.classList.add("slide-in");
+    let hasItems = false;
 
-    // リストに追加
-    list.appendChild(li);
+    groups.forEach((group) => {
 
-    // アニメーション開始
-    requestAnimationFrame(() => {
-        li.classList.remove("slide-in");
+        // グループ
+        const groupElement = document.createElement("details");
+        groupElement.className = "itemGroup";
+        groupElement.dataset.groupId = String(group.id);
+
+        // グループ名
+        const summary = document.createElement("summary");
+        summary.className = "groupTitle";
+        summary.textContent = group.name;
+
+        groupElement.appendChild(summary);
+
+        // アイテムリスト
+        const ul = document.createElement("ul");
+
+        // 解放済みアイテム
+        const items = group.items.filter((item) => {
+            return unlockedIds.includes(item.id);
+        });
+
+        // アイテムが存在する場合
+        if (items.length > 0) {
+
+            hasItems = true;
+
+            groupElement.hidden = false;
+
+            // 展開状態
+            if (openGroupIds.includes(String(group.id))) {
+                groupElement.open = true;
+            }
+
+            items.forEach((item) => {
+
+                const li = createListItem(
+                    item,
+                    selectedId,
+                    type,
+                    selectFunction
+                );
+
+                // 新規取得アニメーション
+                if (item.id === animatedId) {
+                    li.classList.add("slide-in");
+
+                    requestAnimationFrame(() => {
+                        li.classList.remove("slide-in");
+                    });
+                }
+
+                ul.appendChild(li);
+
+            });
+
+        }
+        // アイテムが存在しない場合
+        else {
+
+            groupElement.hidden = true;
+
+        }
+
+        groupElement.appendChild(ul);
+        list.appendChild(groupElement);
+
     });
+
+    // 全グループにアイテムが存在しない場合
+    if (!hasItems) {
+
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "NO DATA";
+
+        list.appendChild(empty);
+
+    }
 
 }
 
@@ -283,31 +377,25 @@ function appendListItem(list, li) {
 
 /**
  * 解放済みの証拠リストを描画
+ * @param {string[]|undefined} openGroupIds 展開するグループID
+ * @param {string|undefined} animatedId アニメーションさせる証拠ID
  * @returns {void}
  */
-function renderEvidenceList() {
+function renderEvidenceList(openGroupIds, animatedId) {
 
-    evidenceList.innerHTML = "";
-
-    const items = getUnlockedEvidence();
-
-    if (items.length === 0) {
-        evidenceList.appendChild(createEmptyListItem());
-        return;
+    if (openGroupIds === undefined) {
+        openGroupIds = getInitialOpenGroupIds(evidenceData, "evidence");
     }
 
-    items.forEach((item) => {
-
-        const li = createListItem(
-            item,
-            selectedEvidenceId,
-            "evidence",
-            selectEvidence
-        );
-
-        evidenceList.appendChild(li);
-
-    });
+    renderGroupedList(
+        evidenceList,
+        evidenceData,
+        "evidence",
+        selectedEvidenceId,
+        selectEvidence,
+        openGroupIds,
+        animatedId
+    );
 
 }
 
@@ -317,31 +405,25 @@ function renderEvidenceList() {
 
 /**
  * 解放済みの人物リストを描画
+ * @param {string[]|undefined} openGroupIds 展開するグループID
+ * @param {string|undefined} animatedId アニメーションさせる人物ID
  * @returns {void}
  */
-function renderPersonList() {
+function renderPersonList(openGroupIds, animatedId) {
 
-    personList.innerHTML = "";
-
-    const items = getUnlockedPerson();
-
-    if (items.length === 0) {
-        personList.appendChild(createEmptyListItem());
-        return;
+    if (openGroupIds === undefined) {
+        openGroupIds = getInitialOpenGroupIds(personData, "person");
     }
 
-    items.forEach((item) => {
-
-        const li = createListItem(
-            item,
-            selectedPersonId,
-            "person",
-            selectPerson
-        );
-
-        personList.appendChild(li);
-
-    });
+    renderGroupedList(
+        personList,
+        personData,
+        "person",
+        selectedPersonId,
+        selectPerson,
+        openGroupIds,
+        animatedId
+    );
 
 }
 
@@ -356,14 +438,22 @@ function renderPersonList() {
  */
 function addEvidence(item) {
 
-    const li = createListItem(
-        item,
-        selectedEvidenceId,
-        "evidence",
-        selectEvidence
-    );
+    const openGroupIds = getOpenGroupIds(evidenceList);
 
-    appendListItem(evidenceList, li);
+    // 取得したアイテムが属するグループを展開
+    evidenceData.forEach((group) => {
+
+        const exists = group.items.some((groupItem) => {
+            return groupItem.id === item.id;
+        });
+
+        if (exists && !openGroupIds.includes(String(group.id))) {
+            openGroupIds.push(String(group.id));
+        }
+
+    });
+
+    renderEvidenceList(openGroupIds, item.id);
 
 }
 
@@ -374,14 +464,22 @@ function addEvidence(item) {
  */
 function addPerson(item) {
 
-    const li = createListItem(
-        item,
-        selectedPersonId,
-        "person",
-        selectPerson
-    );
+    const openGroupIds = getOpenGroupIds(personList);
 
-    appendListItem(personList, li);
+    // 取得したアイテムが属するグループを展開
+    personData.forEach((group) => {
+
+        const exists = group.items.some((groupItem) => {
+            return groupItem.id === item.id;
+        });
+
+        if (exists && !openGroupIds.includes(String(group.id))) {
+            openGroupIds.push(String(group.id));
+        }
+
+    });
+
+    renderPersonList(openGroupIds, item.id);
 
 }
 
@@ -391,7 +489,7 @@ function addPerson(item) {
 
 /**
  * 証拠を既読にする
- * @param {number} id 証拠ID
+ * @param {string} id 証拠ID
  * @returns {void}
  */
 function markEvidenceRead(id) {
@@ -484,57 +582,67 @@ function updatePersonSelection() {
  * @param {HTMLElement} detailElement 対象要素
  */
 function setKeyword(detailElement) {
+
     // キーワード要素を取得
     const targets = detailElement.querySelectorAll(".keyword");
 
-    //　要素ごとに処理
-    targets.forEach(target => {
+    // 要素ごとに処理
+    targets.forEach((target) => {
 
         // 証拠
         const evidenceId = target.getAttribute("getEvidence");
-        if (evidenceId) {
-            console.dir(isUnlocked("evidence", evidenceId));
 
-            // ●未取得
+        if (evidenceId) {
+
+            // 未取得
             if (!isUnlocked("evidence", evidenceId)) {
-                // クリックイベント
+
                 target.addEventListener("click", () => {
-                    // リストに追加
+
                     acquireItem("evidence", evidenceId);
 
-                    // ボタンに獲得済みクラスを付与
                     target.classList.add("get");
-                })
+
+                });
+
             }
-            // ●取得済み
+            // 取得済み
             else {
-                // ボタンに獲得済みクラスを付与
+
                 target.classList.add("get");
+
             }
+
         }
 
         // 人物
         const personId = target.getAttribute("getPerson");
+
         if (personId) {
-            // ●未取得
+
+            // 未取得
             if (!isUnlocked("person", personId)) {
-                // クリックイベント
+
                 target.addEventListener("click", () => {
-                    // リストに追加
+
                     acquireItem("person", personId);
 
-                    // ボタンに獲得済みクラスを付与
                     target.classList.add("get");
-                })
+
+                });
+
             }
-            // ●取得済み
+            // 取得済み
             else {
-                // ボタンに獲得済みクラスを付与
+
                 target.classList.add("get");
+
             }
+
         }
 
     });
+
 }
 
 /**
@@ -554,6 +662,7 @@ function renderEvidenceDetail(item) {
     evidenceDetail.innerHTML = item.detail.join("<br>");
 
     setKeyword(evidenceDetail);
+
 }
 
 /**
@@ -573,6 +682,7 @@ function renderPersonDetail(item) {
     personDetail.innerHTML = item.detail.join("<br>");
 
     setKeyword(personDetail);
+
 }
 
 // --------------------------------------------------
@@ -735,7 +845,7 @@ async function transitionDetail(
 
 /**
  * 証拠を選択
- * @param {number} id 証拠ID
+ * @param {string} id 証拠ID
  * @returns {void}
  */
 function selectEvidence(id) {

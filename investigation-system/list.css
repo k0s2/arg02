@@ -35,6 +35,36 @@
         interpolate-size: allow-keywords;
     }
 
+    /* グループラッパー */
+    .groups {
+
+        /* グループ */
+        .itemGroup {
+
+            /* タイトル */
+            .groupTitle {
+
+                padding: 4px 16px;
+                background: var(--color-line);
+                color: var(--color-font);
+                cursor: pointer;
+                transition:
+                    background-color 0.25s,
+                    color 0.25s;
+
+                /* ホバー */
+                @media (hover: hover) {
+                    &:hover {
+                        background-color: var(--color-focus-2);
+                        color: #004;
+                    }
+                }
+
+            }
+        }
+
+    }
+
     /* リスト */
     ul {
 
