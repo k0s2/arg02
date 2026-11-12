@@ -479,6 +479,44 @@ function updatePersonSelection() {
 // --------------------------------------------------
 
 /**
+ * キーワード設定
+ * @param {HTMLElement} detailElement 対象要素
+ */
+function setKeyword(detailElement) {
+    //
+    const targets = detailElement.querySelectorAll(".keyword");
+
+    //
+    targets.forEach(target => {
+
+        // クリックイベント
+        target.addEventListener("click", () => {
+            // 証拠
+            const evidenceId = target.getAttribute("getEvidence");
+            if (evidenceId) {
+                // リストに追加
+                addEvidence(evidenceId);
+
+                // ボタンに獲得済みクラスを付与
+                target.classList.add("get");
+            }
+
+            // 人物
+            const personId = target.getAttribute("getPerson");
+            if (personId) {
+                // リストに追加
+                addPerson(personId);
+
+                // ボタンに獲得済みクラスを付与
+                target.classList.add("get");
+            }
+
+        })
+
+    });
+}
+
+/**
  * 証拠の詳細を表示
  * @param {Object|undefined} item 表示するデータ
  * @returns {void}
@@ -494,6 +532,7 @@ function renderEvidenceDetail(item) {
     evidenceTitle.textContent = item.name;
     evidenceDetail.innerHTML = item.detail.join("<br>");
 
+    setKeyword(evidenceDetail);
 }
 
 /**
@@ -512,6 +551,7 @@ function renderPersonDetail(item) {
     personTitle.textContent = item.name;
     personDetail.innerHTML = item.detail.join("<br>");
 
+    setKeyword(personDetail);
 }
 
 // --------------------------------------------------

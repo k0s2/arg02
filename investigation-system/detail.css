@@ -29,14 +29,29 @@
         height: stretch;
         overflow-y: auto;
 
-        /* 段落 */
-        p {
-            margin: 0;
+        /* キーワード */
+        button.keyword {
 
-            /* 間隔 */
-            &+& {
-                margin-top: 1em;
+            background: none;
+            border: none;
+            margin: 0;
+            padding: 0;
+            color: currentColor;
+            cursor: pointer;
+            transition: color 0.25s;
+
+            /* 獲得済み */
+            &.get {
+                cursor: initial;
             }
+
+            /* ホバー */
+            @media (hover: hover) {
+                &:not(.get):hover {
+                    color: var(--color-main);
+                }
+            }
+
         }
 
     }
