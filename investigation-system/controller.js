@@ -266,7 +266,10 @@ function appendListItem(list, li) {
 // 証拠リスト描画
 // --------------------------------------------------
 
-/** 解放済みの証拠リストを描画 @returns {void} */
+/**
+ * 解放済みの証拠リストを描画
+ * @returns {void}
+ */
 function renderEvidenceList() {
 
     // リストを初期化
@@ -295,7 +298,10 @@ function renderEvidenceList() {
 // 人物リスト描画
 // --------------------------------------------------
 
-/** 解放済みの人物リストを描画 @returns {void} */
+/**
+ * 解放済みの人物リストを描画
+ * @returns {void}
+ */
 function renderPersonList() {
 
     // リストを初期化
@@ -324,7 +330,6 @@ function renderPersonList() {
 // リストへの新規項目追加
 // --------------------------------------------------
 
-// 新しい証拠を追加
 /**
  * 解放された証拠をリストに追加
  * @param {Object} item 追加する証拠データ
@@ -342,8 +347,6 @@ function addEvidence(item) {
     appendListItem(evidenceList, li);
 }
 
-
-// 新しい人物を追加
 /**
  * 解放された人物をリストに追加
  * @param {Object} item 追加する人物データ
@@ -360,7 +363,6 @@ function addPerson(item) {
 
     appendListItem(personList, li);
 }
-
 
 // --------------------------------------------------
 // 既読処理
@@ -539,9 +541,9 @@ function renderPersonDetail() {
  * @returns {void}
  */
 function selectEvidence(id) {
-    // ●
+    // ●アクティブ変更
     if (selectedEvidenceId != id) {
-
+        //
         selectedEvidenceId = id;
 
         // 既読に
@@ -553,8 +555,9 @@ function selectEvidence(id) {
         // 詳細を更新
         renderEvidenceDetail();
     }
-    // ●
+    // ●アクティブ解除
     else {
+        //
         selectedEvidenceId = null;
 
         // 選択状態を更新
@@ -573,9 +576,9 @@ function selectEvidence(id) {
  * @returns {void}
  */
 function selectPerson(id) {
-    // ●
+    // ●アクティブ変更
     if (selectedPersonId != id) {
-
+        //
         selectedPersonId = id;
 
         // 既読に
@@ -587,8 +590,9 @@ function selectPerson(id) {
         // 詳細を更新
         renderPersonDetail();
     }
-    // ●
+    // ●アクティブ解除
     else {
+        //
         selectedEvidenceId = null;
 
         // 選択状態を更新

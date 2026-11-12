@@ -4,8 +4,8 @@
 
 /* なのゴシック */
 @font-face {
-    font-family: "nano";
-    src: url("./font/NanoGothicText-W3.otf");
+    font-family: "appliMincho";
+    src: url("./font/AppliMincho.otf");
 }
 
 /* スマートフォント */
@@ -16,7 +16,7 @@
 
 /* デフォルト */
 * {
-    font-family: "nano";
+    font-family: "appliMincho";
 }
 
 /* -------------------------------------------------- */

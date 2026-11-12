@@ -75,13 +75,25 @@ body#investigation-system {
                 justify-content: center;
                 height: 100%;
                 padding: 0 16px;
+                color: var(--color-main);
+                font-weight: bold;
                 text-align: center;
+                transition: color 0.25s;
 
                 /* アクティブ */
                 &.active {
                     opacity: 1;
                     border-bottom: solid 2px currentColor;
+                    color: var(--color-focus-1);
                 }
+
+                /* ホバー */
+                @media (hover: hover) {
+                    &:not(.disabled):hover {
+                        color: var(--color-focus-1);
+                    }
+                }
+
             }
 
             /* セパレーター */
