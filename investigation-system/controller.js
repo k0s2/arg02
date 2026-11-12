@@ -287,7 +287,7 @@ function appendListItem(list, li) {
         li.removeEventListener("transitionend", onTransitionEnd);
 
         // 高さをautoに戻す。
-        li.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+        li.style.transition = "opacity 0.25s ease, transform 0.25s ease";
         li.style.height = "auto";
         li.style.overflow = "";
 
@@ -669,10 +669,14 @@ async function transitionDetail(
 
     renderFunction(item);
 
-    // 選択解除ならここで終了
+    // 選択解除
     if (item === undefined) {
+        panel.classList.add("empty");
         return;
     }
+
+    // 選択状態
+    panel.classList.remove("empty");
 
     // ----------------------------------------------
     // 新しい詳細をスライドイン
@@ -732,18 +736,22 @@ async function transitionDetail(
 function selectEvidence(id) {
     // ●アクティブ変更
     if (selectedEvidenceId !== id) {
-
+        //
         selectedEvidenceId = id;
 
-        // 既読に
+        // 既読にする
         markEvidenceRead(id);
 
+        // 「推理」ボタンを切り替え
+        inferenceButton.disabled = !(selectedPersonId != null);
     }
     // ●アクティブ解除
     else {
-
+        //
         selectedEvidenceId = null;
 
+        // 「推理」ボタンを無効化
+        inferenceButton.disabled = true;
     }
 
     // 選択状態を更新
@@ -770,17 +778,22 @@ function selectPerson(id) {
 
     // ●アクティブ変更
     if (selectedPersonId !== id) {
-
+        //
         selectedPersonId = id;
 
-        // 既読に
+        // 既読にする
         markPersonRead(id);
 
+        // 「推理」ボタンを切り替え
+        inferenceButton.disabled = !(selectedEvidenceId != null);
     }
     // ●アクティブ解除
     else {
-
+        //
         selectedPersonId = null;
+
+        // 「推理」ボタンを無効化
+        inferenceButton.disabled = true;
 
     }
 
@@ -930,20 +943,13 @@ renderPersonList();
 // --------------------------------------------------
 
 // 証拠
-renderEvidenceDetail();
+renderEvidenceDetail(getEvidence(selectedEvidenceId));
+if (selectedEvidenceId === null) {
+    evidencePanel.classList.add("empty");
+}
 
 // 人物
-renderPersonDetail();
-
-// --------------------------------------------------
-// 推理ボタン
-// --------------------------------------------------
-
-// 証拠・人物が選択されていない場合
-if (
-    selectedEvidenceId === null
-    || selectedPersonId === null
-) {
-    // 推理ボタンを無効化
-    inferenceButton.disabled = true;
+renderPersonDetail(getPerson(selectedPersonId));
+if (selectedPersonId === null) {
+    personPanel.classList.add("empty");
 }

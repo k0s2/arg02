@@ -7,14 +7,18 @@
     min-height: 0;
     background: rgba(0, 0, 0, 0.5);
 
+    /* リスト未選択 */
+    &.empty {
+        opacity: 0;
+    }
+
     /* タイトル */
     h2 {
-        height: 40px;
-        margin: 0;
-        margin-bottom: 16px;
-        padding-left: 16px;
+        margin: 0 0 8px 0;
+        padding-left: 8px;
         border-left: solid 4px;
         font-size: 24px;
+        line-height: 1;
     }
 
     /* テキスト */
@@ -90,8 +94,8 @@
             }
         }
 
-        /* 非表示 */
-        &.hidden {
+        /* 非活性 */
+        &:disabled {
             opacity: 0;
             transform: scale(0.75);
         }
