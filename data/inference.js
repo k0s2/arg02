@@ -10,6 +10,11 @@ export default [
                 type: "evidence",
                 id: "002",
             },
+            // 「祖父の遺した手紙」
+            {
+                type: "evidence",
+                id: "003",
+            },
         ],
         dialog: [
             'そうだ。これはじいちゃんが残した手紙だ。',

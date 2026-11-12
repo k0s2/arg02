@@ -210,17 +210,16 @@ function getInitialOpenGroupIds(groups, type) {
  * @returns {HTMLLIElement} 生成したリスト項目
  */
 function createListItem(item, selectedId, type, selectFunction) {
-
     // リスト項目
     const li = document.createElement("li");
 
     // ID
     li.dataset.id = String(item.id);
 
-    // 未読
+    // 新規追加
     const unreadIds = getUnreadIds(type);
-
     if (unreadIds.includes(item.id)) {
+        // バッジ
         li.classList.add("new");
     }
 
@@ -255,7 +254,6 @@ function createListItem(item, selectedId, type, selectFunction) {
     li.appendChild(button);
 
     return li;
-
 }
 
 // --------------------------------------------------
@@ -282,7 +280,6 @@ function renderGroupedList(
     openGroupIds,
     animatedId
 ) {
-
     list.innerHTML = "";
 
     const unlockedIds = getUnlockedIds(type);
@@ -313,6 +310,13 @@ function renderGroupedList(
 
         // アイテムが存在する場合
         if (items.length > 0) {
+            // 新規グループ
+            if (
+                items.length === 1
+                && items[0].id === animatedId
+            ) {
+                groupElement.classList.add("slide-in");
+            }
 
             hasItems = true;
 
@@ -382,7 +386,6 @@ function renderGroupedList(
  * @returns {void}
  */
 function renderEvidenceList(openGroupIds, animatedId) {
-
     if (openGroupIds === undefined) {
         openGroupIds = getInitialOpenGroupIds(evidenceData, "evidence");
     }
@@ -396,7 +399,6 @@ function renderEvidenceList(openGroupIds, animatedId) {
         openGroupIds,
         animatedId
     );
-
 }
 
 // --------------------------------------------------
@@ -410,7 +412,6 @@ function renderEvidenceList(openGroupIds, animatedId) {
  * @returns {void}
  */
 function renderPersonList(openGroupIds, animatedId) {
-
     if (openGroupIds === undefined) {
         openGroupIds = getInitialOpenGroupIds(personData, "person");
     }
@@ -424,7 +425,6 @@ function renderPersonList(openGroupIds, animatedId) {
         openGroupIds,
         animatedId
     );
-
 }
 
 // --------------------------------------------------
@@ -437,7 +437,6 @@ function renderPersonList(openGroupIds, animatedId) {
  * @returns {void}
  */
 function addEvidence(item) {
-
     const openGroupIds = getOpenGroupIds(evidenceList);
 
     // 取得したアイテムが属するグループを展開
@@ -454,7 +453,6 @@ function addEvidence(item) {
     });
 
     renderEvidenceList(openGroupIds, item.id);
-
 }
 
 /**
@@ -463,7 +461,6 @@ function addEvidence(item) {
  * @returns {void}
  */
 function addPerson(item) {
-
     const openGroupIds = getOpenGroupIds(personList);
 
     // 取得したアイテムが属するグループを展開
@@ -480,7 +477,6 @@ function addPerson(item) {
     });
 
     renderPersonList(openGroupIds, item.id);
-
 }
 
 // --------------------------------------------------
