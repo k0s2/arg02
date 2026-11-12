@@ -20,8 +20,9 @@
     /* テキスト */
     .text {
         padding: 8px;
-        border: solid 1px #448;
-        overflow: auto;
+        border: solid 1px var(--color-line);
+        height: stretch;
+        overflow-y: auto;
 
         /* 段落 */
         p {
@@ -53,7 +54,7 @@
         width: 120px;
         aspect-ratio: 1;
         background: linear-gradient(#000, #004);
-        border: solid 1px #448;
+        border: solid 1px var(--color-line);
         border-radius: 100%;
         opacity: 1;
         color: var(--color-font);

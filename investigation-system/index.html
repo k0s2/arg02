@@ -2,17 +2,19 @@
 <html lang="ja">
 
 <head>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="./style/common.css" />
-    <link rel="stylesheet" href="./style/list.css" />
-    <link rel="stylesheet" href="./style/detail.css" />
     <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="./style/common.css" />
+    <link rel="stylesheet" href="./style/detail.css" />
+    <link rel="stylesheet" href="./style/list.css" />
 
-    <script src="./controller.js" defer></script>
+    <script type="module" src="./controller.js"></script>
 
     <title>REMAINS 13</title>
+
 </head>
 
 <body id="investigation-system">
@@ -32,6 +34,10 @@
 
             <a href="" target="_blank">メール</a>
 
+            <span class="separator"></span>
+
+            <a href="" target="_blank">エンディング</a>
+
         </div>
 
     </header>
@@ -41,6 +47,7 @@
     <!-- -------------------------------------------------- -->
     <main>
 
+        <!-- 証拠 -->
         <div class="pannel-left">
 
             <div class="listTitle">
@@ -51,44 +58,20 @@
             <div class="itemList">
                 <ul>
 
-                    <li>
-                        <button class="active">
-                            <div class="name">事件概要</div>
-                            <div class="note">初期情報</div>
-                        </button>
-                    </li>
-
-                    <li>
-                        <button>
-                            <div class="name">祖父の遺した手紙</div>
-                            <div class="note">初期情報</div>
-                        </button>
-                    </li>
-
                 </ul>
             </div>
+
         </div>
 
+        <!-- 詳細 -->
         <div class="pannel-middle">
 
             <div class="detail-evidence">
 
                 <h2>
-                    事件概要
                 </h2>
 
                 <div class="text">
-                    <p>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                    </p>
                 </div>
 
             </div>
@@ -103,27 +86,16 @@
             <div class="detail-person">
 
                 <h2>
-                    矢戸 亮介
                 </h2>
 
                 <div class="text">
-                    <p>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                        事件当時～～～<br>
-                    </p>
                 </div>
 
             </div>
 
         </div>
 
+        <!-- 人物 -->
         <div class="pannel-right">
 
             <div class="listTitle">
@@ -134,78 +106,9 @@
             <div class="itemList">
                 <ul>
 
-                    <li>
-                        <button class="active">
-                            <div class="name">矢戸 亮介</div>
-                            <div class="note">未特定</div>
-                        </button>
-                    </li>
-
-                    <li>
-                        <button>
-                            <div class="name">小森川 由紀子</div>
-                            <div class="note">未特定</div>
-                        </button>
-                    </li>
-
-                    <li>
-                        <button>
-                            <div class="name">土井 美奈</div>
-                            <div class="note">未特定</div>
-                        </button>
-                    </li>
-
-                    <li>
-                        <button>
-                            <div class="name">是枝 智也</div>
-                            <div class="note">未特定</div>
-                        </button>
-                    </li>
-
-                    <li>
-                        <button>
-                            <div class="name">諏訪部 直人</div>
-                            <div class="note">未特定</div>
-                        </button>
-                    </li>
-
-                    <li>
-                        <button>
-                            <div class="name">栗原 修</div>
-                            <div class="note">未特定</div>
-                        </button>
-                    </li>
-
-                    <!-- <li>
-                        <button>
-                            <div class="name">土路 優里</div>
-                            <div class="note">未特定</div>
-                        </button>
-                    </li>
-
-                    <li>
-                        <button>
-                            <div class="name">千保 和也</div>
-                            <div class="note">未特定</div>
-                        </button>
-                    </li>
-
-                    <li>
-                        <button>
-                            <div class="name">空田 誠</div>
-                            <div class="note">未特定</div>
-                        </button>
-                    </li>
-
-                    <li>
-                        <button>
-                            <div class="name">湯田 友介</div>
-                            <div class="note">未特定</div>
-                        </button>
-                    </li> -->
-
                 </ul>
             </div>
+
         </div>
 
     </main>

@@ -24,22 +24,42 @@
 /* 証拠リスト */
 .itemList {
 
-    border-top: solid 1px #448;
-    border-bottom: solid 1px #448;
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-font) transparent;
+    border-top: solid 1px var(--color-line);
+    border-bottom: solid 1px var(--color-line);
+    overflow-x: hidden;
+    overflow-y: auto;
     scroll-behavior: smooth;
+
+    &,
+    & * {
+        interpolate-size: allow-keywords;
+        transition: height 0.25s ease;
+    }
 
     /* リスト */
     ul {
 
         list-style: none;
+        position: relative;
         margin: 0;
         padding: 8px;
 
         /* アイテム */
         li {
+
+            /* 新規 */
+            &.new {
+                &::after {
+                    content: "NEW";
+                    position: absolute;
+                    top: 0;
+                    right: 8px;
+                    border-radius: 8px;
+                    color: var(--color-focus-1);
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+            }
 
             /* 間隔 */
             &+& {
@@ -53,7 +73,7 @@
                 min-height: 2em;
                 padding: 8px;
                 background: linear-gradient(90deg, #000, #004);
-                border: solid 1px #448;
+                border: solid 1px var(--color-line);
                 border-radius: 8px;
                 color: var(--color-font);
                 text-align: left;
@@ -92,4 +112,34 @@
         }
     }
 
+}
+
+/* -------------------------------------------------- */
+/* アニメーション */
+/* -------------------------------------------------- */
+
+/* 「証拠」追加 */
+@keyframes slideInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 「人物」追加 */
+@keyframes slideInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
