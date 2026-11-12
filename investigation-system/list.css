@@ -72,7 +72,7 @@
                     color: var(--color-focus-1);
                     font-size: 12px;
                     font-weight: bold;
-                    animation: new-color 1.0s ease-in-out infinite alternate;
+                    animation: new-color 0.5s ease-in-out infinite alternate;
                 }
             }
 
@@ -111,27 +111,14 @@
                     color 0.25s;
 
                 /* グラデーションカバー */
-                &::before {
+                &::before,
+                &::after {
                     content: "";
                     position: absolute;
                     inset: 0;
                     z-index: -1;
                     opacity: 0;
                     transition: opacity 0.25s ease;
-                }
-
-                /* アクティブ */
-                &.active {
-
-                    color: #004;
-                    cursor: initial;
-
-                    /* グラデーションカバー */
-                    &::before {
-                        background: linear-gradient(90deg, var(--color-focus-1), var(--color-focus-2));
-                        opacity: 1;
-                    }
-
                 }
 
                 /* ホバー */
@@ -147,6 +134,20 @@
                         }
 
                     }
+                }
+
+                /* アクティブ */
+                &.active {
+
+                    color: #004;
+                    cursor: initial;
+
+                    /* グラデーションカバー */
+                    &::after {
+                        background: linear-gradient(90deg, var(--color-focus-1), var(--color-focus-2));
+                        opacity: 1;
+                    }
+
                 }
 
                 /* 名称 */
@@ -214,6 +215,6 @@
     }
 
     to {
-        color: var(--color-focus-2);
+        color: var(--color-font);
     }
 }
