@@ -1,7 +1,7 @@
 export default [
 
     {
-        id: 0,
+        id: "001",
         name: "矢戸 道人",
         note: "やと　みちひと",
         detail: [
@@ -11,7 +11,7 @@ export default [
     },
 
     {
-        id: 1,
+        id: "002",
         name: "矢戸 亮介",
         note: "やと　りょうすけ",
         detail: [
@@ -21,37 +21,6 @@ export default [
             '',
             '俺も両親も死んだものと思っているけど、ばあちゃんはどうだったのかな……？',
         ],
-        condition: [1, 1],
-    },
-
-    {
-        id: 2,
-        name: "矢戸 俊子",
-        note: "やと　としこ",
-        detail: [
-            'こないだ亡くなった、俺のばあちゃんだ。',
-        ],
-        condition: [1, 1],
-    },
-
-    {
-        id: 3,
-        name: "矢戸 俊介",
-        note: "やと　しゅんすけ",
-        detail: [
-            '俺の父さんだ。',
-        ],
-        condition: [1, 1],
-    },
-
-    {
-        id: 4,
-        name: "矢戸 道江",
-        note: "やと　みちえ",
-        detail: [
-            '俺の母さんだ。',
-        ],
-        condition: [1, 1],
     },
 
 ]

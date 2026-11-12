@@ -47,11 +47,13 @@ const inferenceButton = document.querySelector(".inference button");
 // 詳細アニメーション
 // --------------------------------------------------
 
+// 証拠
 const evidenceDetailAnimation = {
     sequence: 0,
     animation: null
 };
 
+// 人物
 const personDetailAnimation = {
     sequence: 0,
     animation: null
@@ -64,8 +66,8 @@ const personDetailAnimation = {
 // 解放済みの証拠ID
 const unlockedEvidenceIds = [];
 evidenceData.forEach((item) => {
-    // conditionが設定されていない項目は初期解放と
-    if (item.condition === undefined) {
+    // needInferenceが設定されていない項目は初期解放と
+    if (item.needInference === undefined) {
         unlockedEvidenceIds.push(item.id);
     }
 });
@@ -73,8 +75,8 @@ evidenceData.forEach((item) => {
 // 解放済みの人物ID
 const unlockedPersonIds = [];
 personData.forEach((item) => {
-    // conditionが設定されていない項目は初期解放と
-    if (item.condition === undefined) {
+    // needInferenceが設定されていない項目は初期解放と
+    if (item.needInference === undefined) {
         unlockedPersonIds.push(item.id);
     }
 });
@@ -803,22 +805,22 @@ function executeInference() {
 
     evidenceData.forEach((item) => {
 
-        // conditionが設定されていない項目は対象外。
-        if (item.condition === undefined) {
+        // needInferenceが設定されていない項目は対象外。
+        if (item.needInference === undefined) {
             return;
         }
 
-        // conditionの形式を確認
-        if (!Array.isArray(item.condition)) {
+        // needInferenceの形式を確認
+        if (!Array.isArray(item.needInference)) {
             return;
         }
 
         // 証拠IDと人物IDの両方が一致するか確認
-        if (item.condition[0] !== selectedEvidenceId) {
+        if (item.needInference[0] !== selectedEvidenceId) {
             return;
         }
 
-        if (item.condition[1] !== selectedPersonId) {
+        if (item.needInference[1] !== selectedPersonId) {
             return;
         }
 
@@ -845,22 +847,22 @@ function executeInference() {
 
     personData.forEach((item) => {
 
-        // conditionが設定されていない項目は対象外。
-        if (item.condition === undefined) {
+        // needInferenceが設定されていない項目は対象外。
+        if (item.needInference === undefined) {
             return;
         }
 
-        // conditionの形式を確認
-        if (!Array.isArray(item.condition)) {
+        // needInferenceの形式を確認
+        if (!Array.isArray(item.needInference)) {
             return;
         }
 
         // 証拠IDと人物IDの両方が一致するか確認
-        if (item.condition[0] !== selectedEvidenceId) {
+        if (item.needInference[0] !== selectedEvidenceId) {
             return;
         }
 
-        if (item.condition[1] !== selectedPersonId) {
+        if (item.needInference[1] !== selectedPersonId) {
             return;
         }
 
