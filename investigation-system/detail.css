@@ -60,6 +60,16 @@
 
 }
 
+/* 詳細エリア：証拠 */
+.detail-evidence {
+    margin-right: 40px;
+}
+
+/* 詳細エリア：人物 */
+.detail-person {
+    margin-left: 40px;
+}
+
 /* 「推理」ボタン */
 .inference {
     margin: 24px 0;
