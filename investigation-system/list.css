@@ -53,11 +53,12 @@
                     content: "NEW";
                     position: absolute;
                     top: 0;
-                    right: 8px;
+                    right: 4px;
                     border-radius: 8px;
                     color: var(--color-focus-1);
                     font-size: 12px;
                     font-weight: bold;
+                    animation: new-color 1.0s ease-in-out infinite alternate;
                 }
             }
 
@@ -100,6 +101,7 @@
                 &.active {
 
                     color: #004;
+                    cursor: initial;
 
                     /* グラデーションカバー */
                     &::before {
@@ -169,5 +171,16 @@
     50% {
         opacity: 1;
         transform: translateX(0);
+    }
+}
+
+/* 新規アイテム */
+@keyframes new-color {
+    from {
+        color: var(--color-focus-1);
+    }
+
+    to {
+        color: var(--color-focus-2);
     }
 }

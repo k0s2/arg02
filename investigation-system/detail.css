@@ -9,12 +9,12 @@
 
     /* タイトル */
     h2 {
+        height: 1em;
         margin: 0;
         margin-bottom: 16px;
         padding-left: 16px;
         border-left: solid 4px;
         font-size: 24px;
-        line-height: 1em;
     }
 
     /* テキスト */
@@ -38,12 +38,6 @@
 
 }
 
-/* 詳細エリア：証拠 */
-.detail-evidence {}
-
-/* 詳細エリア：人物 */
-.detail-person {}
-
 /* 「推理」ボタン */
 .inference {
     margin: 24px 0;
@@ -51,6 +45,9 @@
 
     /* ボタン */
     button {
+
+        position: relative;
+        isolation: isolate;
         width: 120px;
         aspect-ratio: 1;
         background: linear-gradient(#000, #004);
@@ -61,17 +58,35 @@
         font-size: 24px;
         font-weight: bold;
         cursor: pointer;
+        overflow: clip;
         transition:
             background-color 0.25s,
             border 0.25s,
             opacity 0.25s,
             transform 0.25s;
 
+        /* グラデーションカバー */
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
         /* ホバー */
         @media (hover: hover) {
             &:hover {
-                background: linear-gradient(#004, #008);
+
                 border-color: var(--color-focus-1);
+
+                /* グラデーションカバー */
+                &::before {
+                    background: linear-gradient(#004, #008);
+                    opacity: 1;
+                }
+
             }
         }
 

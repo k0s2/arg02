@@ -5,7 +5,7 @@
     --color-line: #448;
 
     --color-focus-1: rgb(70, 220, 255);
-    --color-focus-2: rgb(35, 110, 128);
+    --color-focus-2: rgb(65, 170, 200);
 }
 
 body#investigation-system {
@@ -23,7 +23,7 @@ body#investigation-system {
         position: absolute;
         inset: 0;
         z-index: -2;
-        opacity: 0.1;
+        opacity: 0.15;
         background-image:
             linear-gradient(#22c 1px, transparent 1px),
             linear-gradient(90deg, #22c 1px, transparent 1px);
@@ -73,7 +73,7 @@ body#investigation-system {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                height: stretch;
+                height: 100%;
                 padding: 0 16px;
                 text-align: center;
 
