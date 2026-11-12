@@ -12,6 +12,20 @@ import evidenceData from "../data/evidence.js";
 // 人物データ
 import personData from "../data/person.js";
 
+// 推理データ
+import inferenceData from "../data/inference.js";
+
+// --------------------------------------------------
+// セーブデータ
+// --------------------------------------------------
+
+import {
+    getUnlockedIds,
+    getUnreadIds,
+    unlockItem,
+    markRead,
+} from "./save.js";
+
 // ====================================================================================================
 // ファンクション
 // ====================================================================================================
@@ -28,16 +42,12 @@ const personList = document.querySelector(".pannel-right .itemList ul");
 
 // 証拠詳細
 const evidencePanel = document.querySelector(".detail-evidence");
-
 const evidenceTitle = document.querySelector(".detail-evidence h2");
-
 const evidenceDetail = document.querySelector(".detail-evidence .text");
 
 // 人物詳細
 const personPanel = document.querySelector(".detail-person");
-
 const personTitle = document.querySelector(".detail-person h2");
-
 const personDetail = document.querySelector(".detail-person .text");
 
 // 推理ボタン
@@ -50,46 +60,14 @@ const inferenceButton = document.querySelector(".inference button");
 // 証拠
 const evidenceDetailAnimation = {
     sequence: 0,
-    animation: null
+    animation: null,
 };
 
 // 人物
 const personDetailAnimation = {
     sequence: 0,
-    animation: null
+    animation: null,
 };
-
-// --------------------------------------------------
-// 解放済みデータ
-// --------------------------------------------------
-
-// 解放済みの証拠ID
-const unlockedEvidenceIds = [];
-evidenceData.forEach((item) => {
-    // needInferenceが設定されていない項目は初期解放と
-    if (item.needInference === undefined) {
-        unlockedEvidenceIds.push(item.id);
-    }
-});
-
-// 解放済みの人物ID
-const unlockedPersonIds = [];
-personData.forEach((item) => {
-    // needInferenceが設定されていない項目は初期解放と
-    if (item.needInference === undefined) {
-        unlockedPersonIds.push(item.id);
-    }
-});
-
-// --------------------------------------------------
-// 未読データ
-// --------------------------------------------------
-
-// 未読の証拠ID
-const unreadEvidenceIds = [];
-
-// 未読の人物ID
-const unreadPersonIds = [];
 
 // --------------------------------------------------
 // 選択中のデータ
@@ -111,58 +89,80 @@ let selectedPersonId = null;
  * @returns {Object|undefined} 該当する証拠データ
  */
 function getEvidence(id) {
-    // IDが一致するアイテムを取得
-    const item = evidenceData.find((data) => {
-        return data.id === id;
+
+    return evidenceData.find((item) => {
+        return item.id === id;
     });
 
-    // アイテムを返す
-    return item;
 }
 
 /**
  * 人物データを取得
- * @param {number} id 人物ID
+ * @param {string} id 人物ID
  * @returns {Object|undefined} 該当する人物データ
  */
 function getPerson(id) {
-    // IDが一致するアイテムを取得
-    const item = personData.find((data) => {
-        return data.id === id;
+
+    return personData.find((item) => {
+        return item.id === id;
     });
 
-    // アイテムを返す
-    return item;
+}
+
+/**
+ * 種類とIDからデータを取得
+ * @param {string} type データの種類
+ * @param {number|string} id アイテムID
+ * @returns {Object|undefined} 該当するデータ
+ */
+function getItemData(type, id) {
+
+    if (type === "evidence") {
+        return getEvidence(id);
+    }
+
+    if (type === "person") {
+        return getPerson(id);
+    }
+
+    if (type === "keyword") {
+        return getKeyword(id);
+    }
+
+    return undefined;
+
 }
 
 // --------------------------------------------------
 // 表示対象の取得
 // --------------------------------------------------
 
-/** 解放済みの証拠だけを取得
+/**
+ * 解放済みの証拠を取得
  * @returns {Object[]} 解放済みの証拠データ
  */
 function getUnlockedEvidence() {
-    // IDが一致する、解放済みアイテムを取得
-    const items = evidenceData.filter((item) => {
-        return unlockedEvidenceIds.includes(item.id);
+
+    const ids = getUnlockedIds("evidence");
+
+    return evidenceData.filter((item) => {
+        return ids.includes(item.id);
     });
 
-    // アイテムを返す
-    return items;
 }
 
-
-// 解放済みの人物だけを取得
-/** @returns {Object[]} 解放済みの人物データ */
+/**
+ * 解放済みの人物を取得
+ * @returns {Object[]} 解放済みの人物データ
+ */
 function getUnlockedPerson() {
-    // IDが一致する、解放済みアイテムを取得
-    const items = personData.filter((item) => {
-        return unlockedPersonIds.includes(item.id);
+
+    const ids = getUnlockedIds("person");
+
+    return personData.filter((item) => {
+        return ids.includes(item.id);
     });
 
-    // アイテムを返す
-    return items;
 }
 
 // --------------------------------------------------
@@ -172,19 +172,22 @@ function getUnlockedPerson() {
 /**
  * リスト項目の要素を生成
  * @param {Object} item 表示するデータ
- * @param {number|null} selectedId 選択中のID
- * @param {number[]} unreadIds 未読ID一覧
- * @param {function(number): void} selectFunction 選択時に呼び出す関数
+ * @param {number|string|null} selectedId 選択中のID
+ * @param {string} type データの種類
+ * @param {function(number|string): void} selectFunction 選択時に呼び出す関数
  * @returns {HTMLLIElement} 生成したリスト項目
  */
-function createListItem(item, selectedId, unreadIds, selectFunction) {
+function createListItem(item, selectedId, type, selectFunction) {
+
     // リスト項目
     const li = document.createElement("li");
 
     // ID
     li.dataset.id = String(item.id);
 
-    // 新規
+    // 未読
+    const unreadIds = getUnreadIds(type);
+
     if (unreadIds.includes(item.id)) {
         li.classList.add("new");
     }
@@ -213,15 +216,14 @@ function createListItem(item, selectedId, unreadIds, selectFunction) {
 
     // クリックイベント
     button.addEventListener("click", () => {
-        // 選択状態の切り替え
         selectFunction(item.id);
     });
 
-    // リストに要素を追加する
+    // リストに要素を追加
     li.appendChild(button);
 
-    // 追加要素を返す
     return li;
+
 }
 
 // --------------------------------------------------
@@ -233,12 +235,15 @@ function createListItem(item, selectedId, unreadIds, selectFunction) {
  * @returns {HTMLLIElement} 生成したリスト項目
  */
 function createEmptyListItem() {
+
     const li = document.createElement("li");
     li.className = "empty";
     li.textContent = "NO DATA";
 
     return li;
+
 }
+
 // --------------------------------------------------
 // リスト項目追加アニメーション
 // --------------------------------------------------
@@ -250,6 +255,7 @@ function createEmptyListItem() {
  * @returns {void}
  */
 function appendListItem(list, li) {
+
     // 空表示を削除
     const emptyItem = list.querySelector("li.empty");
 
@@ -267,6 +273,7 @@ function appendListItem(list, li) {
     requestAnimationFrame(() => {
         li.classList.remove("slide-in");
     });
+
 }
 
 // --------------------------------------------------
@@ -279,31 +286,28 @@ function appendListItem(list, li) {
  */
 function renderEvidenceList() {
 
-    // リストを初期化
     evidenceList.innerHTML = "";
 
-    // 解放済みの証拠を取得
     const items = getUnlockedEvidence();
 
-    // 空の場合
     if (items.length === 0) {
         evidenceList.appendChild(createEmptyListItem());
         return;
     }
 
-    // 解放済みの証拠を順番に描画
     items.forEach((item) => {
 
         const li = createListItem(
             item,
             selectedEvidenceId,
-            unreadEvidenceIds,
+            "evidence",
             selectEvidence
         );
 
         evidenceList.appendChild(li);
 
     });
+
 }
 
 // --------------------------------------------------
@@ -316,31 +320,28 @@ function renderEvidenceList() {
  */
 function renderPersonList() {
 
-    // リストを初期化
     personList.innerHTML = "";
 
-    // 解放済みの人物を取得
     const items = getUnlockedPerson();
 
-    // 空の場合
     if (items.length === 0) {
         personList.appendChild(createEmptyListItem());
         return;
     }
 
-    // 解放済みの人物を順番に描画
     items.forEach((item) => {
 
         const li = createListItem(
             item,
             selectedPersonId,
-            unreadPersonIds,
+            "person",
             selectPerson
         );
 
         personList.appendChild(li);
 
     });
+
 }
 
 // --------------------------------------------------
@@ -357,11 +358,12 @@ function addEvidence(item) {
     const li = createListItem(
         item,
         selectedEvidenceId,
-        unreadEvidenceIds,
+        "evidence",
         selectEvidence
     );
 
     appendListItem(evidenceList, li);
+
 }
 
 /**
@@ -374,30 +376,26 @@ function addPerson(item) {
     const li = createListItem(
         item,
         selectedPersonId,
-        unreadPersonIds,
+        "person",
         selectPerson
     );
 
     appendListItem(personList, li);
+
 }
 
 // --------------------------------------------------
 // 既読処理
 // --------------------------------------------------
 
-// 証拠を既読に
 /**
- * 証拠を既読状態に
+ * 証拠を既読にする
  * @param {number} id 証拠ID
  * @returns {void}
  */
 function markEvidenceRead(id) {
 
-    const index = unreadEvidenceIds.indexOf(id);
-
-    if (index !== -1) {
-        unreadEvidenceIds.splice(index, 1);
-    }
+    markRead("evidence", id);
 
     const li = evidenceList.querySelector(
         'li[data-id="' + id + '"]'
@@ -406,21 +404,17 @@ function markEvidenceRead(id) {
     if (li !== null) {
         li.classList.remove("new");
     }
+
 }
 
-// 人物を既読に
 /**
- * 人物を既読状態に
- * @param {number} id 人物ID
+ * 人物を既読にする
+ * @param {string} id 人物ID
  * @returns {void}
  */
 function markPersonRead(id) {
 
-    const index = unreadPersonIds.indexOf(id);
-
-    if (index !== -1) {
-        unreadPersonIds.splice(index, 1);
-    }
+    markRead("person", id);
 
     const li = personList.querySelector(
         'li[data-id="' + id + '"]'
@@ -429,112 +423,95 @@ function markPersonRead(id) {
     if (li !== null) {
         li.classList.remove("new");
     }
-}
 
+}
 
 // --------------------------------------------------
 // 選択状態の更新
 // --------------------------------------------------
 
 /**
- * 証拠リストの選択状態を更新します。
+ * リストの選択状態を更新
+ * @param {HTMLElement} list 対象リスト
+ * @param {number|string|null} selectedId 選択中のID
+ * @returns {void}
+ */
+function updateListSelection(list, selectedId) {
+
+    const buttons = list.querySelectorAll("button");
+
+    buttons.forEach((button) => {
+
+        const id = button.parentElement.dataset.id;
+
+        if (id === String(selectedId)) {
+            button.classList.add("active");
+        } else {
+            button.classList.remove("active");
+        }
+
+    });
+
+}
+
+/**
+ * 証拠リストの選択状態を更新
  * @returns {void}
  */
 function updateEvidenceSelection() {
 
-    const buttons = evidenceList.querySelectorAll("button");
+    updateListSelection(evidenceList, selectedEvidenceId);
 
-    buttons.forEach((button) => {
-
-        const id = Number(button.parentElement.dataset.id);
-
-        if (id === selectedEvidenceId) {
-            button.classList.add("active");
-        } else {
-            button.classList.remove("active");
-        }
-
-    });
 }
 
 /**
- * 人物リストの選択状態を更新します。
+ * 人物リストの選択状態を更新
  * @returns {void}
  */
 function updatePersonSelection() {
 
-    const buttons = personList.querySelectorAll("button");
+    updateListSelection(personList, selectedPersonId);
 
-    buttons.forEach((button) => {
-
-        const id = Number(button.parentElement.dataset.id);
-
-        if (id === selectedPersonId) {
-            button.classList.add("active");
-        } else {
-            button.classList.remove("active");
-        }
-
-    });
 }
+
 // --------------------------------------------------
 // 詳細表示
 // --------------------------------------------------
 
-// 選択中の証拠の詳細を表示
+/**
+ * 証拠の詳細を表示
+ * @param {Object|undefined} item 表示するデータ
+ * @returns {void}
+ */
 function renderEvidenceDetail(item) {
-    // 選択中のデータが存在しない場合は空に
+
     if (item === undefined) {
         evidenceTitle.textContent = "";
         evidenceDetail.innerHTML = "";
         return;
     }
 
-    // タイトルを設定
     evidenceTitle.textContent = item.name;
+    evidenceDetail.innerHTML = item.detail.join("<br>");
 
-    // 詳細を設定
-    let detail = '';
-
-    item.detail.forEach((text) => {
-
-        if (detail !== '') {
-            detail += '<br>';
-        }
-
-        detail += text;
-
-    });
-
-    evidenceDetail.innerHTML = detail;
 }
 
-// 選択中の人物の詳細を表示
+/**
+ * 人物の詳細を表示
+ * @param {Object|undefined} item 表示するデータ
+ * @returns {void}
+ */
 function renderPersonDetail(item) {
-    // 選択中のデータが存在しない場合は空に
+
     if (item === undefined) {
         personTitle.textContent = "";
         personDetail.innerHTML = "";
         return;
     }
 
-    // タイトルを設定
     personTitle.textContent = item.name;
+    personDetail.innerHTML = item.detail.join("<br>");
 
-    // 詳細を設定
-    let detail = '';
-
-    item.detail.forEach((text) => {
-
-        if (detail !== '') {
-            detail += '<br>';
-        }
-
-        detail += text;
-
-    });
-
-    personDetail.innerHTML = detail;
 }
 
 // --------------------------------------------------
@@ -549,7 +526,7 @@ function renderPersonDetail(item) {
  * @param {Object|undefined} item 表示するデータ
  * @param {string} side リストの位置
  * @param {Object} state アニメーション状態
- * @param {function(Object): void} renderFunction 描画関数
+ * @param {function(Object|undefined): void} renderFunction 描画関数
  * @returns {Promise<void>}
  */
 async function transitionDetail(
@@ -561,6 +538,7 @@ async function transitionDetail(
     state,
     renderFunction
 ) {
+
     // アニメーション番号を更新
     state.sequence++;
 
@@ -590,7 +568,6 @@ async function transitionDetail(
 
     if (hasContent) {
 
-        // リストと反対側へ移動
         let exitTransform = "translateX(24px)";
 
         if (side === "right") {
@@ -601,17 +578,17 @@ async function transitionDetail(
             [
                 {
                     transform: startTransform,
-                    opacity: startOpacity
+                    opacity: startOpacity,
                 },
                 {
                     transform: exitTransform,
-                    opacity: 0
-                }
+                    opacity: 0,
+                },
             ],
             {
                 duration: 180,
                 easing: "ease-in",
-                fill: "forwards"
+                fill: "forwards",
             }
         );
 
@@ -623,7 +600,6 @@ async function transitionDetail(
             return;
         }
 
-        // 途中で別の選択が行われていたら終了
         if (sequence !== state.sequence) {
             return;
         }
@@ -645,14 +621,12 @@ async function transitionDetail(
         return;
     }
 
-    // 選択状態
     panel.classList.remove("empty");
 
     // ----------------------------------------------
     // 新しい詳細をスライドイン
     // ----------------------------------------------
 
-    // リスト側から移動
     let enterTransform = "translateX(-24px)";
 
     if (side === "right") {
@@ -663,17 +637,17 @@ async function transitionDetail(
         [
             {
                 transform: enterTransform,
-                opacity: 0
+                opacity: 0,
             },
             {
                 transform: "translateX(0)",
-                opacity: 1
-            }
+                opacity: 1,
+            },
         ],
         {
             duration: 220,
             easing: "ease-out",
-            fill: "both"
+            fill: "both",
         }
     );
 
@@ -685,49 +659,49 @@ async function transitionDetail(
         return;
     }
 
-    // 途中で別の選択が行われていたら終了
     if (sequence !== state.sequence) {
         return;
     }
 
-    // アニメーションを解除して通常状態に戻す
     enterAnimation.cancel();
     state.animation = null;
+
 }
 
 // --------------------------------------------------
-// 選択状態の更新
+// 選択処理
 // --------------------------------------------------
 
 /**
  * 証拠を選択
- * @param {*} id
+ * @param {number} id 証拠ID
+ * @returns {void}
  */
 function selectEvidence(id) {
-    // ●アクティブ変更
+
+    // アクティブ変更
     if (selectedEvidenceId !== id) {
-        //
+
         selectedEvidenceId = id;
 
         // 既読にする
         markEvidenceRead(id);
 
-        // 「推理」ボタンを切り替え
-        inferenceButton.disabled = !(selectedPersonId != null);
+        // 推理ボタンを切り替え
+        inferenceButton.disabled = !(selectedPersonId !== null);
+
     }
-    // ●アクティブ解除
+    // アクティブ解除
     else {
-        //
+
         selectedEvidenceId = null;
 
-        // 「推理」ボタンを無効化
         inferenceButton.disabled = true;
+
     }
 
-    // 選択状態を更新
     updateEvidenceSelection();
 
-    // 詳細をアニメーション付きで更新
     transitionDetail(
         evidencePanel,
         evidenceTitle,
@@ -742,35 +716,34 @@ function selectEvidence(id) {
 
 /**
  * 人物を選択
- * @param {*} id
+ * @param {string} id 人物ID
+ * @returns {void}
  */
 function selectPerson(id) {
 
-    // ●アクティブ変更
+    // アクティブ変更
     if (selectedPersonId !== id) {
-        //
+
         selectedPersonId = id;
 
         // 既読にする
         markPersonRead(id);
 
-        // 「推理」ボタンを切り替え
-        inferenceButton.disabled = !(selectedEvidenceId != null);
+        // 推理ボタンを切り替え
+        inferenceButton.disabled = !(selectedEvidenceId !== null);
+
     }
-    // ●アクティブ解除
+    // アクティブ解除
     else {
-        //
+
         selectedPersonId = null;
 
-        // 「推理」ボタンを無効化
         inferenceButton.disabled = true;
 
     }
 
-    // 選択状態を更新
     updatePersonSelection();
 
-    // 詳細をアニメーション付きで更新
     transitionDetail(
         personPanel,
         personTitle,
@@ -784,13 +757,57 @@ function selectPerson(id) {
 }
 
 // --------------------------------------------------
+// アイテム解放
+// --------------------------------------------------
+
+/**
+ * 指定したアイテムを解放
+ * @param {string} type データの種類
+ * @param {number|string} id アイテムID
+ * @returns {boolean} 新規解放されたか
+ */
+function acquireItem(type, id) {
+
+    // データを取得
+    const item = getItemData(type, id);
+
+    // データが存在しない場合
+    if (item === undefined) {
+        return false;
+    }
+
+    // セーブデータに解放状態を登録
+    const unlocked = unlockItem(type, id);
+
+    // すでに解放済みの場合
+    if (!unlocked) {
+        return false;
+    }
+
+    // 画面に反映
+    if (type === "evidence") {
+        addEvidence(item);
+    }
+
+    if (type === "person") {
+        addPerson(item);
+    }
+
+    return true;
+
+}
+
+// --------------------------------------------------
 // 推理処理
 // --------------------------------------------------
 
-/** 選択中の証拠と人物の組み合わせから新しい項目を解放 @returns {void} */
+/**
+ * 選択中の証拠と人物から新しい情報を解放
+ * @returns {void}
+ */
 function executeInference() {
 
-    // どちらかが未選択なら処理しない。
+    // どちらかが未選択なら処理しない
     if (selectedEvidenceId === null) {
         return;
     }
@@ -800,99 +817,56 @@ function executeInference() {
     }
 
     // ----------------------------------------------
-    // 証拠の解放判定
+    // 推理条件の照合
     // ----------------------------------------------
 
-    evidenceData.forEach((item) => {
+    const results = inferenceData.filter((rule) => {
 
-        // needInferenceが設定されていない項目は対象外。
-        if (item.needInference === undefined) {
-            return;
+        if (rule.evidenceId !== selectedEvidenceId) {
+            return false;
         }
 
-        // needInferenceの形式を確認
-        if (!Array.isArray(item.needInference)) {
-            return;
+        if (rule.personId !== selectedPersonId) {
+            return false;
         }
 
-        // 証拠IDと人物IDの両方が一致するか確認
-        if (item.needInference[0] !== selectedEvidenceId) {
-            return;
-        }
-
-        if (item.needInference[1] !== selectedPersonId) {
-            return;
-        }
-
-        // すでに解放済みなら何もしない。
-        if (unlockedEvidenceIds.includes(item.id)) {
-            return;
-        }
-
-        // 証拠を解放
-        unlockedEvidenceIds.push(item.id);
-
-        // 未読として登録
-        unreadEvidenceIds.push(item.id);
-
-        // 証拠を追加
-        addEvidence(item);
+        return true;
 
     });
 
-
     // ----------------------------------------------
-    // 人物の解放判定
+    // 解放処理
     // ----------------------------------------------
 
-    personData.forEach((item) => {
+    results.forEach((rule) => {
 
-        // needInferenceが設定されていない項目は対象外。
-        if (item.needInference === undefined) {
+        if (!Array.isArray(rule.newInfo)) {
             return;
         }
 
-        // needInferenceの形式を確認
-        if (!Array.isArray(item.needInference)) {
-            return;
-        }
+        rule.newInfo.forEach((info) => {
 
-        // 証拠IDと人物IDの両方が一致するか確認
-        if (item.needInference[0] !== selectedEvidenceId) {
-            return;
-        }
+            acquireItem(info.type, info.id);
 
-        if (item.needInference[1] !== selectedPersonId) {
-            return;
-        }
-
-        // すでに解放済みなら何もしない。
-        if (unlockedPersonIds.includes(item.id)) {
-            return;
-        }
-
-        // 人物を解放
-        unlockedPersonIds.push(item.id);
-
-        // 未読として登録
-        unreadPersonIds.push(item.id);
-
-        // 人物を追加
-        addPerson(item);
+        });
 
     });
 
 }
 
-// --------------------------------------------------
+// ====================================================================================================
 // イベント設定
+// ====================================================================================================
+
+// --------------------------------------------------
+// 推理ボタン
 // --------------------------------------------------
 
-// 推理ボタン
 inferenceButton.addEventListener("click", () => {
-    executeInference();
-});
 
+    executeInference();
+
+});
 
 // ====================================================================================================
 // 初期化
@@ -914,12 +888,14 @@ renderPersonList();
 
 // 証拠
 renderEvidenceDetail(getEvidence(selectedEvidenceId));
+
 if (selectedEvidenceId === null) {
     evidencePanel.classList.add("empty");
 }
 
 // 人物
 renderPersonDetail(getPerson(selectedPersonId));
+
 if (selectedPersonId === null) {
     personPanel.classList.add("empty");
 }
