@@ -70,7 +70,7 @@ function loadSave() {
         }
 
         // 各カテゴリの配列を確認
-        const types = ["evidence", "person", "keyword"];
+        const types = ["evidence", "person"];
 
         types.forEach((type) => {
 
@@ -197,8 +197,26 @@ export function unlockItem(type, id) {
 }
 
 // --------------------------------------------------
-// 既読状態確認
+// 状態確認
 // --------------------------------------------------
+
+/**
+ * アイテムが取得済みか確認
+ * @param {string} type データの種類
+ * @param {number|string} id アイテムID
+ * @returns {boolean} 取得済みか
+ */
+export function isUnlocked(type, id) {
+
+    const ids = saveData.unlocked[type];
+
+    if (!Array.isArray(ids)) {
+        return false;
+    }
+
+    return ids.includes(id);
+
+}
 
 /**
  * アイテムが既読か確認

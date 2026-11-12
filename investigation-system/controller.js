@@ -24,6 +24,7 @@ import {
     getUnreadIds,
     unlockItem,
     markRead,
+    isUnlocked,
 } from "./save.js";
 
 // ====================================================================================================
@@ -483,35 +484,55 @@ function updatePersonSelection() {
  * @param {HTMLElement} detailElement 対象要素
  */
 function setKeyword(detailElement) {
-    //
+    // キーワード要素を取得
     const targets = detailElement.querySelectorAll(".keyword");
 
-    //
+    //　要素ごとに処理
     targets.forEach(target => {
 
-        // クリックイベント
-        target.addEventListener("click", () => {
-            // 証拠
-            const evidenceId = target.getAttribute("getEvidence");
-            if (evidenceId) {
-                // リストに追加
-                addEvidence(evidenceId);
+        // 証拠
+        const evidenceId = target.getAttribute("getEvidence");
+        if (evidenceId) {
+            console.dir(isUnlocked("evidence", evidenceId));
 
+            // ●未取得
+            if (!isUnlocked("evidence", evidenceId)) {
+                // クリックイベント
+                target.addEventListener("click", () => {
+                    // リストに追加
+                    acquireItem("evidence", evidenceId);
+
+                    // ボタンに獲得済みクラスを付与
+                    target.classList.add("get");
+                })
+            }
+            // ●取得済み
+            else {
                 // ボタンに獲得済みクラスを付与
                 target.classList.add("get");
             }
+        }
 
-            // 人物
-            const personId = target.getAttribute("getPerson");
-            if (personId) {
-                // リストに追加
-                addPerson(personId);
+        // 人物
+        const personId = target.getAttribute("getPerson");
+        if (personId) {
+            // ●未取得
+            if (!isUnlocked("person", personId)) {
+                // クリックイベント
+                target.addEventListener("click", () => {
+                    // リストに追加
+                    acquireItem("person", personId);
 
+                    // ボタンに獲得済みクラスを付与
+                    target.classList.add("get");
+                })
+            }
+            // ●取得済み
+            else {
                 // ボタンに獲得済みクラスを付与
                 target.classList.add("get");
             }
-
-        })
+        }
 
     });
 }

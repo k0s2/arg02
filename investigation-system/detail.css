@@ -37,6 +37,7 @@
             margin: 0;
             padding: 0;
             color: currentColor;
+            font-size: inherit;
             cursor: pointer;
             transition: color 0.25s;
 
