@@ -146,17 +146,23 @@
                 transform 0.25s ease;
 
             /* 新規 */
+            &::after {
+                content: "NEW";
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                border-radius: 8px;
+                color: var(--color-focus-1);
+                font-size: 12px;
+                font-weight: bold;
+                opacity: 0;
+                transition: opacity 0.25s ease;
+            }
+
+            /* 未読 */
             &.new {
                 &::after {
-                    content: "NEW";
-                    position: absolute;
-                    top: 8px;
-                    right: 8px;
-                    border-radius: 8px;
-                    color: var(--color-focus-1);
-                    font-size: 12px;
-                    font-weight: bold;
-                    pointer-events: none;
+                    opacity: 1;
                     animation: new-color 0.25s ease-in-out infinite alternate;
                 }
             }
