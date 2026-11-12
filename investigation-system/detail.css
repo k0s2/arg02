@@ -24,6 +24,7 @@
 
     /* テキスト */
     .text {
+
         padding: 8px;
         border: solid 1px var(--color-line);
         height: stretch;

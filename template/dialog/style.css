@@ -1,0 +1,186 @@
+:root {
+    --color-alert: #f44;
+}
+
+#dialog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 1;
+
+    transition: opacity 0.25s;
+
+    /* 注意 */
+    &.is-alert {
+        section {
+            .buttons {
+                button {
+                    min-width: 150px;
+
+                    &:first-child {
+                        --icon-size: 16px;
+                        --progress: 0%;
+
+                        position: relative;
+                        isolation: isolate;
+                        border: solid 2px var(--color-alert);
+
+                        /* ボタン：ホバー */
+                        @media (hover: hover) {
+                            &:hover {
+                                background-color: var(--color-alert);
+                                color: #fff;
+                            }
+                        }
+
+                        /* 長押し中 */
+                        &.is-holding {
+                            background-color: var(--color-alert);
+                            color: #fff;
+
+                            /* 長押しアイコン */
+                            &::after {
+                                --ring-width: 3px;
+                                --ring-softness: 1px;
+
+                                content: "";
+
+                                position: absolute;
+                                right: 8px;
+                                top: 50%;
+
+                                width: var(--icon-size);
+                                aspect-ratio: 1;
+
+                                background: conic-gradient(from 1deg, #fff var(--progress), transparent var(--progress));
+                                border-radius: 50%;
+                                mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-width)), #000 calc(100% - var(--ring-width) + var(--ring-softness)));
+
+                                transform: translateY(-50%);
+
+                                pointer-events: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.is-hidden {
+        opacity: 0;
+
+        section {
+            transform: scale(0.75);
+        }
+    }
+
+    section {
+        background: #fff;
+
+        padding: 24px;
+
+        color: #000;
+
+        transform: scale(1.0);
+        transition: opacity 0.25s, transform 0.25s;
+
+        /* スマホ用 */
+        @media (max-width: 479px) {
+            width: 100%;
+        }
+
+        h1 {
+            border-bottom: solid 1px #000;
+
+            margin: 0;
+
+            color: #000;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 8px;
+
+            margin: 24px 0 0 0;
+
+            button {
+                display: flex;
+                flex-direction: column;
+                margin: 0;
+                min-width: 100px;
+                border: solid 2px var(--color-main);
+
+                span {
+                    font-size: 0.5em;
+                }
+            }
+
+            /* スマホ用 */
+            @media (max-width: 479px) {
+                flex-direction: column;
+            }
+        }
+    }
+
+    &.is-mind {
+        background: rgba(255, 255, 255, 0.75);
+
+        section {
+            background: rgba(0, 0, 0, 0.75);
+            box-shadow: 0 0 30px 40px rgba(0, 0, 0, 0.75);
+            color: #fff;
+
+            h1 {
+                color: #fff;
+                border-color: #fff;
+            }
+
+            .buttons {
+                button {
+                    border: none;
+                }
+            }
+        }
+    }
+
+    &.is-system {
+        transition: none;
+
+        &.is-hidden {
+            display: none;
+        }
+
+        section {
+            border: solid 1px #444;
+            transition: none;
+
+            button {
+                background: #eee;
+                border: solid 1px #444;
+                border-radius: 0;
+                transition: none;
+
+                /* ホバー */
+                @media (hover: hover) {
+                    &:hover {
+                        opacity: 0.5;
+                        color: inherit;
+                    }
+                }
+            }
+        }
+    }
+
+}
