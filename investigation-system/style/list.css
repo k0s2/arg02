@@ -94,8 +94,8 @@
                 /* ホバー */
                 @media (hover: hover) {
                     &:hover {
-                        background-color: var(--color-focus-2);
-                        color: #004;
+                        background-color: var(--color-focus-1);
+                        color: var(--color-bg);
                     }
                 }
 
@@ -152,10 +152,11 @@
                 top: 8px;
                 right: 8px;
                 border-radius: 8px;
+                opacity: 0;
                 color: var(--color-focus-1);
                 font-size: 12px;
                 font-weight: bold;
-                opacity: 0;
+                pointer-events: none;
                 transition: opacity 0.25s ease;
             }
 
@@ -230,7 +231,7 @@
                 /* アクティブ */
                 &.active {
 
-                    color: #004;
+                    color: var(--color-bg);
 
                     /* グラデーションカバー */
                     &::after {

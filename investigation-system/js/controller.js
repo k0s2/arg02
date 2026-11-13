@@ -7,13 +7,13 @@
 // --------------------------------------------------
 
 // 証拠データ
-import evidenceData from "../data/evidence.js";
+import evidenceData from "../../data/evidence.js";
 
 // 人物データ
-import personData from "../data/person.js";
+import personData from "../../data/person.js";
 
 // 推理データ
-import inferenceData from "../data/inference.js";
+import inferenceData from "../../data/inference.js";
 
 // --------------------------------------------------
 // セーブデータ
@@ -291,6 +291,7 @@ function renderGroupedList(
         // グループ
         const groupElement = document.createElement("details");
         groupElement.className = "itemGroup";
+        groupElement.open = true;
         groupElement.dataset.groupId = String(group.id);
 
         // グループ名
