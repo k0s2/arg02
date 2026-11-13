@@ -14,7 +14,7 @@ import { initFavorite, getBoxMails, getMailStatus } from "../mail-common.js";
 
 import {
     flagOn,
-} from "../../js/save.js";
+} from "../../data/save.js";
 
 // ====================================================================================================
 // 初期化

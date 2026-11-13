@@ -4,7 +4,6 @@ body#mail {
     background-position: top;
     background-repeat: no-repeat;
 
-
     /* ロード中 */
     >p {
         display: flex;
@@ -177,7 +176,7 @@ body#mail {
                 }
 
                 .user {
-                    width: 10em;
+                    width: 17em;
                 }
 
                 .title {
@@ -206,8 +205,17 @@ body#mail {
 
                     /* ボタン */
                     button {
+                        border: none;
+                        border-radius: 100px;
                         margin: 0;
                         padding: 4px 16px;
+
+                        /* ホバー */
+                        @media (hover: hover) {
+                            &:hover {
+                                background: #ddf;
+                            }
+                        }
 
                         /* 間隔 */
                         &+button {

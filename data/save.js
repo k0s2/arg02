@@ -26,24 +26,20 @@ function createInitialSave() {
 
         // 証拠
         evidence: [
-
             // 古びた便箋
             {
                 id: "001",
                 read: false,
             },
-
         ],
 
         // 人物
         person: [
-
             // 谷戸　俊道
             {
                 id: "001",
                 read: false,
             },
-
         ],
 
         // メール
@@ -78,28 +74,13 @@ function loadSave() {
 
         // データ形式の確認
         if (
-            typeof parsedData.unlocked !== "object"
-            || parsedData.unlocked === null
-            || typeof parsedData.read !== "object"
-            || parsedData.read === null
+            !Array.isArray(parsedData.flag)
+            || !Array.isArray(parsedData.evidence)
+            || !Array.isArray(parsedData.person)
+            || !Array.isArray(parsedData.mail)
         ) {
             return createInitialSave();
         }
-
-        // 各カテゴリの配列を確認
-        const types = ["evidence", "person"];
-
-        types.forEach((type) => {
-
-            if (!Array.isArray(parsedData.unlocked[type])) {
-                parsedData.unlocked[type] = [];
-            }
-
-            if (!Array.isArray(parsedData.read[type])) {
-                parsedData.read[type] = [];
-            }
-
-        });
 
         return parsedData;
 
@@ -117,6 +98,7 @@ function loadSave() {
 // --------------------------------------------------
 
 function save() {
+
     // セーブデータ取得
     const json = JSON.stringify(saveData);
 
@@ -125,6 +107,7 @@ function save() {
 
     // セーブデータ更新イベントを発火
     window.dispatchEvent(new Event("saveupdated"));
+
 }
 
 // --------------------------------------------------
@@ -161,17 +144,19 @@ const saveData = loadSave();
 // --------------------------------------------------
 
 /**
- * 解放済みIDを取得
+ * 登録済みIDを取得
  * @param {string} type データの種類
- * @returns {Array} 解放済みID
+ * @returns {Array} 登録済みID
  */
 export function getUnlockedIds(type) {
 
-    if (!Array.isArray(saveData.unlocked[type])) {
+    const records = saveData[type];
+
+    if (!Array.isArray(records)) {
         return [];
     }
 
-    return saveData.unlocked[type].slice();
+    return records.map(item => item.id);
 
 }
 
@@ -182,22 +167,15 @@ export function getUnlockedIds(type) {
  */
 export function getUnreadIds(type) {
 
-    const unlockedIds = saveData.unlocked[type];
-    const readIds = saveData.read[type];
+    const records = saveData[type];
 
-    if (!Array.isArray(unlockedIds)) {
+    if (!Array.isArray(records)) {
         return [];
     }
 
-    if (!Array.isArray(readIds)) {
-        return [];
-    }
-
-    return unlockedIds.filter((id) => {
-
-        return !readIds.includes(id);
-
-    });
+    return records
+        .filter(item => !item.read)
+        .map(item => item.id);
 
 }
 
@@ -209,20 +187,23 @@ export function getUnreadIds(type) {
  */
 export function unlockItem(type, id) {
 
-    const ids = saveData.unlocked[type];
+    const records = saveData[type];
 
     // 対応していない種類なら処理しない
-    if (!Array.isArray(ids)) {
+    if (!Array.isArray(records)) {
         return false;
     }
 
     // 解放済みなら処理しない
-    if (ids.includes(id)) {
+    if (records.some(item => item.id == id)) {
         return false;
     }
 
     // 解放
-    ids.push(id);
+    records.push({
+        id,
+        read: false,
+    });
 
     // 保存
     save();
@@ -239,13 +220,13 @@ export function unlockItem(type, id) {
  */
 export function isUnlocked(type, id) {
 
-    const ids = saveData.unlocked[type];
+    const records = saveData[type];
 
-    if (!Array.isArray(ids)) {
+    if (!Array.isArray(records)) {
         return false;
     }
 
-    return ids.includes(id);
+    return records.some(item => item.id == id);
 
 }
 
@@ -257,13 +238,15 @@ export function isUnlocked(type, id) {
  */
 export function isRead(type, id) {
 
-    const ids = saveData.read[type];
+    const records = saveData[type];
 
-    if (!Array.isArray(ids)) {
+    if (!Array.isArray(records)) {
         return false;
     }
 
-    return ids.includes(id);
+    const target = records.find(item => item.id == id);
+
+    return target?.read ?? false;
 
 }
 
@@ -275,29 +258,28 @@ export function isRead(type, id) {
  */
 export function markRead(type, id) {
 
-    const unlockedIds = saveData.unlocked[type];
-    const readIds = saveData.read[type];
+    const records = saveData[type];
 
-    // 未解放のアイテムは既読にできない
-    if (!Array.isArray(unlockedIds)) {
+    // 対応していない種類なら処理しない
+    if (!Array.isArray(records)) {
         return;
     }
 
-    if (!unlockedIds.includes(id)) {
-        return;
-    }
+    // 対象アイテムを取得
+    const target = records.find(item => item.id == id);
 
-    if (!Array.isArray(readIds)) {
+    // 未取得なら処理しない
+    if (!target) {
         return;
     }
 
     // 既読済みなら何もしない
-    if (readIds.includes(id)) {
+    if (target.read) {
         return;
     }
 
     // 既読
-    readIds.push(id);
+    target.read = true;
 
     // 保存
     save();
@@ -314,6 +296,7 @@ export function markRead(type, id) {
  * @returns {boolean} 新規フラグか
  */
 export function flagOn(name) {
+
     // 既に立ってる？
     if (isFlagOn(name)) {
         return false;
@@ -356,14 +339,21 @@ export function getMailRecords() {
  * @param {string} id メールID
  * @param {string} date 受信・送信日
  * @param {boolean} read 既読状態
+ * @returns {boolean} 新規追加されたか
  */
 export function addMailRecord(type, id, date, read = false) {
+
+    // 対応していない種類なら処理しない
+    if (type != "receive" && type != "send") {
+        return false;
+    }
 
     // 登録済みなら処理しない
     if (saveData.mail.some(mail => mail.id == id)) {
         return false;
     }
 
+    // メールを追加
     saveData.mail.unshift({
         type,
         id,
@@ -372,15 +362,18 @@ export function addMailRecord(type, id, date, read = false) {
         read,
     });
 
+    // 保存
     save();
 
     return true;
+
 }
 
 /**
  * メール情報を更新
  * @param {string} id メールID
  * @param {Object} updates 更新内容
+ * @returns {boolean} 更新されたか
  */
 export function updateMailRecord(id, updates) {
 
@@ -392,9 +385,11 @@ export function updateMailRecord(id, updates) {
 
     Object.assign(mail, updates);
 
+    // 保存
     save();
 
     return true;
+
 }
 
 /**
@@ -403,5 +398,5 @@ export function updateMailRecord(id, updates) {
  * @returns {boolean} メールを受け取っているか
  */
 export function isReceivedMail(mailId) {
-    return saveData.mail.filter(item => (item.id == mailId)).length >= 1;
+    return saveData.mail.some(item => item.id == mailId && item.type == "receive");
 }

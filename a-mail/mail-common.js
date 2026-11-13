@@ -13,6 +13,8 @@ import {
     getMailRecords,
     addMailRecord,
     updateMailRecord,
+    flagOn,
+    isFlagOn,
 } from "../data/save.js";
 
 // ====================================================================================================
@@ -67,10 +69,10 @@ export function getBoxMails(box) {
  * メールIDの追加
  * @param {String} box "receive":受信ボックス / "send":送信ボックス
  * @param {String} id メールID
- * @param {Boolean} read 既読状態
  * @param {String} date 受信・送信日
+ * @param {Boolean} read 既読状態
  */
-export function addBoxMail(box, id, read = false, date = null) {
+export function addBoxMail(box, id, date = null, read = false) {
 
     // 受信・送信以外は処理しない
     if (box != "receive" && box != "send") {
@@ -292,4 +294,21 @@ export async function initFavorite() {
 
     });
 
+}
+
+// ====================================================================================================
+// 初期化
+// ====================================================================================================
+
+// 【ストーリー進行】
+if (isFlagOn("releaseMail") == false) {
+    // フラグ
+    flagOn("releaseMail");
+
+    // ３日前を取得
+    const date = getDate(-3);
+
+    // メール
+    addBoxMail("send", "s1001", date, true);
+    addBoxMail("receive", "r1001", date, true);
 }

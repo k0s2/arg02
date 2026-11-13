@@ -3,23 +3,23 @@
 // ====================================================================================================
 
 // ダイアログ
-import { showSystemDialog, showMindDialog } from "../../common/template/dialog/controler.js";
+import { showSystemDialog, showThinkDialog } from "../../template/dialog/controler.js";
 
 // メール情報
-import { getMails } from "../data/mail.js";
+import { getMails } from "../../data/mail.js";
 
 // 返信情報
-import { getReplyData } from "../data/reply.js";
+import { getReplyData } from "../../data/reply.js";
 
 // メール共通
-import { initFavorite, addBoxMail, setMailRead, getMailStatus, getBoxMails } from "../controler.js";
+import { initFavorite, addBoxMail, setMailRead, getMailStatus, getBoxMails } from "../mail-common.js";
 
 // ====================================================================================================
 // 準備
 // ====================================================================================================
 
 // 要素取得
-const targetDetail = document.querySelector("#area-main #detail");
+const targetDetail = document.getElementById("detail");
 
 // 表示中のメールID（URLから取得）
 const currentId = location.hash.slice(1);;
@@ -67,7 +67,7 @@ if (isReceive) {
             // 選択肢がある
             if (reply.length >= 1) {
                 // 選択ダイアログを表示
-                const result = await showMindDialog(
+                const result = await showThinkDialog(
                     "なんと返そうか？",
                     "返信する",
                     reply.map(item => item.text),
@@ -87,7 +87,7 @@ if (isReceive) {
             }
             // ●それ以外
             else {
-                showMindDialog("返信の必要は無いな。");
+                showThinkDialog("返信の必要は無いな。");
             }
         }
 
