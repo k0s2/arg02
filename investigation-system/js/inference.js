@@ -98,7 +98,7 @@ export async function executeInference(
         const namePerson = getItemData("person", selectedPersonId).name;
 
         // ダイアログ表示
-        const res = await showDialog("「" + nameEvidence + "」と「" + namePerson + "」の組み合わせに、関連性は無さそうだ。");
+        const res = await showDialog("「" + nameEvidence + "」と「" + namePerson + "」の組み合わせから、得られる情報は無さそうだ。");
 
         // 「閉じる」押下後
         if (res == 0) {

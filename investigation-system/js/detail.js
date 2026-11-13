@@ -60,6 +60,12 @@ function setKeyword(detailElement, acquireItem) {
 
                     target.classList.add("get");
 
+                    // 【ストーリー進行】チュートリアル
+                    if (isFlagOn("tutorial-4") == false) {
+                        flagOn("tutorial-3");
+                        setTutorial(3);
+                    }
+
                 });
 
             }

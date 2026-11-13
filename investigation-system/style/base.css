@@ -3,6 +3,11 @@ body#investigation-system {
     background: radial-gradient(#224, var(--color-bg));
     color: var(--color-font);
 
+    /* フォント */
+    * {
+        font-family: "appliMincho";
+    }
+
     /* 背景グリッド */
     &::before {
         content: "";

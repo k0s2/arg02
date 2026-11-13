@@ -83,8 +83,16 @@
 
         /* リンク */
         a {
-            color: var(--color-focus-1);
             text-decoration: underline;
+            transition: color 0.25s;
+
+            /* ホバー */
+            @media (hover: hover) {
+                &:hover {
+                    color: var(--color-main);
+                }
+            }
+
         }
 
     }

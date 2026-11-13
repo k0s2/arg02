@@ -14,11 +14,6 @@
     src: url("../font/SmartFontUI.otf");
 }
 
-/* デフォルト */
-* {
-    font-family: "appliMincho";
-}
-
 /* -------------------------------------------------- */
 /* スクロールバー変更 */
 /* -------------------------------------------------- */
@@ -140,6 +135,11 @@ header {
             text-align: center;
             transition: color 0.25s;
 
+            /* 非活性 */
+            &:not([href]) {
+                color: #888;
+            }
+
             /* アクティブ */
             &.active {
                 opacity: 1;
@@ -149,7 +149,7 @@ header {
 
             /* ホバー */
             @media (hover: hover) {
-                &:not(.disabled):hover {
+                &[href]:hover {
                     color: var(--color-focus-1);
                 }
             }

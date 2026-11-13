@@ -21,6 +21,9 @@ function createInitialSave() {
         // バージョン
         version: SAVE_VERSION,
 
+        // 進行フラグ
+        flag: [],
+
         // 取得済み
         unlocked: {
             evidence: [
@@ -37,8 +40,8 @@ function createInitialSave() {
             person: [],
         },
 
-        // 進行フラグ
-        flag: [],
+        // メール
+        mail: [],
 
     };
 
@@ -108,12 +111,34 @@ function loadSave() {
 // --------------------------------------------------
 
 function save() {
-    //
+    // セーブデータ取得
     const json = JSON.stringify(saveData);
 
-    //
+    // ローカルストレージに保存
     localStorage.setItem(SAVE_KEY, json);
+
+    // セーブデータ更新イベントを発火
+    window.dispatchEvent(new Event("saveupdated"));
 }
+
+// --------------------------------------------------
+// 他タブからのセーブデータ更新
+// --------------------------------------------------
+
+window.addEventListener("storage", (event) => {
+
+    // セーブデータ以外の変更は無視
+    if (event.key !== SAVE_KEY) {
+        return;
+    }
+
+    // 最新のセーブデータを読み込み
+    Object.assign(saveData, loadSave());
+
+    // 更新イベント
+    window.dispatchEvent(new Event("saveupdated"));
+
+});
 
 // --------------------------------------------------
 // セーブデータ本体
@@ -126,7 +151,7 @@ const saveData = loadSave();
 // ====================================================================================================
 
 // --------------------------------------------------
-// 解放済みID取得
+// 情報
 // --------------------------------------------------
 
 /**
@@ -143,10 +168,6 @@ export function getUnlockedIds(type) {
     return saveData.unlocked[type].slice();
 
 }
-
-// --------------------------------------------------
-// 未読ID取得
-// --------------------------------------------------
 
 /**
  * 未読IDを取得
@@ -173,10 +194,6 @@ export function getUnreadIds(type) {
     });
 
 }
-
-// --------------------------------------------------
-// アイテム解放
-// --------------------------------------------------
 
 /**
  * アイテムを解放
@@ -207,10 +224,6 @@ export function unlockItem(type, id) {
     return true;
 
 }
-
-// --------------------------------------------------
-// 状態確認
-// --------------------------------------------------
 
 /**
  * アイテムが取得済みか確認
@@ -247,10 +260,6 @@ export function isRead(type, id) {
     return ids.includes(id);
 
 }
-
-// --------------------------------------------------
-// 既読処理
-// --------------------------------------------------
 
 /**
  * アイテムを既読にする
@@ -321,4 +330,17 @@ export function flagOn(name) {
  */
 export function isFlagOn(name) {
     return saveData.flag.includes(name);
+}
+
+// --------------------------------------------------
+// メール
+// --------------------------------------------------
+
+/**
+ * メールを受け取っているか
+ * @param {string} mailId メールID
+ * @returns {boolean} メールを受け取っているか
+ */
+export function isReceivedMail(mailId) {
+    return saveData.mail.filter(item => (item.id == mailId)).length >= 1;
 }

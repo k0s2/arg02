@@ -6,7 +6,7 @@
 import { updateMailBadge } from "../js/common.js";
 
 // メール情報
-import { getMails } from "./data/mail.js";
+import { getMails } from "../data/mail.js";
 
 // ====================================================================================================
 // 共通メソッド
