@@ -1,5 +1,6 @@
 :root {
     --color-bg: #112;
+    --color-bg-alpha: #10102080;
 
     --color-main: rgb(50, 170, 255);
     --color-font: rgb(220, 220, 255);
@@ -16,7 +17,7 @@ body#investigation-system {
     flex-direction: column;
     margin: 0;
     height: 100svh;
-    background: radial-gradient(var(--color-bg), #224);
+    background: radial-gradient(#224, var(--color-bg));
     color: var(--color-font);
 
     /* 背景グリッド */

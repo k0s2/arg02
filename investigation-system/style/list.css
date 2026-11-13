@@ -190,7 +190,7 @@
                 width: 100%;
                 height: 100%;
                 padding: 8px;
-                background: linear-gradient(90deg, #000, #004);
+                background: var(--color-bg-alpha);
                 border: solid 1px var(--color-line);
                 border-radius: 8px;
                 color: var(--color-font);
@@ -199,46 +199,21 @@
                 transition: background-color 0.25s;
                 cursor: pointer;
                 transition:
+                    background-color 0.25s,
                     border-color 0.25s,
                     color 0.25s;
 
-                /* グラデーションカバー */
-                &::before,
-                &::after {
-                    content: "";
-                    position: absolute;
-                    inset: 0;
-                    z-index: -1;
-                    opacity: 0;
-                    transition: opacity 0.25s ease;
-                }
-
                 /* ホバー */
                 @media (hover: hover) {
-                    &:not(.active):hover {
-
+                    &:hover {
                         border-color: var(--color-focus-1);
-
-                        /* グラデーションカバー */
-                        &::before {
-                            background: linear-gradient(90deg, #004, #008);
-                            opacity: 1;
-                        }
-
                     }
                 }
 
                 /* アクティブ */
                 &.active {
-
+                    background-color: var(--color-font);
                     color: var(--color-bg);
-
-                    /* グラデーションカバー */
-                    &::after {
-                        background: linear-gradient(90deg, var(--color-focus-1), var(--color-focus-2));
-                        opacity: 1;
-                    }
-
                 }
 
                 /* 名称 */

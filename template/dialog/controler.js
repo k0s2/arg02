@@ -3,7 +3,7 @@
 // ====================================================================================================
 
 // テンプレート
-import { loadTemplate } from "../../controler.js";
+import { loadTemplate } from "../../common.js";
 
 // ====================================================================================================
 // ダイアログを閉じる
@@ -146,7 +146,7 @@ export async function showDialog(message, title = "", buttons = null, mode = 0) 
         // ●設定値あり
         if (message) {
             // 文字列を設定
-            p.textContent = message;
+            p.innerHTML = message;
         }
         // ●設定値なし
         else {
@@ -331,7 +331,7 @@ export async function showDialog(message, title = "", buttons = null, mode = 0) 
  * @param {String} title 見出し（省略可）
  * @param {[String]} buttons ボタン（省略可）
  */
-export async function showMindDialog(message, title = "", buttons = null) {
+export async function showThinkDialog(message, title = "", buttons = null) {
     // 思考モードで、既存のダイアログ表示処理を呼び出し
     return showDialog(message, title, buttons, 1);
 }

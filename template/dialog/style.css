@@ -6,17 +6,91 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
     position: fixed;
     inset: 0;
     z-index: 5000;
-
     background: rgba(0, 0, 0, 0.5);
     opacity: 1;
-
     transition: opacity 0.25s;
 
-    /* 注意 */
+    /* 無効化 */
+    &.is-hidden {
+
+        opacity: 0;
+        pointer-events: none;
+
+        section {
+            transform: scale(0.75);
+        }
+
+    }
+
+    /* セクション */
+    section {
+        background: #fff;
+
+        padding: 24px;
+
+        color: #000;
+
+        transform: scale(1.0);
+        transition: opacity 0.25s, transform 0.25s;
+
+        /* スマホ用 */
+        @media (max-width: 479px) {
+            width: 100%;
+        }
+
+        h1 {
+            border-bottom: solid 1px #000;
+
+            margin: 0;
+
+            color: #000;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 8px;
+
+            margin: 24px 0 0 0;
+
+            button {
+                display: flex;
+                flex-direction: column;
+                margin: 0;
+                padding: 8px;
+                min-width: 100px;
+                border: none;
+                border-radius: 100px;
+                cursor: pointer;
+                transition: background-color 0.25s;
+
+                span {
+                    font-size: 0.5em;
+                }
+
+                /* ホバー */
+                @media (hover: hover) {
+                    &:hover {
+                        background-color: var(--color-focus-1);
+                    }
+                }
+            }
+
+            /* スマホ用 */
+            @media (max-width: 479px) {
+                flex-direction: column;
+            }
+        }
+    }
+
+    /* 警告モード */
     &.is-alert {
         section {
             .buttons {
@@ -73,71 +147,13 @@
         }
     }
 
-    &.is-hidden {
-        opacity: 0;
-
-        section {
-            transform: scale(0.75);
-        }
-    }
-
-    section {
-        background: #fff;
-
-        padding: 24px;
-
-        color: #000;
-
-        transform: scale(1.0);
-        transition: opacity 0.25s, transform 0.25s;
-
-        /* スマホ用 */
-        @media (max-width: 479px) {
-            width: 100%;
-        }
-
-        h1 {
-            border-bottom: solid 1px #000;
-
-            margin: 0;
-
-            color: #000;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .buttons {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 8px;
-
-            margin: 24px 0 0 0;
-
-            button {
-                display: flex;
-                flex-direction: column;
-                margin: 0;
-                min-width: 100px;
-                border: solid 2px var(--color-main);
-
-                span {
-                    font-size: 0.5em;
-                }
-            }
-
-            /* スマホ用 */
-            @media (max-width: 479px) {
-                flex-direction: column;
-            }
-        }
-    }
-
+    /* 思考モード */
     &.is-mind {
+
         background: rgba(255, 255, 255, 0.75);
 
         section {
+
             background: rgba(0, 0, 0, 0.75);
             box-shadow: 0 0 30px 40px rgba(0, 0, 0, 0.75);
             color: #fff;
@@ -147,14 +163,10 @@
                 border-color: #fff;
             }
 
-            .buttons {
-                button {
-                    border: none;
-                }
-            }
         }
     }
 
+    /* システムモード */
     &.is-system {
         transition: none;
 

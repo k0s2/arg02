@@ -6,7 +6,7 @@
     position: relative;
     padding: 16px 24px;
     min-height: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--color-bg-alpha);
 
     /* リスト未選択 */
     &.empty {
@@ -93,7 +93,7 @@
         isolation: isolate;
         width: 120px;
         aspect-ratio: 1;
-        background: linear-gradient(#000, #004);
+        background: var(--color-bg-alpha);
         border: solid 1px var(--color-line);
         border-radius: 100%;
         opacity: 1;
@@ -108,28 +108,10 @@
             opacity 0.25s,
             transform 0.25s;
 
-        /* グラデーションカバー */
-        &::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-        }
-
         /* ホバー */
         @media (hover: hover) {
             &:hover {
-
                 border-color: var(--color-focus-1);
-
-                /* グラデーションカバー */
-                &::before {
-                    background: linear-gradient(#004, #008);
-                    opacity: 1;
-                }
-
             }
         }
 
