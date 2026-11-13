@@ -1,0 +1,243 @@
+/* -------------------------------------------------- */
+/* フォント */
+/* -------------------------------------------------- */
+
+/* なのゴシック */
+@font-face {
+    font-family: "appliMincho";
+    src: url("../font/AppliMincho.otf");
+}
+
+/* スマートフォント */
+@font-face {
+    font-family: "smartFont";
+    src: url("../font/SmartFontUI.otf");
+}
+
+/* デフォルト */
+* {
+    font-family: "appliMincho";
+}
+
+/* -------------------------------------------------- */
+/* スクロールバー変更 */
+/* -------------------------------------------------- */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-font) transparent;
+}
+
+/* -------------------------------------------------- */
+/* デフォルト修正 */
+/* -------------------------------------------------- */
+
+/* リンク */
+a {
+    color: currentColor;
+    text-decoration: none;
+}
+
+/* タブフォーカス */
+*:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px #4f4 !important;
+}
+
+/* -------------------------------------------------- */
+/* ローディング */
+/* -------------------------------------------------- */
+
+body {
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+body.loaded {
+    opacity: 1;
+}
+
+/* -------------------------------------------------- */
+/* 汎用 */
+/* -------------------------------------------------- */
+
+/* 斜体 */
+.italic {
+    display: inline-block;
+    transform: skewX(-15deg);
+}
+
+/* ==================================================================================================== */
+/* 共通 */
+/* ==================================================================================================== */
+
+:root {
+    --color-bg: #112;
+    --color-bg-alpha: #10102080;
+
+    --color-main: rgb(50, 170, 255);
+    --color-font: rgb(220, 220, 255);
+
+    --color-line: #448;
+
+    --color-focus-1: rgb(70, 220, 255);
+    --color-focus-2: rgb(65, 170, 200);
+}
+
+/* -------------------------------------------------- */
+/* ヘッダー＆フッター */
+/* -------------------------------------------------- */
+
+header,
+footer {
+
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    background: #000;
+    color: var(--color-main);
+    z-index: 9001;
+
+}
+
+/* -------------------------------------------------- */
+/* ヘッダー */
+/* -------------------------------------------------- */
+
+header {
+
+    /* タイトル */
+    h1 {
+
+        margin: 8px 0;
+        font-family: "smartFont";
+        letter-spacing: 0.1em;
+
+    }
+
+    /* リンクボタン */
+    .buttons {
+
+        display: flex;
+        align-items: center;
+        gap: 32px;
+
+        /* リンク */
+        a {
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 0 16px;
+            color: var(--color-main);
+            font-weight: bold;
+            text-align: center;
+            transition: color 0.25s;
+
+            /* アクティブ */
+            &.active {
+                opacity: 1;
+                border-bottom: solid 2px currentColor;
+                color: var(--color-focus-1);
+            }
+
+            /* ホバー */
+            @media (hover: hover) {
+                &:not(.disabled):hover {
+                    color: var(--color-focus-1);
+                }
+            }
+
+        }
+
+        /* セパレーター */
+        .separator {
+            content: "";
+            display: inline-block;
+            width: 1px;
+            height: 40px;
+            border-right: 1px solid var(--color-main);
+            transform: rotate(30deg);
+            vertical-align: middle;
+            opacity: 0.6;
+        }
+
+    }
+
+}
+
+/* -------------------------------------------------- */
+/* チュートリアル */
+/* -------------------------------------------------- */
+
+/* メイン領域 */
+#mainWrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* チュートリアル領域 */
+#tutorialWrapper {
+
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.25s ease;
+
+    /* 非表示 */
+    &.hidden {
+        grid-template-rows: 0fr;
+    }
+
+    /* チュートリアルバー */
+    .tutorial {
+
+        display: flex;
+        align-items: center;
+        padding: 4px 8px;
+        min-height: 0;
+        background: var(--color-font);
+        color: var(--color-bg);
+
+        /* タイトル */
+        .title {
+            opacity: 0.5;
+            margin-right: 16px;
+            font-family: "smartFont";
+        }
+
+        /* 段落 */
+        p {
+
+            margin: 0;
+            opacity: 1;
+            transition: opacity 0.25s;
+
+            /* 非表示 */
+            &.hidden {
+                opacity: 0;
+            }
+
+        }
+
+    }
+
+}
+
+/* -------------------------------------------------- */
+/* フッター */
+/* -------------------------------------------------- */
+
+footer {
+
+    justify-content: right;
+
+    /* 注意書き */
+    p {
+        margin: 8px 0;
+        font-size: 12px;
+    }
+
+}

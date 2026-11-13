@@ -7,6 +7,14 @@
 // --------------------------------------------------
 
 import {
+    setTutorial,
+} from "../../js/common.js";
+
+// --------------------------------------------------
+// ダイアログ
+// --------------------------------------------------
+
+import {
     showDialog,
     showThinkDialog
 } from "../../template/dialog/controler.js"
@@ -23,6 +31,15 @@ import {
     getItemData,
 } from "./data.js";
 
+// --------------------------------------------------
+// セーブデータ
+// --------------------------------------------------
+
+import {
+    flagOn,
+    isFlagOn,
+} from "../../js/save.js";
+
 // ====================================================================================================
 // 推理処理
 // ====================================================================================================
@@ -36,7 +53,7 @@ import {
  * @param {Function} addPerson 人物追加関数
  * @returns {void}
  */
-export function executeInference(
+export async function executeInference(
     selectedEvidenceId,
     selectedPersonId,
     acquireItem,
@@ -74,7 +91,18 @@ export function executeInference(
     // 不一致
     if (results.length == 0) {
         // ダイアログ表示
-        showDialog("この組み合わせに関連性は無さそうだ。");
+        const res = await showDialog("この組み合わせに関連性は無さそうだ。");
+
+        // 「閉じる」押下後
+        if (res == 0) {
+            // 【ストーリー進行】チュートリアル
+            if (isFlagOn("tutorial-3") == false) {
+                flagOn("tutorial-2");
+                setTutorial("詳細に隠された「キーワード」をクリックすることで、新たな情報を得られます。");
+            }
+        }
+
+        // 処理を中断
         return;
     }
 

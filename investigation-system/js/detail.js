@@ -16,7 +16,7 @@ import {
 
 import {
     isUnlocked,
-} from "./save.js";
+} from "../../js/save.js";
 
 // ====================================================================================================
 // キーワード設定
@@ -75,6 +75,12 @@ function setKeyword(detailElement, acquireItem) {
                     acquireItem("person", personId);
 
                     target.classList.add("get");
+
+                    // 【ストーリー進行】チュートリアル
+                    if (isFlagOn("tutorial-4") == false) {
+                        flagOn("tutorial-3");
+                        setTutorial("関連性のある「証拠」と「人物」をセットした状態で「推理」ボタンを押下すると、新たな情報が得られます。");
+                    }
 
                 });
 

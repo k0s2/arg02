@@ -65,14 +65,51 @@ export async function loadTemplate(baseUrl, containerSelector = null) {
 }
 
 // --------------------------------------------------
-// チュートリアルウィンドウ
+// チュートリアル
 // --------------------------------------------------
 
 /**
- * チュートリアルウィンドウ呼び出し
- * @param {HTMLElement} target 対象要素
- * @param {[String]} message 文章
+ * チュートリアルメッセージ表示
+ * @param {String} message 文章
  */
-export function showTutorial(target, message) {
+export async function setTutorial(message) {
+    // 親要素を取得
+    const tutorialElement = document.getElementById("tutorialWrapper");
 
+    // 子要素を取得
+    const p = tutorialElement.querySelector(".tutorial>p");
+
+    // 既に文章が設定されている場合
+    if (p.innerHTML != "") {
+        // 同じ文章の場合、処理を行わない
+        if (p.innerHTML == message) {
+            return
+        }
+
+        // 文章を消去
+        p.classList.add("hidden");
+
+        // transition完了を待機
+        await new Promise((resolve) => {
+            p.addEventListener("transitionend", resolve, { once: true });
+        });
+    }
+
+    // 文章を設定
+    p.innerHTML = message;
+    p.classList.remove("hidden");
+
+    // 親要素を表示
+    tutorialElement.classList.remove("hidden");
+}
+
+/**
+ * チュートリアルメッセージ非表示
+ */
+export function hideTutorial() {
+    // 親要素を取得
+    const tutorialElement = document.getElementById("tutorialWrapper");
+
+    // 親要素を表示
+    tutorialElement.classList.add("hidden");
 }

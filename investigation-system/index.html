@@ -6,12 +6,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="../style/common.css" />
     <link rel="stylesheet" href="./style/base.css" />
     <link rel="stylesheet" href="./style/detail.css" />
     <link rel="stylesheet" href="./style/list.css" />
 
-    <script type="module" src="../common.js"></script>
+    <script type="module" src="../js/common.js"></script>
     <script type="module" src="./js/controller.js"></script>
 
     <title>REMAINS 13 - 調査システム</title>
@@ -48,62 +48,75 @@
     <!-- メイン -->
     <!-- -------------------------------------------------- -->
 
-    <main>
+    <div id="mainWrapper">
 
-        <!-- 証拠 -->
-        <div class="pannel-left">
+        <!-- メインコンテンツ -->
+        <main>
 
-            <div class="listTitle">
-                証拠
-                <span class="subTitle">EVIDENCE</span>
-            </div>
+            <!-- 証拠 -->
+            <div class="pannel-left">
 
-            <div class="itemList">
-                <div class="groups"></div>
-            </div>
+                <div class="listTitle">
+                    証拠
+                    <span class="subTitle">EVIDENCE</span>
+                </div>
 
-        </div>
-
-        <!-- 詳細 -->
-        <div class="pannel-middle">
-
-            <div class="detail-evidence">
-                <h2></h2>
-                <div class="text"></div>
-            </div>
-
-            <div class="inference">
-                <button disabled>
-                    推理<span class="subTitle">INFERENCE</span>
-                </button>
-            </div>
-
-            <div class="detail-person">
-
-                <h2>
-                </h2>
-
-                <div class="text">
+                <div class="itemList">
+                    <div class="groups"></div>
                 </div>
 
             </div>
 
-        </div>
+            <!-- 詳細 -->
+            <div class="pannel-middle">
 
-        <!-- 人物 -->
-        <div class="pannel-right">
+                <div class="detail-evidence">
+                    <h2></h2>
+                    <div class="text"></div>
+                </div>
 
-            <div class="listTitle">
-                人物<span class="subTitle">PERSON</span>
+                <div class="inference">
+                    <button disabled>
+                        推理<span class="subTitle">INFERENCE</span>
+                    </button>
+                </div>
+
+                <div class="detail-person">
+
+                    <h2>
+                    </h2>
+
+                    <div class="text">
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="itemList">
-                <div class="groups"></div>
+            <!-- 人物 -->
+            <div class="pannel-right">
+
+                <div class="listTitle">
+                    人物<span class="subTitle">PERSON</span>
+                </div>
+
+                <div class="itemList">
+                    <div class="groups"></div>
+                </div>
+
             </div>
 
+        </main>
+
+        <!-- チュートリアルバー -->
+        <div id="tutorialWrapper" class="hidden">
+            <div class="tutorial">
+                <div class="title">TUTORIAL</div>
+                <p></p>
+            </div>
         </div>
 
-    </main>
+    </div>
 
     <!-- -------------------------------------------------- -->
     <!-- フッター -->

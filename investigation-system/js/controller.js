@@ -3,6 +3,14 @@
 // ====================================================================================================
 
 // --------------------------------------------------
+// 共通
+// --------------------------------------------------
+
+import {
+    setTutorial,
+} from "../../js/common.js";
+
+// --------------------------------------------------
 // データ読み込み
 // --------------------------------------------------
 
@@ -58,7 +66,9 @@ import {
 
 import {
     unlockItem,
-} from "./save.js";
+    flagOn,
+    isFlagOn,
+} from "../../js/save.js";
 
 // ====================================================================================================
 // 要素取得
@@ -287,6 +297,12 @@ function selectEvidence(id) {
         // 推理ボタンを切り替え
         inferenceButton.disabled = !(selectedPersonId !== null);
 
+        // 【ストーリー進行】チュートリアル
+        if (isFlagOn("tutorial-2") == false) {
+            flagOn("tutorial-1");
+            setTutorial("関連性のある「証拠」と「人物」をセットした状態で「推理」ボタンを押下すると、新たな情報が得られます。");
+        }
+
     }
     // アクティブ解除
     else {
@@ -328,6 +344,12 @@ function selectPerson(id) {
 
         // 推理ボタンを切り替え
         inferenceButton.disabled = !(selectedEvidenceId !== null);
+
+        // 【ストーリー進行】チュートリアル
+        if (isFlagOn("tutorial-2") == false) {
+            flagOn("tutorial-1");
+            setTutorial("関連性のある「証拠」と「人物」をセットした状態で「推理」ボタンを押下すると、新たな情報が得られます。");
+        }
 
     }
     // アクティブ解除
@@ -417,4 +439,21 @@ renderPersonDetailView(getPerson(selectedPersonId));
 
 if (selectedPersonId === null) {
     personPanel.classList.add("empty");
+}
+
+// --------------------------------------------------
+// 【ストーリー進行】チュートリアル
+// --------------------------------------------------
+
+if (isFlagOn("tutorial-1") == false) {
+    setTutorial("両サイドのリストから情報を選択すると、詳細を確認することができます。");
+}
+else if (isFlagOn("tutorial-2") == false) {
+    setTutorial("関連性のある「証拠」と「人物」をセットした状態で「推理」ボタンを押下すると、新たな情報が得られます。");
+}
+else if (isFlagOn("tutorial-3") == false) {
+    setTutorial("詳細に隠された「キーワード」をクリックすることで、新たな情報を得られます。");
+}
+else if (isFlagOn("tutorial-4") == false) {
+    setTutorial("関連性のある「証拠」と「人物」をセットした状態で「推理」ボタンを押下すると、新たな情報が得られます。");
 }
