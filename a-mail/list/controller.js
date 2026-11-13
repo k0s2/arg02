@@ -2,11 +2,8 @@
 // インポート
 // ====================================================================================================
 
-// 共通
-import { releaseMail } from "../../common/controler.js";
-
 // メール共通
-import { initFavorite, getBoxMails, addBoxMail, getMailStatus } from "../controler.js";
+import { initFavorite, getBoxMails, getMailStatus } from "../mail-common.js";
 
 // ====================================================================================================
 // 初期化
@@ -19,14 +16,7 @@ const currentCategory = location.hash.slice(1);
 const isSend = (currentCategory == "send");
 
 // 要素取得
-const targetList = document.querySelector("#area-main #list");
-
-// --------------------------------------------------
-// ボタン解放
-// --------------------------------------------------
-
-// 「メール」解放
-releaseMail();
+const targetList = document.getElementById("list");
 
 // --------------------------------------------------
 // メール情報を取得

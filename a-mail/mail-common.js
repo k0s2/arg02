@@ -3,7 +3,7 @@
 // ====================================================================================================
 
 // 共通
-import { updateMailBadge } from "../common/controler.js";
+import { updateMailBadge } from "../js/common.js";
 
 // メール情報
 import { getMails } from "./data/mail.js";
@@ -243,15 +243,4 @@ export async function initFavorite() {
         });
 
     });
-
-    // --------------------------------------------------
-    // ロード表示
-    // --------------------------------------------------
-
-    // ウェイト
-    await new Promise(resolve => setTimeout(resolve, 250));
-
-    // ロード完了
-    document.querySelector("#area-main>p").classList.add("is-hidden");
-    document.querySelector("#area-main>section").classList.remove("is-hidden");
 }

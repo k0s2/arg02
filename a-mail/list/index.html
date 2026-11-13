@@ -5,12 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script type="module" src="../../common/controler.js"></script>
-    <script type="module" src="../controler.js"></script>
-    <script type="module" src="./controler.js"></script>
+    <link rel="stylesheet" href="../../style/common.css" />
+    <link rel="stylesheet" href="../base.css" />
 
-    <link rel="stylesheet" href="../../common/style.css">
-    <link rel="stylesheet" href="../style.css">
+    <script type="module" src="../../js/common.js"></script>
+    <script type="module" src="../mail-common.js"></script>
+    <script type="module" src="./controller.js"></script>
 
     <title>怪異調査報告／Amail</title>
 </head>
@@ -27,11 +27,11 @@
 
         <div class="buttons">
 
-            <a class="active">推理</a>
+            <a href="../../investigation-system/" target="_blank">推理</a>
 
             <span class="separator"></span>
 
-            <a href="../a-mail/list/" target="_blank">メール</a>
+            <a class="active">メール</a>
 
             <span class="separator"></span>
 
@@ -47,58 +47,45 @@
 
     <main>
 
-        <div id="area-main">
+        <!-- サイドバー -->
+        <div id="sideBar">
 
-            <p>メール情報を取得しています……</p>
+            <h1>Amail</h1>
 
-            <section class="is-hidden">
+            <ul class="buttons">
 
-                <!-- サイドバー -->
-                <div id="sideBar">
+                <li id="button-receive">
+                    受信ボックス
+                    <span class="count"></span>
+                </li>
 
-                    <h1>Amail</h1>
+                <li id="button-send">
+                    送信ボックス
+                </li>
 
-                    <ul class="buttons">
+                <li id="button-favorite">
+                    お気に入り
+                </li>
 
-                        <li id="button-receive">
-                            受信ボックス
-                            <span class="count"></span>
-                        </li>
-
-                        <li id="button-send">
-                            送信ボックス
-                        </li>
-
-                        <li id="button-favorite">
-                            お気に入り
-                        </li>
-
-                    </ul>
-
-                </div>
-
-                <!-- メール本文 -->
-                <div id="mailContent">
-                    <div id="list">
-
-                        <div class="mailRow header">
-                            <div class="star"></div>
-                            <div class="user"></div>
-                            <div class="title">件名</div>
-                            <div class="date">受信日時</div>
-                        </div>
-
-                        <ul></ul>
-
-                    </div>
-                </div>
-
-            </section>
+            </ul>
 
         </div>
 
-        <!-- キーワードリスト -->
-        <div id="collectListContainer"></div>
+        <!-- メール本文 -->
+        <div id="mailContent">
+            <div id="list">
+
+                <div class="mailRow header">
+                    <div class="star"></div>
+                    <div class="user"></div>
+                    <div class="title">件名</div>
+                    <div class="date">受信日時</div>
+                </div>
+
+                <ul></ul>
+
+            </div>
+        </div>
 
     </main>
 

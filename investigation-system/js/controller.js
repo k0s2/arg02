@@ -300,7 +300,7 @@ function selectEvidence(id) {
         // 【ストーリー進行】チュートリアル
         if (isFlagOn("tutorial-2") == false) {
             flagOn("tutorial-1");
-            setTutorial("関連性のある「証拠」と「人物」をセットした状態で「推理」ボタンを押下すると、新たな情報が得られます。");
+            setTutorial(1);
         }
 
     }
@@ -348,7 +348,7 @@ function selectPerson(id) {
         // 【ストーリー進行】チュートリアル
         if (isFlagOn("tutorial-2") == false) {
             flagOn("tutorial-1");
-            setTutorial("関連性のある「証拠」と「人物」をセットした状態で「推理」ボタンを押下すると、新たな情報が得られます。");
+            setTutorial(1);
         }
 
     }
@@ -446,14 +446,14 @@ if (selectedPersonId === null) {
 // --------------------------------------------------
 
 if (isFlagOn("tutorial-1") == false) {
-    setTutorial("両サイドのリストから情報を選択すると、詳細を確認することができます。");
+    setTutorial(0);
 }
 else if (isFlagOn("tutorial-2") == false) {
-    setTutorial("関連性のある「証拠」と「人物」をセットした状態で「推理」ボタンを押下すると、新たな情報が得られます。");
+    setTutorial(1);
 }
 else if (isFlagOn("tutorial-3") == false) {
-    setTutorial("詳細に隠された「キーワード」をクリックすることで、新たな情報を得られます。");
+    setTutorial(2);
 }
 else if (isFlagOn("tutorial-4") == false) {
-    setTutorial("関連性のある「証拠」と「人物」をセットした状態で「推理」ボタンを押下すると、新たな情報が得られます。");
+    setTutorial(3);
 }

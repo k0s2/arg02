@@ -45,19 +45,6 @@ a {
 }
 
 /* -------------------------------------------------- */
-/* ローディング */
-/* -------------------------------------------------- */
-
-body {
-    opacity: 0;
-    transition: opacity 0.25s;
-}
-
-body.loaded {
-    opacity: 1;
-}
-
-/* -------------------------------------------------- */
 /* 汎用 */
 /* -------------------------------------------------- */
 
@@ -85,6 +72,24 @@ body.loaded {
 }
 
 /* -------------------------------------------------- */
+/* ボディ */
+/* -------------------------------------------------- */
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100svh;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+/* ロード完了 */
+body.loaded {
+    opacity: 1;
+}
+
+/* -------------------------------------------------- */
 /* ヘッダー＆フッター */
 /* -------------------------------------------------- */
 
@@ -96,7 +101,7 @@ footer {
     padding: 0 16px;
     background: #000;
     color: var(--color-main);
-    z-index: 9001;
+    z-index: 8001;
 
 }
 
@@ -168,6 +173,14 @@ header {
 }
 
 /* -------------------------------------------------- */
+/* メイン */
+/* -------------------------------------------------- */
+
+main {
+    flex: 1;
+}
+
+/* -------------------------------------------------- */
 /* チュートリアル */
 /* -------------------------------------------------- */
 
@@ -183,12 +196,13 @@ header {
 #tutorialWrapper {
 
     display: grid;
-    grid-template-rows: 1fr;
+    grid-template-rows: minmax(0, 1fr);
+    overflow: hidden;
     transition: grid-template-rows 0.25s ease;
 
     /* 非表示 */
     &.hidden {
-        grid-template-rows: 0fr;
+        grid-template-rows: minmax(0, 0fr);
     }
 
     /* チュートリアルバー */
@@ -197,9 +211,9 @@ header {
         display: flex;
         align-items: center;
         padding: 4px 8px;
-        min-height: 0;
         background: var(--color-font);
         color: var(--color-bg);
+        transition: background-color 0.25s;
 
         /* タイトル */
         .title {
@@ -224,6 +238,21 @@ header {
 
     }
 
+}
+
+/* 更新アニメ */
+.update {
+    animation: update 2.0s ease;
+}
+
+@keyframes update {
+    0% {}
+
+    50% {
+        background-color: var(--color-focus-1);
+    }
+
+    100% {}
 }
 
 /* -------------------------------------------------- */

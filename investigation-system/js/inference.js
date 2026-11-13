@@ -8,6 +8,7 @@
 
 import {
     setTutorial,
+    hideTutorial,
 } from "../../js/common.js";
 
 // --------------------------------------------------
@@ -90,15 +91,21 @@ export async function executeInference(
 
     // 不一致
     if (results.length == 0) {
+        // 証拠名
+        const nameEvidence = getItemData("evidence", selectedEvidenceId).name;
+
+        // 人物名
+        const namePerson = getItemData("person", selectedPersonId).name;
+
         // ダイアログ表示
-        const res = await showDialog("この組み合わせに関連性は無さそうだ。");
+        const res = await showDialog("「" + nameEvidence + "」と「" + namePerson + "」の組み合わせに、関連性は無さそうだ。");
 
         // 「閉じる」押下後
         if (res == 0) {
             // 【ストーリー進行】チュートリアル
             if (isFlagOn("tutorial-3") == false) {
                 flagOn("tutorial-2");
-                setTutorial("詳細に隠された「キーワード」をクリックすることで、新たな情報を得られます。");
+                setTutorial(2);
             }
         }
 
@@ -147,6 +154,17 @@ export async function executeInference(
                     textDialog += text;
                 })
                 showThinkDialog(textDialog);
+
+                // 【ストーリー進行】チュートリアル
+                if (isFlagOn("tutorial-5") == false) {
+                    flagOn("tutorial-1");
+                    flagOn("tutorial-2");
+                    flagOn("tutorial-3");
+                    flagOn("tutorial-4");
+                    flagOn("tutorial-5");
+                    hideTutorial();
+                }
+
             }
             else {
                 // ダイアログ表示

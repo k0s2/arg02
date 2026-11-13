@@ -1,10 +1,39 @@
+// ====================================================================================================
+// インポート
+// ====================================================================================================
+
 // --------------------------------------------------
-// ロード完了
+// データ
 // --------------------------------------------------
 
-document.fonts.ready.then(() => {
-    document.body.classList.add("loaded");
-});
+import tutorialMessage from "../data/tutorial.js";
+
+// ====================================================================================================
+// メソッド
+// ====================================================================================================
+
+// --------------------------------------------------
+// アニメーション再生
+// --------------------------------------------------
+
+/**
+ * アニメーション再生
+ * @param {HTMLElement} element アニメーション対象
+ * @param {string} className アニメーション用クラス
+ */
+function playAnimation(element, className) {
+    element.classList.remove(className);
+
+    // アニメーションを再実行できるようにリフローを発生させる
+    void element.offsetWidth;
+
+    element.classList.add(className);
+
+    element.addEventListener("animationend", function handler() {
+        element.classList.remove(className);
+        element.removeEventListener("animationend", handler);
+    }, { once: true });
+}
 
 // ====================================================================================================
 // 共通メソッド
@@ -65,19 +94,52 @@ export async function loadTemplate(baseUrl, containerSelector = null) {
 }
 
 // --------------------------------------------------
+// メール
+// --------------------------------------------------
+
+/**
+ * 新着メールバッジの更新
+ */
+export function updateMailBadge() {
+    const target = document.getElementById("buttonMail");
+
+    if (!target) {
+        return;
+    }
+
+    // 受信メールを取得
+    const mails = JSON.parse(localStorage.getItem("mail-receive") || "[]");
+
+    // 既読情報を取得
+    const status = JSON.parse(localStorage.getItem("mail-status") || "{}");
+
+    // 未読メールがあるか
+    const hasNewMail = mails.some(id => status[id]?.readed == false);
+
+    // バッジ表示
+    target.classList.toggle("has-new-mail", hasNewMail);
+}
+
+// --------------------------------------------------
 // チュートリアル
 // --------------------------------------------------
 
 /**
  * チュートリアルメッセージ表示
- * @param {String} message 文章
+ * @param {Number} messageId メッセージID
  */
-export async function setTutorial(message) {
+export async function setTutorial(messageId) {
+    // メッセージを取得
+    const message = tutorialMessage[messageId];
+
     // 親要素を取得
-    const tutorialElement = document.getElementById("tutorialWrapper");
+    const parent = document.getElementById("tutorialWrapper");
 
     // 子要素を取得
-    const p = tutorialElement.querySelector(".tutorial>p");
+    const child = parent.querySelector(".tutorial");
+
+    // 段落要素を取得
+    const p = child.querySelector("p");
 
     // 既に文章が設定されている場合
     if (p.innerHTML != "") {
@@ -99,8 +161,11 @@ export async function setTutorial(message) {
     p.innerHTML = message;
     p.classList.remove("hidden");
 
+    // 更新アニメーション
+    playAnimation(child, "update");
+
     // 親要素を表示
-    tutorialElement.classList.remove("hidden");
+    parent.classList.remove("hidden");
 }
 
 /**
@@ -108,8 +173,20 @@ export async function setTutorial(message) {
  */
 export function hideTutorial() {
     // 親要素を取得
-    const tutorialElement = document.getElementById("tutorialWrapper");
+    const parent = document.getElementById("tutorialWrapper");
 
     // 親要素を表示
-    tutorialElement.classList.add("hidden");
+    parent.classList.add("hidden");
 }
+
+// ====================================================================================================
+// 初期化
+// ====================================================================================================
+
+// --------------------------------------------------
+// ロード完了
+// --------------------------------------------------
+
+document.fonts.ready.then(() => {
+    document.body.classList.add("loaded");
+});

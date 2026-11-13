@@ -1,9 +1,5 @@
 body#investigation-system {
 
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    height: 100svh;
     background: radial-gradient(#224, var(--color-bg));
     color: var(--color-font);
 
@@ -27,7 +23,6 @@ body#investigation-system {
     main {
 
         display: flex;
-        flex: 1;
         padding: 16px 0;
         overflow: hidden;
 

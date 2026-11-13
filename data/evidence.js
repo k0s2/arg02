@@ -16,7 +16,7 @@ export default [
                 detail: [
                     'ばあちゃんの葬式が終わって、遺品整理をしてたら出てきた便箋だ。',
                     '「<button class="keyword" getPerson="002">亮介</button>」という名前が書かれている。',
-                    '一度開封された跡があるから、ばあちゃんはこれを読んでいたのだろう。',
+                    '開封された跡があるから、ばあちゃんはこれを読んでいたのだろう。',
                 ],
             },
 
@@ -25,7 +25,7 @@ export default [
                 name: "祖父の遺した手紙",
                 note: "古びた便箋の中身は、祖父の手紙だった",
                 detail: [
-                    '俊子、俊介、道江さん、そして俊道へ。',
+                    '<button class="keyword" getPerson="003">俊子</button>、<button class="keyword" getPerson="004">俊介</button>、<button class="keyword" getPerson="005">道江</button>さん、そして俊道へ。',
                     '',
                     'じいちゃんはもう帰って来られないだろう。',
                     '',
