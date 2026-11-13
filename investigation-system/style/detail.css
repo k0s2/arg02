@@ -16,6 +16,8 @@
     /* タイトル */
     h2 {
 
+        display: flex;
+        justify-content: space-between;
         margin: 0 0 8px 0;
         padding-left: 8px;
         border-left: solid 4px;
@@ -23,10 +25,14 @@
         line-height: 1;
 
         /* カテゴリー */
-        span {
-            background: currentColor;
-            padding: 4px 8px;
+        span.category {
+            display: flex;
+            align-items: center;
+            background: var(--color-font);
+            padding: 0 16px;
             color: var(--color-bg);
+            font-size: 10px;
+            font-weight: normal;
         }
 
     }
