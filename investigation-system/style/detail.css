@@ -81,6 +81,12 @@
 
         }
 
+        /* リンク */
+        a {
+            color: var(--color-focus-1);
+            text-decoration: underline;
+        }
+
     }
 
 }
