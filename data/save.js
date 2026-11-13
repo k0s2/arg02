@@ -215,7 +215,7 @@ export function unlockItem(type, id) {
 /**
  * アイテムが取得済みか確認
  * @param {string} type データの種類
- * @param {number|string} id アイテムID
+ * @param {number|string|Array} id アイテムID
  * @returns {boolean} 取得済みか
  */
 export function isUnlocked(type, id) {
@@ -226,6 +226,14 @@ export function isUnlocked(type, id) {
         return false;
     }
 
+    // 配列の場合はすべて取得済みか確認
+    if (Array.isArray(id)) {
+        return id.every(itemId =>
+            records.some(item => item.id == itemId)
+        );
+    }
+
+    // 単一IDの場合
     return records.some(item => item.id == id);
 
 }

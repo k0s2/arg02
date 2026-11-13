@@ -10,6 +10,15 @@ import {
     setTutorial,
 } from "../../js/common.js";
 
+
+// --------------------------------------------------
+// ダイアログ
+// --------------------------------------------------
+
+import {
+    showDialog,
+} from "../../template/dialog/controler.js"
+
 // --------------------------------------------------
 // データ取得
 // --------------------------------------------------
@@ -31,7 +40,6 @@ import {
 // ====================================================================================================
 // キーワード設定
 // ====================================================================================================
-
 /**
  * キーワード設定
  * @param {HTMLElement} detailElement 対象要素
@@ -39,79 +47,88 @@ import {
  * @returns {void}
  */
 function setKeyword(detailElement, acquireItem) {
-
     // キーワード要素を取得
     const targets = detailElement.querySelectorAll(".keyword");
 
     // 要素ごとに処理
     targets.forEach((target) => {
 
-        // 証拠
-        const evidenceId = target.getAttribute("getEvidence");
+        // 解放対象を取得
+        const items = [
+            {
+                type: "evidence",
+                ids: target.getAttribute("getEvidence"),
+            },
+            {
+                type: "person",
+                ids: target.getAttribute("getPerson"),
+            },
+        ];
 
-        if (evidenceId) {
+        // IDを配列化
+        items.forEach(item => {
 
-            // 未取得
-            if (!isUnlocked("evidence", evidenceId)) {
+            if (item.ids) {
+                item.ids = item.ids
+                    .split(",")
+                    .map(id => id.trim())
+                    .filter(id => id);
+            } else {
+                item.ids = [];
+            }
 
-                target.addEventListener("click", () => {
+        });
 
-                    acquireItem("evidence", evidenceId);
+        // 解放対象がなければ終了
+        const unlockItems = items.filter(item => item.ids.length > 0);
 
-                    target.classList.add("get");
+        if (unlockItems.length === 0) {
+            return;
+        }
 
-                    // 【ストーリー進行】チュートリアル
-                    if (isFlagOn("tutorial-4") == false) {
-                        flagOn("tutorial-3");
-                        setTutorial(3);
+        // すべて取得済みなら取得済み表示
+        const isComplete = () => unlockItems.every(item =>
+            isUnlocked(item.type, item.ids)
+        );
+
+        if (isComplete()) {
+            target.classList.add("get");
+            return;
+        }
+
+        // クリックイベント
+        target.addEventListener("click", () => {
+
+            let acquired = false;
+
+            // 未取得のアイテムをすべて解放
+            unlockItems.forEach(item => {
+
+                item.ids.forEach(id => {
+
+                    if (!isUnlocked(item.type, id)) {
+                        acquireItem(item.type, id);
+                        acquired = true;
                     }
 
                 });
 
-            }
-            // 取得済み
-            else {
+            });
 
+            // すべて取得済みなら取得済み表示
+            if (isComplete()) {
                 target.classList.add("get");
-
             }
 
-        }
-
-        // 人物
-        const personId = target.getAttribute("getPerson");
-
-        if (personId) {
-
-            // 未取得
-            if (!isUnlocked("person", personId)) {
-
-                target.addEventListener("click", () => {
-
-                    acquireItem("person", personId);
-
-                    target.classList.add("get");
-
-                    // 【ストーリー進行】チュートリアル
-                    if (isFlagOn("tutorial-4") == false) {
-                        flagOn("tutorial-3");
-                        setTutorial(3);
-                    }
-
-                });
-
-            }
-            // 取得済み
-            else {
-
-                target.classList.add("get");
-
+            // 【ストーリー進行】チュートリアル
+            if (acquired && isFlagOn("tutorial-4") == false) {
+                flagOn("tutorial-3");
+                setTutorial(3);
             }
 
-        }
+        });
 
     });
-
 }
 
 // ====================================================================================================
@@ -161,9 +178,21 @@ export function renderEvidenceDetail(item, title, detail, acquireItem) {
     renderDetailTitle(title, item, "evidence");
 
     detail.innerHTML = item.detail.join("<br>");
+    detail.scrollTo(0, 0);
 
     setKeyword(detail, acquireItem);
 
+    // --------------------------------------------------
+    // 特殊処理
+    // --------------------------------------------------
+
+    const targetSpecial = detail.querySelector(".dummyLink");
+
+    if (targetSpecial) {
+        targetSpecial.addEventListener("click", () => {
+            showDialog("既にインストールされています。");
+        })
+    }
 }
 
 /**
@@ -185,6 +214,7 @@ export function renderPersonDetail(item, title, detail, acquireItem) {
     renderDetailTitle(title, item, "person");
 
     detail.innerHTML = item.detail.join("<br>");
+    detail.scrollTo(0, 0);
 
     setKeyword(detail, acquireItem);
 

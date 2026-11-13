@@ -20,7 +20,7 @@ export default [
 
     // 「立花という人物」×「谷戸　道江」
     {
-        evidenceId: "201",
+        evidenceId: "003",
         personId: "005",
         newInfo: [
             // 「立花　幸男」

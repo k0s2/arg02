@@ -56,7 +56,7 @@
         overflow-y: auto;
 
         /* キーワード */
-        button.keyword {
+        button {
 
             background: none;
             border: none;
@@ -81,8 +81,21 @@
 
         }
 
-        /* リンク */
-        a {
+        /* メールタイトル */
+        .mailTitle {
+            display: inline-block;
+            margin-bottom: 8px;
+            padding: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            border-top: solid 1px var(--color-line);
+            border-bottom: solid 1px var(--color-line);
+            font-size: 12px;
+        }
+
+        /* ダミーリンク */
+        .dummyLink {
+            color: #a8f;
             text-decoration: underline;
             transition: color 0.25s;
 
@@ -92,7 +105,6 @@
                     color: var(--color-main);
                 }
             }
-
         }
 
     }
@@ -117,7 +129,7 @@
 
 /* 「推理」ボタン */
 .inference {
-    margin: 24px 0;
+    margin: 16px 0;
     text-align: center;
 
     /* ボタン */
