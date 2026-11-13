@@ -231,7 +231,6 @@
                 &.active {
 
                     color: #004;
-                    cursor: initial;
 
                     /* グラデーションカバー */
                     &::after {

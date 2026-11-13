@@ -61,14 +61,10 @@
 }
 
 /* 詳細エリア：証拠 */
-.detail-evidence {
-    margin-right: 40px;
-}
+.detail-evidence {}
 
 /* 詳細エリア：人物 */
-.detail-person {
-    margin-left: 40px;
-}
+.detail-person {}
 
 /* 「推理」ボタン */
 .inference {
