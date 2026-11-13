@@ -6,7 +6,10 @@
 // 共通
 // --------------------------------------------------
 
-import { showThinkDialog } from "../../template/dialog/controler.js"
+import {
+    showDialog,
+    showThinkDialog
+} from "../../template/dialog/controler.js"
 
 // --------------------------------------------------
 // データ
@@ -71,7 +74,7 @@ export function executeInference(
     // 不一致
     if (results.length == 0) {
         // ダイアログ表示
-        showThinkDialog("この組み合わせに関連性は無さそうだ。");
+        showDialog("この組み合わせに関連性は無さそうだ。");
         return;
     }
 

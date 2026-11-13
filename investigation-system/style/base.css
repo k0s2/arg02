@@ -138,6 +138,8 @@ body#investigation-system {
         /* パネル：左 */
         .pannel-left {
 
+            border-right: solid 1px var(--color-line);
+
             /* スクロールバー位置反転 */
             .itemList {
 
@@ -164,7 +166,7 @@ body#investigation-system {
 
         /* パネル：右 */
         .pannel-right {
-            justify-content: end;
+            border-left: solid 1px var(--color-line);
         }
 
     }

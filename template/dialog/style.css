@@ -10,6 +10,7 @@
     inset: 0;
     z-index: 5000;
     background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
     opacity: 1;
     transition: opacity 0.25s;
 
@@ -26,7 +27,7 @@
     }
 
     /* セクション */
-    section {
+    >section {
         background: #fff;
 
         padding: 24px;
@@ -66,10 +67,14 @@
                 margin: 0;
                 padding: 8px;
                 min-width: 100px;
+                background: var(--color-line);
                 border: none;
                 border-radius: 100px;
+                color: var(--color-font);
                 cursor: pointer;
-                transition: background-color 0.25s;
+                transition:
+                    color 0.25s,
+                    background-color 0.25s;
 
                 span {
                     font-size: 0.5em;
@@ -78,6 +83,7 @@
                 /* ホバー */
                 @media (hover: hover) {
                     &:hover {
+                        color: var(--color-bg);
                         background-color: var(--color-focus-1);
                     }
                 }

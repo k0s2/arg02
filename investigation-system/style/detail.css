@@ -8,6 +8,16 @@
     min-height: 0;
     background: var(--color-bg-alpha);
 
+    /* アロー */
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 100%;
+        color: var(--color-line);
+        font-size: 32px;
+    }
+
     /* リスト未選択 */
     &.empty {
         opacity: 0;
@@ -28,9 +38,9 @@
         span.category {
             display: flex;
             align-items: center;
-            background: var(--color-font);
+            background: var(--color-line);
             padding: 0 16px;
-            color: var(--color-bg);
+            color: var(--color-font);
             font-size: 10px;
             font-weight: normal;
         }
@@ -76,10 +86,20 @@
 }
 
 /* 詳細エリア：証拠 */
-.detail-evidence {}
+.detail-evidence {
+    &::before {
+        content: "》";
+        right: calc(100% - 24px);
+    }
+}
 
 /* 詳細エリア：人物 */
-.detail-person {}
+.detail-person {
+    &::before {
+        content: "《";
+        left: calc(100% - 24px);
+    }
+}
 
 /* 「推理」ボタン */
 .inference {

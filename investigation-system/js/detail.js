@@ -222,11 +222,7 @@ export async function transitionDetail(
 
     if (hasContent) {
 
-        let exitTransform = "translateX(24px)";
-
-        if (side === "right") {
-            exitTransform = "translateX(-24px)";
-        }
+        let exitTransform = "translateX(" + ((side === "right") ? "24" : "-24") + "px)";
 
         const exitAnimation = panel.animate(
             [
