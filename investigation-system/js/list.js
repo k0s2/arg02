@@ -10,7 +10,7 @@ import {
     getUnlockedIds,
     getUnreadIds,
     markRead,
-} from "../../js/save.js";
+} from "../../data/save.js";
 
 // ====================================================================================================
 // 要素取得

@@ -8,6 +8,13 @@ import { updateMailBadge } from "../js/common.js";
 // メール情報
 import { getMails } from "../data/mail.js";
 
+// セーブデータ
+import {
+    getMailRecords,
+    addMailRecord,
+    updateMailRecord,
+} from "../data/save.js";
+
 // ====================================================================================================
 // 共通メソッド
 // ====================================================================================================
@@ -29,32 +36,58 @@ function getDate(dayPlus = 0) {
 };
 
 /**
- *メール情報の取得
+ * メール情報の取得
  * @param {String} box "receive":受信ボックス / "send":送信ボックス / "favorite":お気に入り
+ * @returns {Object[]} メール情報の配列
  */
 export function getBoxMails(box) {
-    const ids = JSON.parse(localStorage.getItem("mail-" + box) || "[]");
-    return getMails(ids);
+
+    // メール管理データを取得
+    const records = getMailRecords();
+
+    // 対象メールを抽出
+    let targets = [];
+
+    switch (box) {
+        case "receive":
+        case "send":
+            targets = records.filter(mail => mail.type == box);
+            break;
+
+        case "favorite":
+            targets = records.filter(mail => mail.favorite);
+            break;
+    }
+
+    // メール情報を取得
+    return getMails(targets.map(mail => mail.id));
 }
 
 /**
  * メールIDの追加
- * @param {String} box "receive":受信ボックス / "send":送信ボックス / "favorite":お気に入り
+ * @param {String} box "receive":受信ボックス / "send":送信ボックス
  * @param {String} id メールID
- * @param {String} date メールID
+ * @param {Boolean} read 既読状態
+ * @param {String} date 受信・送信日
  */
-export function addBoxMail(box, id, readed = false, date = null) {
-    // 登録済みのメールIDを取得
-    const ids = JSON.parse(localStorage.getItem("mail-" + box) || "[]");
+export function addBoxMail(box, id, read = false, date = null) {
 
-    // 登録済みでない場合
-    if (!ids.includes(id)) {
-        // 追加
-        ids.unshift(id);
-        localStorage.setItem("mail-" + box, JSON.stringify(ids));
+    // 受信・送信以外は処理しない
+    if (box != "receive" && box != "send") {
+        return;
+    }
 
-        // 既読情報の登録
-        setMailRead(id, readed, date);
+    // メールを追加
+    const added = addMailRecord(
+        box,
+        id,
+        date || getDate(),
+        read,
+    );
+
+    // 新着メールバッジの更新
+    if (added) {
+        updateMailBadge();
     }
 }
 
@@ -63,12 +96,9 @@ export function addBoxMail(box, id, readed = false, date = null) {
  * @param {String} id メールID
  */
 export function addFavorite(id) {
-    const favorites = JSON.parse(localStorage.getItem("mail-favorite") || "[]");
-
-    if (!favorites.includes(id)) {
-        favorites.push(id);
-        localStorage.setItem("mail-favorite", JSON.stringify(favorites));
-    }
+    updateMailRecord(id, {
+        favorite: true,
+    });
 }
 
 /**
@@ -76,11 +106,9 @@ export function addFavorite(id) {
  * @param {String} id メールID
  */
 export function removeFavorite(id) {
-    let favorites = JSON.parse(localStorage.getItem("mail-favorite") || "[]");
-
-    favorites = favorites.filter(item => item !== id);
-
-    localStorage.setItem("mail-favorite", JSON.stringify(favorites));
+    updateMailRecord(id, {
+        favorite: false,
+    });
 }
 
 /**
@@ -89,9 +117,9 @@ export function removeFavorite(id) {
  * @returns {Boolean} お気に入り状態
  */
 export function isFavorite(id) {
-    const favorites = JSON.parse(localStorage.getItem("mail-favorite") || "[]");
+    const mail = getMailRecords().find(mail => mail.id == id);
 
-    return favorites.includes(id);
+    return mail?.favorite || false;
 }
 
 /**
@@ -100,47 +128,59 @@ export function isFavorite(id) {
  * @returns {Object} 既読情報
  */
 export function getMailStatus(id) {
-    const status = JSON.parse(localStorage.getItem("mail-status") || "{}");
-    return status[id] || null;
+    const mail = getMailRecords().find(mail => mail.id == id);
+
+    if (!mail) {
+        return null;
+    }
+
+    return {
+        readed: mail.read,
+        date: mail.date,
+    };
 }
 
 /**
  * 既読状態の変更
  * @param {String} id メールID
- * @param {Boolean} readed 既読状態(デフォルト：true)
+ * @param {Boolean} read 既読状態(デフォルト：true)
  */
-export function setMailRead(id, readed = true, date = null) {
-    const status = JSON.parse(localStorage.getItem("mail-status") || "{}");
+export function setMailRead(id, read = true) {
 
-    status[id] = {
-        readed,
-        date: date || getDate(),
-    };
-
-    localStorage.setItem("mail-status", JSON.stringify(status));
+    // 既読状態を更新
+    const updated = updateMailRecord(id, {
+        read,
+    });
 
     // 新着メールバッジの更新
-    updateMailBadge();
+    if (updated) {
+        updateMailBadge();
+    }
 }
 
 /**
  * 共通初期化処理
  */
 export async function initFavorite() {
+
     // カテゴリー（URLから取得）
     let currentCategory = location.hash.slice(1);
 
     // 詳細画面の場合
     if (location.href.includes("detail")) {
+
         // 一文字目を取得
         const type = currentCategory.charAt(0);
+
         switch (type) {
             case "r":
                 currentCategory = "receive";
                 break;
+
             case "s":
                 currentCategory = "send";
                 break;
+
             default:
         }
     }
@@ -191,22 +231,26 @@ export async function initFavorite() {
     // 新着件数を表示
     // --------------------------------------------------
 
-    // 受信ボックスを取得
-    let mails = getBoxMails("receive");
+    // 受信メールを取得
+    const mails = getMailRecords().filter(mail => mail.type == "receive");
 
     // 件数を取得
-    const countNew = mails.filter(mail => (!getMailStatus(mail.id).readed)).length;
+    const countNew = mails.filter(mail => !mail.read).length;
 
     // 描画
     const targetNew = document.querySelector("#button-receive .count");
-    targetNew.textContent = countNew || "";
-    targetNew.classList.toggle("new", countNew >= 1);
+
+    if (targetNew) {
+        targetNew.textContent = countNew || "";
+        targetNew.classList.toggle("new", countNew >= 1);
+    }
 
     // --------------------------------------------------
     // お気に入り
     // --------------------------------------------------
 
     const targetsFavorite = document.querySelectorAll(".mailRow:not(.header) > .star[favoriteId]");
+
     targetsFavorite.forEach(target => {
 
         // お気に入り済みか
@@ -225,22 +269,27 @@ export async function initFavorite() {
 
             // ●お気に入り済み
             if (isFavorite(favoriteId)) {
+
                 // お気に入り解除
                 removeFavorite(favoriteId);
 
                 // クラス除去
                 target.classList.remove("is-favorite");
+
             }
             // ●それ以外の場合
             else {
+
                 // お気に入り登録
                 addFavorite(favoriteId);
 
                 // クラス付与
                 target.classList.add("is-favorite");
+
             }
 
         });
 
     });
+
 }

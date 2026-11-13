@@ -24,21 +24,27 @@ function createInitialSave() {
         // 進行フラグ
         flag: [],
 
-        // 取得済み
-        unlocked: {
-            evidence: [
-                "001",
-            ],
-            person: [
-                "001",
-            ],
-        },
+        // 証拠
+        evidence: [
 
-        // 既読
-        read: {
-            evidence: [],
-            person: [],
-        },
+            // 古びた便箋
+            {
+                id: "001",
+                read: false,
+            },
+
+        ],
+
+        // 人物
+        person: [
+
+            // 谷戸　俊道
+            {
+                id: "001",
+                read: false,
+            },
+
+        ],
 
         // メール
         mail: [],
@@ -335,6 +341,61 @@ export function isFlagOn(name) {
 // --------------------------------------------------
 // メール
 // --------------------------------------------------
+
+/**
+ * メール情報を取得
+ * @returns {Object[]} メール情報
+ */
+export function getMailRecords() {
+    return saveData.mail;
+}
+
+/**
+ * メールを追加
+ * @param {string} type receive / send
+ * @param {string} id メールID
+ * @param {string} date 受信・送信日
+ * @param {boolean} read 既読状態
+ */
+export function addMailRecord(type, id, date, read = false) {
+
+    // 登録済みなら処理しない
+    if (saveData.mail.some(mail => mail.id == id)) {
+        return false;
+    }
+
+    saveData.mail.unshift({
+        type,
+        id,
+        date,
+        favorite: false,
+        read,
+    });
+
+    save();
+
+    return true;
+}
+
+/**
+ * メール情報を更新
+ * @param {string} id メールID
+ * @param {Object} updates 更新内容
+ */
+export function updateMailRecord(id, updates) {
+
+    const mail = saveData.mail.find(mail => mail.id == id);
+
+    if (!mail) {
+        return false;
+    }
+
+    Object.assign(mail, updates);
+
+    save();
+
+    return true;
+}
 
 /**
  * メールを受け取っているか

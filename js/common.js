@@ -14,37 +14,10 @@ import tutorialMessage from "../data/tutorial.js";
 
 import {
     isFlagOn,
-} from "../../js/save.js";
+} from "../data/save.js";
 
 // ====================================================================================================
-// メソッド
-// ====================================================================================================
-
-// --------------------------------------------------
-// アニメーション再生
-// --------------------------------------------------
-
-/**
- * アニメーション再生
- * @param {HTMLElement} element アニメーション対象
- * @param {string} className アニメーション用クラス
- */
-function playAnimation(element, className) {
-    element.classList.remove(className);
-
-    // アニメーションを再実行できるようにリフローを発生させる
-    void element.offsetWidth;
-
-    element.classList.add(className);
-
-    element.addEventListener("animationend", function handler() {
-        element.classList.remove(className);
-        element.removeEventListener("animationend", handler);
-    }, { once: true });
-}
-
-// ====================================================================================================
-// 共通メソッド
+// テンプレート読み込み
 // ====================================================================================================
 
 // --------------------------------------------------
@@ -133,6 +106,25 @@ export function updateMailBadge() {
 // --------------------------------------------------
 
 /**
+ * アニメーション再生
+ * @param {HTMLElement} element アニメーション対象
+ * @param {string} className アニメーション用クラス
+ */
+function playAnimation(element, className) {
+    element.classList.remove(className);
+
+    // アニメーションを再実行できるようにリフローを発生させる
+    void element.offsetWidth;
+
+    element.classList.add(className);
+
+    element.addEventListener("animationend", function handler() {
+        element.classList.remove(className);
+        element.removeEventListener("animationend", handler);
+    }, { once: true });
+}
+
+/**
  * チュートリアルメッセージ表示
  * @param {Number} messageId メッセージID
  */
@@ -188,7 +180,7 @@ export function hideTutorial() {
 }
 
 // ====================================================================================================
-// ヘッダーボタン
+// 初期化
 // ====================================================================================================
 
 /**
@@ -223,10 +215,6 @@ function releaseEnd() {
     // }
 }
 
-// ====================================================================================================
-// 初期化
-// ====================================================================================================
-
 // --------------------------------------------------
 // ヘッダーボタン更新：他タブ・ウィンドウの更新時
 // --------------------------------------------------
@@ -243,7 +231,7 @@ window.addEventListener("storage", (event) => {
 });
 
 // --------------------------------------------------
-// 画面表示時
+// ヘッダーボタン更新：画面表示時
 // --------------------------------------------------
 
 // メール
