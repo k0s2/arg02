@@ -101,13 +101,13 @@ export default [
 
             {
                 id: "302",
-                name: "ペンション　グアルディアーノ",
+                name: "ペンション・グアルディアーノ",
                 note: "立花が経営するペンション",
                 detail: [
                     '<button class="keyword" getEvidence="301">風路山</button>の麓にある、立花が経営するペンション。',
                     '客入りは少ないようだが、何故か１０年以上続いている。',
                     '',
-                    '連絡先は、<a href="../a-mail/list/#receive" target="_blank">guardiano@a-mail.co.jp</a>。',
+                    '連絡先は、<a href="../a-mail/list/#send" target="_blank">guardiano@a-mail.co.jp</a>。',
                 ],
             },
 

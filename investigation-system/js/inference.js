@@ -3,7 +3,7 @@
 // ====================================================================================================
 
 // --------------------------------------------------
-// 共通
+// 共通コントローラー
 // --------------------------------------------------
 
 import {
@@ -146,14 +146,7 @@ export async function executeInference(
                 }
 
                 // ダイアログ表示
-                let textDialog = "";
-                rule.dialog.forEach(text => {
-                    if (text != "") {
-                        textDialog += '<br>';
-                    }
-                    textDialog += text;
-                })
-                showThinkDialog(textDialog);
+                showThinkDialog(rule.dialog);
 
                 // 【ストーリー進行】チュートリアル
                 if (isFlagOn("tutorial-5") == false) {

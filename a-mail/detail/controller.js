@@ -2,6 +2,9 @@
 // インポート
 // ====================================================================================================
 
+// 共通コントローラー
+import { setInnerHtml } from "../../js/common.js";
+
 // ダイアログ
 import { showSystemDialog, showThinkDialog } from "../../template/dialog/controler.js";
 
@@ -127,7 +130,7 @@ targetDetail.querySelector("#mailInfo .title").innerHTML = data.title;
 targetDetail.querySelector("#mailInfo .date").innerHTML = getMailStatus(data.id).date;
 
 // 本文
-targetDetail.querySelector(".message>p").innerHTML = data.message;
+targetDetail.querySelector(".message>p").innerHTML = setInnerHtml(data.message);
 
 // 既読情報の登録
 setMailRead(data.id);

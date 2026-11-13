@@ -176,16 +176,16 @@ body#mail {
                 }
 
                 .user {
-                    width: 17em;
+                    flex: 1;
+                    max-width: 10em;
                 }
 
                 .title {
                     flex: 1;
-                    min-width: 0;
                 }
 
                 .date {
-                    width: 7em;
+                    width: 6em;
                 }
             }
 
