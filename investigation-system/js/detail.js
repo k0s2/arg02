@@ -346,29 +346,6 @@ export async function transitionDetail(
     const isDetailExpand = document.querySelector("." + classExpanded);
 
     // ----------------------------------------------
-    // 詳細拡大表示関連
-    // ----------------------------------------------
-
-    // ●スライドイン
-    if (item) {
-        // ●詳細エリア拡大中
-        if (isDetailExpand) {
-            // 拡大表示を解除
-            isDetailExpand.classList.remove(classNoTransition);
-            isDetailExpand.classList.remove(classExpanded);
-
-            // アニメーションウェイト
-            await waitDetailTransition(isDetailExpand);
-        }
-        // ●それ以外
-        else {
-            // 開く詳細を、最初から拡大表示にする
-            panel.classList.add(classNoTransition);
-            panel.classList.add(classExpanded);
-        }
-    }
-
-    // ----------------------------------------------
     // アニメーション準備
     // ----------------------------------------------
 
@@ -388,6 +365,29 @@ export async function transitionDetail(
         title.textContent !== ""
         || detail.innerHTML !== ""
     );
+
+    // ----------------------------------------------
+    // 詳細拡大表示関連
+    // ----------------------------------------------
+
+    // ●スライドイン
+    if (item) {
+        // ●既に詳細エリアが開かれている場合
+        if (isDetailExpand) {
+            // 拡大表示を解除
+            isDetailExpand.classList.remove(classNoTransition);
+            isDetailExpand.classList.remove(classExpanded);
+
+            // アニメーションウェイト
+            await waitDetailTransition(isDetailExpand);
+        }
+        // ●片方の詳細を開く場合
+        else if (!hasContent) {
+            // 開く詳細を、最初から拡大表示にする
+            panel.classList.add(classNoTransition);
+            panel.classList.add(classExpanded);
+        }
+    }
 
     // ----------------------------------------------
     // 古い詳細をスライドアウト
