@@ -298,6 +298,36 @@ export async function transitionDetail(
     state,
     renderFunction
 ) {
+    // ----------------------------------------------
+    // 詳細拡大表示関連
+    // ----------------------------------------------
+
+    // 拡大表示クラス
+    const classExpanded = ".is-expanded";
+
+    // 拡大表示中の詳細
+    const isDetailExpand = document.querySelector(classExpanded);
+
+    // TODO: ●スライドイン
+    if (true) {
+        // ●詳細エリア拡大中
+        if (isDetailExpand) {
+            // 縮小
+            isDetailExpand.classList.remove(classExpanded);
+
+            // TODO: アニメーション終了を待つ
+
+        }
+        // ●それ以外
+        else {
+            // TODO:　開く詳細を、最初から拡大表示にする
+
+        }
+    }
+
+    // ----------------------------------------------
+    // アニメーション準備
+    // ----------------------------------------------
 
     // アニメーション番号を更新
     state.sequence++;
