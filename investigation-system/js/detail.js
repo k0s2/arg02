@@ -225,6 +225,12 @@ export function renderPersonDetail(item, title, detail, acquireItem) {
 // 詳細切り替えアニメーション
 // ====================================================================================================
 
+// CSS：拡大表示
+const classExpanded = "is-expanded";
+
+// CSS:トランジションなし
+const classNoTransition = "no-transition";
+
 /**
  * CSSアニメーションを実行
  * @param {HTMLElement} panel 詳細パネル
@@ -243,6 +249,12 @@ function playDetailAnimation(panel, className, state) {
 
             if (state.animation === cancel) {
                 state.animation = null;
+            }
+
+            // 拡大表示関連クラス削除
+            if (className.includes("out")) {
+                panel.classList.remove(classNoTransition);
+                panel.classList.remove(classExpanded);
             }
 
             resolve(completed);
@@ -302,9 +314,6 @@ export async function transitionDetail(
     // TODO: 詳細拡大表示関連
     // ----------------------------------------------
 
-    // 拡大表示クラス
-    const classExpanded = "is-expanded";
-
     // 拡大表示中の詳細
     const isDetailExpand = document.querySelector("." + classExpanded);
 
@@ -321,7 +330,8 @@ export async function transitionDetail(
         // ●それ以外
         else {
             // 開く詳細を、最初から拡大表示にする
-
+            panel.classList.add("no-transition");
+            panel.classList.add(classExpanded);
         }
     }
 
