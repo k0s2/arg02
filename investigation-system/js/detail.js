@@ -419,6 +419,34 @@ export async function transitionDetail(
     }
 
     // ----------------------------------------------
+    // 残された詳細を拡大表示
+    // ----------------------------------------------
+
+    if (item === undefined && hasContent) {
+
+        // 残された詳細を取得
+        const otherPanel = panel.parentElement.querySelector(
+            panel.classList.contains("detail-evidence")
+                ? ".detail-person"
+                : ".detail-evidence"
+        );
+
+        // ●残された詳細が存在する
+        if (
+            otherPanel
+            && !otherPanel.classList.contains("empty")
+            && !otherPanel.classList.contains(classExpanded)
+        ) {
+            // トランジションなしクラスを除去
+            otherPanel.classList.remove(classNoTransition);
+
+            // 拡大表示
+            otherPanel.classList.add(classExpanded);
+        }
+
+    }
+
+    // ----------------------------------------------
     // 新しい詳細を設定
     // ----------------------------------------------
 
