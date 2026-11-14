@@ -22,9 +22,9 @@
     margin: 0 24px;
 
     transition:
-        top 0.3s ease-in-out,
-        bottom 0.3s ease-in-out,
-        opacity 0.3s ease-in-out;
+        top 0.25s ease-in-out,
+        bottom 0.25s ease-in-out,
+        opacity 0.25s ease-in-out;
 
     /* リスト未選択 */
     &.empty {

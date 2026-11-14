@@ -232,6 +232,28 @@ const classExpanded = "is-expanded";
 const classNoTransition = "no-transition";
 
 /**
+ * CSSトランジションの終了を待機
+ * @param {HTMLElement} element 対象要素
+ * @returns {Promise<void>}
+ */
+async function waitDetailTransition(element) {
+
+    // スタイルを反映
+    getComputedStyle(element).top;
+
+    // 実行中のトランジションを取得
+    const transitions = element.getAnimations();
+
+    // すべての終了を待機
+    await Promise.all(
+        transitions.map(animation =>
+            animation.finished.catch(() => { })
+        )
+    );
+
+}
+
+/**
  * CSSアニメーションを実行
  * @param {HTMLElement} panel 詳細パネル
  * @param {string} className アニメーションクラス
@@ -242,6 +264,7 @@ function playDetailAnimation(panel, className, state) {
 
     return new Promise(resolve => {
 
+        // 最終処理
         const finish = (completed) => {
 
             panel.removeEventListener("animationend", onAnimationEnd);
@@ -261,6 +284,7 @@ function playDetailAnimation(panel, className, state) {
 
         };
 
+        // アニメーション終了
         const onAnimationEnd = (event) => {
 
             if (event.target !== panel) {
@@ -275,6 +299,7 @@ function playDetailAnimation(panel, className, state) {
 
         };
 
+        // キャンセル
         const cancel = () => {
             finish(false);
         };
@@ -321,16 +346,19 @@ export async function transitionDetail(
     if (item) {
         // ●詳細エリア拡大中
         if (isDetailExpand) {
-            // 縮小
+            // 拡大表示を解除
+            isDetailExpand.classList.remove(classNoTransition);
             isDetailExpand.classList.remove(classExpanded);
 
-            // アニメーション終了を待つ
+            // アニメーションウェイト
+            await waitDetailTransition(isDetailExpand);
 
+            console.dir("wait-end");
         }
         // ●それ以外
         else {
             // 開く詳細を、最初から拡大表示にする
-            panel.classList.add("no-transition");
+            panel.classList.add(classNoTransition);
             panel.classList.add(classExpanded);
         }
     }
