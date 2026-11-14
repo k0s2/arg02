@@ -247,6 +247,11 @@
 /* アニメーション */
 /* -------------------------------------------------- */
 
+/* トランジションなし */
+.no-transition {
+    transition: none !important;
+}
+
 /* 左側パネル：スライドアウト */
 .slide-out-left {
     animation: detailSlideOutLeft 0.18s ease-in forwards;
