@@ -6,10 +6,25 @@
 
     flex: 1;
     position: relative;
+    margin: 0 24px;
 
     /* リスト未選択 */
     &.empty {
         opacity: 0;
+    }
+
+    /* 拡大表示 */
+    &.is-expanded {
+
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+
+        .content {
+            height: 100%;
+            box-sizing: border-box;
+        }
+
     }
 
     /* アロー */
