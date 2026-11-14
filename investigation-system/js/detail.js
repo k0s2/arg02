@@ -274,12 +274,6 @@ function playDetailAnimation(panel, className, state) {
                 state.animation = null;
             }
 
-            // 拡大表示関連クラス削除
-            if (className.includes("out")) {
-                panel.classList.remove(classNoTransition);
-                panel.classList.remove(classExpanded);
-            }
-
             resolve(completed);
 
         };
@@ -336,18 +330,14 @@ export async function transitionDetail(
     renderFunction
 ) {
     // ----------------------------------------------
-    // 要素取得
+    // 準備
     // ----------------------------------------------
-
-    // 推理ボタンを取得
-    const inferenceButton = document.querySelector(".inference button");
 
     // 拡大表示中の詳細
     const isDetailExpand = document.querySelector("." + classExpanded);
 
-    // ----------------------------------------------
-    // アニメーション準備
-    // ----------------------------------------------
+    // 推理ボタンを取得
+    const inferenceButton = document.querySelector(".inference button");
 
     // アニメーション番号を更新
     state.sequence++;
@@ -372,8 +362,11 @@ export async function transitionDetail(
 
     // ●スライドイン
     if (item) {
-        // ●既に詳細エリアが開かれている場合
-        if (isDetailExpand) {
+        // ●別の詳細エリアが開かれている場合
+        if (
+            isDetailExpand
+            && isDetailExpand !== panel
+        ) {
             // 拡大表示を解除
             isDetailExpand.classList.remove(classNoTransition);
             isDetailExpand.classList.remove(classExpanded);
@@ -382,7 +375,10 @@ export async function transitionDetail(
             await waitDetailTransition(isDetailExpand);
         }
         // ●片方の詳細を開く場合
-        else if (!hasContent) {
+        else if (
+            !hasContent
+            && !isDetailExpand
+        ) {
             // 開く詳細を、最初から拡大表示にする
             panel.classList.add(classNoTransition);
             panel.classList.add(classExpanded);
@@ -416,13 +412,20 @@ export async function transitionDetail(
             return;
         }
 
+        // 拡大表示関連のクラスを除去
+        panel.classList.remove(classNoTransition);
+        panel.classList.remove(classExpanded);
+
     }
 
     // ----------------------------------------------
     // 残された詳細を拡大表示
     // ----------------------------------------------
 
-    if (item === undefined && hasContent) {
+    if (
+        item === undefined
+        && hasContent
+    ) {
 
         // 残された詳細を取得
         const otherPanel = panel.parentElement.querySelector(
