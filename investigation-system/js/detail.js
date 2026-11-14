@@ -40,6 +40,7 @@ import {
 // ====================================================================================================
 // キーワード設定
 // ====================================================================================================
+
 /**
  * キーワード設定
  * @param {HTMLElement} detailElement 対象要素
@@ -225,6 +226,59 @@ export function renderPersonDetail(item, title, detail, acquireItem) {
 // ====================================================================================================
 
 /**
+ * CSSアニメーションを実行
+ * @param {HTMLElement} panel 詳細パネル
+ * @param {string} className アニメーションクラス
+ * @param {Object} state アニメーション状態
+ * @returns {Promise<boolean>}
+ */
+function playDetailAnimation(panel, className, state) {
+
+    return new Promise(resolve => {
+
+        const finish = (completed) => {
+
+            panel.removeEventListener("animationend", onAnimationEnd);
+            panel.classList.remove(className);
+
+            if (state.animation === cancel) {
+                state.animation = null;
+            }
+
+            resolve(completed);
+
+        };
+
+        const onAnimationEnd = (event) => {
+
+            if (event.target !== panel) {
+                return;
+            }
+
+            if (event.animationName === "") {
+                return;
+            }
+
+            finish(true);
+
+        };
+
+        const cancel = () => {
+            finish(false);
+        };
+
+        // アニメーション終了を監視
+        panel.addEventListener("animationend", onAnimationEnd);
+
+        // CSSクラスを付与
+        state.animation = cancel;
+        panel.classList.add(className);
+
+    });
+
+}
+
+/**
  * 詳細をアニメーション付きで切り替え
  * @param {HTMLElement} panel 詳細パネル
  * @param {HTMLElement} title タイトル
@@ -250,15 +304,9 @@ export async function transitionDetail(
 
     const sequence = state.sequence;
 
-    // 現在の表示状態を取得
-    const computedStyle = getComputedStyle(panel);
-
-    const startTransform = computedStyle.transform;
-    const startOpacity = computedStyle.opacity;
-
     // 実行中のアニメーションを停止
     if (state.animation !== null) {
-        state.animation.cancel();
+        state.animation();
         state.animation = null;
     }
 
@@ -274,40 +322,19 @@ export async function transitionDetail(
 
     if (hasContent) {
 
-        let exitTransform = "translateX(" + ((side === "right") ? "24" : "-24") + "px)";
+        const exitClass = side === "right"
+            ? "slide-out-right"
+            : "slide-out-left";
 
-        const exitAnimation = panel.animate(
-            [
-                {
-                    transform: startTransform,
-                    opacity: startOpacity,
-                },
-                {
-                    transform: exitTransform,
-                    opacity: 0,
-                },
-            ],
-            {
-                duration: 180,
-                easing: "ease-in",
-                fill: "forwards",
-            }
+        const completed = await playDetailAnimation(
+            panel,
+            exitClass,
+            state
         );
 
-        state.animation = exitAnimation;
-
-        try {
-            await exitAnimation.finished;
-        } catch (error) {
+        if (!completed || sequence !== state.sequence) {
             return;
         }
-
-        if (sequence !== state.sequence) {
-            return;
-        }
-
-        exitAnimation.cancel();
-        state.animation = null;
 
     }
 
@@ -329,43 +356,18 @@ export async function transitionDetail(
     // 新しい詳細をスライドイン
     // ----------------------------------------------
 
-    let enterTransform = "translateX(-24px)";
+    const enterClass = side === "right"
+        ? "slide-in-right"
+        : "slide-in-left";
 
-    if (side === "right") {
-        enterTransform = "translateX(24px)";
-    }
-
-    const enterAnimation = panel.animate(
-        [
-            {
-                transform: enterTransform,
-                opacity: 0,
-            },
-            {
-                transform: "translateX(0)",
-                opacity: 1,
-            },
-        ],
-        {
-            duration: 220,
-            easing: "ease-out",
-            fill: "both",
-        }
+    const completed = await playDetailAnimation(
+        panel,
+        enterClass,
+        state
     );
 
-    state.animation = enterAnimation;
-
-    try {
-        await enterAnimation.finished;
-    } catch (error) {
+    if (!completed || sequence !== state.sequence) {
         return;
     }
-
-    if (sequence !== state.sequence) {
-        return;
-    }
-
-    enterAnimation.cancel();
-    state.animation = null;
 
 }

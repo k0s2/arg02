@@ -177,3 +177,79 @@
 
     }
 }
+
+/* -------------------------------------------------- */
+/* 詳細切り替えアニメーション */
+/* -------------------------------------------------- */
+
+/* 左側パネル：スライドアウト */
+.slide-out-left {
+    animation: detailSlideOutLeft 0.18s ease-in forwards;
+}
+
+/* 右側パネル：スライドアウト */
+.slide-out-right {
+    animation: detailSlideOutRight 0.18s ease-in forwards;
+}
+
+/* 左側パネル：スライドイン */
+.slide-in-left {
+    animation: detailSlideInLeft 0.22s ease-out both;
+}
+
+/* 右側パネル：スライドイン */
+.slide-in-right {
+    animation: detailSlideInRight 0.22s ease-out both;
+}
+
+/* 左へスライドアウト */
+@keyframes detailSlideOutLeft {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-24px);
+    }
+}
+
+/* 右へスライドアウト */
+@keyframes detailSlideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+}
+
+/* 左からスライドイン */
+@keyframes detailSlideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 右からスライドイン */
+@keyframes detailSlideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
