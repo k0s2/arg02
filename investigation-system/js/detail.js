@@ -412,10 +412,6 @@ export async function transitionDetail(
             return;
         }
 
-        // 拡大表示関連のクラスを除去
-        panel.classList.remove(classNoTransition);
-        panel.classList.remove(classExpanded);
-
     }
 
     // ----------------------------------------------
@@ -472,7 +468,10 @@ export async function transitionDetail(
     // ----------------------------------------------
 
     // ●既に別の詳細が表示されていた場合
-    if (isDetailExpand) {
+    if (
+        isDetailExpand
+        && isDetailExpand !== panel
+    ) {
         // 活性化
         inferenceButton.disabled = false;
     }
