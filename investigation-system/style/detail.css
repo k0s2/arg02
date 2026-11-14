@@ -4,11 +4,12 @@
 
 /* パネル：中央 */
 .pannel-middle {
-    display: flex;
-    flex-direction: column;
+
     flex: 1;
+    min-height: 0;
     position: relative;
     overflow: hidden;
+
 }
 
 /* -------------------------------------------------- */
@@ -17,9 +18,15 @@
 
 [class|="detail"] {
 
-    flex: 1;
-    position: relative;
+    position: absolute;
+    left: 0;
+    right: 0;
     margin: 0 24px;
+
+    transition:
+        top 0.3s ease-in-out,
+        bottom 0.3s ease-in-out,
+        opacity 0.3s ease-in-out;
 
     /* リスト未選択 */
     &.empty {
@@ -28,16 +35,9 @@
 
     /* 拡大表示 */
     &.is-expanded {
-
-        position: absolute;
-        inset: 0;
+        top: 0;
+        bottom: 0;
         z-index: 1;
-
-        .content {
-            height: 100%;
-            box-sizing: border-box;
-        }
-
     }
 
     /* アロー */
@@ -56,7 +56,8 @@
         display: flex;
         flex-direction: column;
         padding: 16px 24px;
-        height: stretch;
+        height: 100%;
+        box-sizing: border-box;
         background: var(--color-bg-alpha);
 
         /* タイトル */
@@ -87,6 +88,7 @@
         .text {
 
             flex: 1;
+            min-height: 0;
             padding: 8px;
             border: solid 1px var(--color-line);
             overflow-y: auto;
@@ -154,10 +156,15 @@
 /* -------------------------------------------------- */
 
 .detail-evidence {
+
+    top: 0;
+    bottom: calc(50% + 76px);
+
     &::before {
         content: "》";
         right: calc(100% - 24px);
     }
+
 }
 
 /* -------------------------------------------------- */
@@ -165,10 +172,15 @@
 /* -------------------------------------------------- */
 
 .detail-person {
+
+    top: calc(50% + 76px);
+    bottom: 0;
+
     &::before {
         content: "《";
         left: calc(100% - 24px);
     }
+
 }
 
 /* -------------------------------------------------- */
@@ -176,8 +188,15 @@
 /* -------------------------------------------------- */
 
 .inference {
-    margin: 16px 0;
+
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 120px;
+    margin: 0;
     text-align: center;
+    transform: translateY(-50%);
 
     /* ボタン */
     button {
