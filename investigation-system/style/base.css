@@ -26,52 +26,9 @@ body#investigation-system {
     /* -------------------------------------------------- */
 
     main {
-
         display: flex;
         padding: 16px 0;
         overflow: hidden;
-
-        /* パネル：左／左 */
-        .pannel-left,
-        .pannel-right {
-            display: flex;
-            position: relative;
-            flex-direction: column;
-            width: 20%;
-        }
-
-        /* パネル：左 */
-        .pannel-left {
-
-            border-right: solid 1px var(--color-line);
-
-            /* スクロールバー位置反転 */
-            .itemList {
-
-                direction: rtl;
-
-                >* {
-                    direction: ltr;
-                }
-
-            }
-
-        }
-
-        /* パネル：中央 */
-        .pannel-middle {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* パネル：右 */
-        .pannel-right {
-            border-left: solid 1px var(--color-line);
-        }
-
     }
 
 }

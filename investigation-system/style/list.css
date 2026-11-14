@@ -1,3 +1,43 @@
+/* -------------------------------------------------- */
+/* パネル */
+/* -------------------------------------------------- */
+
+/* パネル：左／左 */
+.pannel-left,
+.pannel-right {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 20%;
+}
+
+/* パネル：左 */
+.pannel-left {
+
+    border-right: solid 1px var(--color-line);
+
+    /* スクロールバー位置反転 */
+    .itemList {
+
+        direction: rtl;
+
+        >* {
+            direction: ltr;
+        }
+
+    }
+
+}
+
+/* パネル：右 */
+.pannel-right {
+    border-left: solid 1px var(--color-line);
+}
+
+/* -------------------------------------------------- */
+/* リスト */
+/* -------------------------------------------------- */
+
 /* タイトル */
 .listTitle {
 
