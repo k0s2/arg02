@@ -336,11 +336,18 @@ export async function transitionDetail(
     renderFunction
 ) {
     // ----------------------------------------------
-    // TODO: 詳細拡大表示関連
+    // 要素取得
     // ----------------------------------------------
+
+    // 推理ボタンを取得
+    const inferenceButton = document.querySelector(".inference button");
 
     // 拡大表示中の詳細
     const isDetailExpand = document.querySelector("." + classExpanded);
+
+    // ----------------------------------------------
+    // 詳細拡大表示関連
+    // ----------------------------------------------
 
     // ●スライドイン
     if (item) {
@@ -352,8 +359,6 @@ export async function transitionDetail(
 
             // アニメーションウェイト
             await waitDetailTransition(isDetailExpand);
-
-            console.dir("wait-end");
         }
         // ●それ以外
         else {
@@ -390,9 +395,16 @@ export async function transitionDetail(
 
     if (hasContent) {
 
-        const exitClass = side === "right"
-            ? "slide-out-right"
-            : "slide-out-left";
+        // ●スライドアウト
+        if (item === undefined) {
+            // 「推理」ボタンの非活性化
+            inferenceButton.disabled = true;
+        }
+
+        const exitClass =
+            (side === "right")
+                ? "slide-out-right"
+                : "slide-out-left";
 
         const completed = await playDetailAnimation(
             panel,
@@ -410,15 +422,29 @@ export async function transitionDetail(
     // 新しい詳細を設定
     // ----------------------------------------------
 
+    //
     renderFunction(item);
 
-    // 選択解除
+    // ●スライドアウト
     if (item === undefined) {
+        // 非表示クラスを付与
         panel.classList.add("empty");
+
         return;
     }
 
+    // 非表示クラスを除去
     panel.classList.remove("empty");
+
+    // ----------------------------------------------
+    // 「推理」ボタンを表示
+    // ----------------------------------------------
+
+    // ●既に別の詳細が表示されていた場合
+    if (isDetailExpand) {
+        // 活性化
+        inferenceButton.disabled = false;
+    }
 
     // ----------------------------------------------
     // 新しい詳細をスライドイン

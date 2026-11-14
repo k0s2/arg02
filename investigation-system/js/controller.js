@@ -285,36 +285,30 @@ function renderPersonDetailView(item) {
  * @returns {void}
  */
 function selectEvidence(id) {
-
-    // アクティブ変更
+    // ●アクティブ変更
     if (selectedEvidenceId !== id) {
-
+        // アクティブ変更
         selectedEvidenceId = id;
 
         // 既読にする
         markEvidenceRead(id);
-
-        // 推理ボタンを切り替え
-        inferenceButton.disabled = !(selectedPersonId !== null);
 
         // 【ストーリー進行】チュートリアル
         if (isFlagOn("tutorial-2") == false) {
             flagOn("tutorial-1");
             setTutorial(1);
         }
-
     }
-    // アクティブ解除
+    // ●アクティブ解除
     else {
-
+        // アクティブ解除
         selectedEvidenceId = null;
-
-        inferenceButton.disabled = true;
-
     }
 
+    //
     updateEvidenceSelection(selectedEvidenceId);
 
+    //
     transitionDetail(
         evidencePanel,
         evidenceTitle,
@@ -324,7 +318,6 @@ function selectEvidence(id) {
         evidenceDetailAnimation,
         renderEvidenceDetailView
     );
-
 }
 
 /**
@@ -333,17 +326,13 @@ function selectEvidence(id) {
  * @returns {void}
  */
 function selectPerson(id) {
-
     // アクティブ変更
     if (selectedPersonId !== id) {
-
+        // アクティブ変更
         selectedPersonId = id;
 
         // 既読にする
         markPersonRead(id);
-
-        // 推理ボタンを切り替え
-        inferenceButton.disabled = !(selectedEvidenceId !== null);
 
         // 【ストーリー進行】チュートリアル
         if (isFlagOn("tutorial-2") == false) {
@@ -354,15 +343,14 @@ function selectPerson(id) {
     }
     // アクティブ解除
     else {
-
+        // アクティブ解除
         selectedPersonId = null;
-
-        inferenceButton.disabled = true;
-
     }
 
+    //
     updatePersonSelection(selectedPersonId);
 
+    //
     transitionDetail(
         personPanel,
         personTitle,
@@ -372,7 +360,6 @@ function selectPerson(id) {
         personDetailAnimation,
         renderPersonDetailView
     );
-
 }
 
 // ====================================================================================================
