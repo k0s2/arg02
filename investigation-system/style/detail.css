@@ -23,88 +23,97 @@
         opacity: 0;
     }
 
-    /* タイトル */
-    h2 {
+    /* コンテンツ */
+    .content {
 
         display: flex;
-        justify-content: space-between;
-        margin: 0 0 8px 0;
-        padding-left: 8px;
-        border-left: solid 4px;
-        font-size: 24px;
-        line-height: 1;
-
-        /* カテゴリー */
-        span.category {
-            display: flex;
-            align-items: center;
-            background: var(--color-line);
-            padding: 0 16px;
-            color: var(--color-font);
-            font-size: 10px;
-            font-weight: normal;
-        }
-
-    }
-
-    /* テキスト */
-    .text {
-
-        padding: 8px;
-        border: solid 1px var(--color-line);
+        flex-direction: column;
         height: stretch;
-        overflow-y: auto;
 
-        /* キーワード */
-        button {
+        /* タイトル */
+        h2 {
 
-            background: none;
-            border: none;
-            margin: 0;
-            padding: 0;
-            color: currentColor;
-            font-size: inherit;
-            cursor: pointer;
-            transition: color 0.25s;
+            display: flex;
+            justify-content: space-between;
+            margin: 0 0 8px 0;
+            padding-left: 8px;
+            border-left: solid 4px;
+            font-size: 24px;
+            line-height: 1;
 
-            /* 獲得済み */
-            &.get {
-                cursor: initial;
-            }
-
-            /* ホバー */
-            @media (hover: hover) {
-                &:not(.get):hover {
-                    color: var(--color-main);
-                }
+            /* カテゴリー */
+            span.category {
+                display: flex;
+                align-items: center;
+                background: var(--color-line);
+                padding: 0 16px;
+                color: var(--color-font);
+                font-size: 10px;
+                font-weight: normal;
             }
 
         }
 
-        /* メールタイトル */
-        .mailTitle {
-            display: inline-block;
-            margin-bottom: 8px;
-            padding: 4px;
-            width: 100%;
-            box-sizing: border-box;
-            border-top: solid 1px var(--color-line);
-            border-bottom: solid 1px var(--color-line);
-            font-size: 12px;
-        }
+        /* テキスト */
+        .text {
 
-        /* ダミーリンク */
-        .dummyLink {
-            color: #a8f;
-            text-decoration: underline;
-            transition: color 0.25s;
+            flex: 1;
+            padding: 8px;
+            border: solid 1px var(--color-line);
+            overflow-y: auto;
 
-            /* ホバー */
-            @media (hover: hover) {
-                &:hover {
-                    color: var(--color-main);
+            /* キーワード */
+            button {
+
+                background: none;
+                border: none;
+                margin: 0;
+                padding: 0;
+                color: currentColor;
+                font-size: inherit;
+                cursor: pointer;
+                transition: color 0.25s;
+
+                /* 獲得済み */
+                &.get {
+                    cursor: initial;
+                }
+
+                /* ホバー */
+                @media (hover: hover) {
+                    &:not(.get):hover {
+                        color: var(--color-main);
+                    }
+                }
+
+            }
+
+            /* メールタイトル */
+            .mailTitle {
+                display: inline-block;
+                margin-bottom: 8px;
+                padding: 4px;
+                width: 100%;
+                box-sizing: border-box;
+                border-top: solid 1px var(--color-line);
+                border-bottom: solid 1px var(--color-line);
+                font-size: 12px;
+            }
+
+            /* ダミーリンク */
+            .dummyLink {
+                color: #a8f;
+                text-decoration: underline;
+                transition: color 0.25s;
+
+                /* ホバー */
+                @media (hover: hover) {
+                    &:hover {
+                        color: var(--color-main);
+                    }
                 }
             }
+
         }
 
     }
