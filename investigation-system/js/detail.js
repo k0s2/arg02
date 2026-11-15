@@ -440,6 +440,13 @@ function playDetailAnimation(panel, className, state) {
             panel.removeEventListener("animationend", onAnimationEnd);
             panel.classList.remove(className);
 
+            // ●スライドアウト時
+            if (className.includes("out")) {
+                // 拡大表示を解除
+                panel.classList.remove(classNoTransition);
+                panel.classList.remove(classExpanded);
+            }
+
             //
             if (state.animation === cancel) {
                 state.animation = null;
@@ -504,16 +511,14 @@ async function transitionDetail(
     // 準備
     // ----------------------------------------------
 
+    // 詳細が開かれていない
+    const isDetailNothing = document.querySelectorAll(".empty").length >= 2;
+
     // 拡大表示中の詳細
     const isDetailExpand = document.querySelector("." + classExpanded);
 
     // 【推理】ボタンを取得
     const inferenceButton = document.querySelector(".inference button");
-
-    // 詳細が開かれていない
-    const isDetailNothing = document.querySelectorAll(".empty").length >= 2;
-    console.dir(document.querySelectorAll(".empty"));
-    console.dir(isDetailNothing);
 
     // アニメーション番号を更新
     state.sequence++;
