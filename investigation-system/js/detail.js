@@ -80,21 +80,28 @@ const personTitle = document.querySelector(".detail-person h2");
 // 説明文
 const personDetail = document.querySelector(".detail-person .text");
 
+// --------------------------------------------------
+// 【推理】ボタン
+// --------------------------------------------------
+
+const inferenceButton = document.querySelector(".inference button");
+
 // ====================================================================================================
 // 詳細アニメーション
 // ====================================================================================================
 
 // 【証拠】
 const evidenceDetailAnimation = {
-    sequence: 0,
     animation: null,
 };
 
 // 【人物】
 const personDetailAnimation = {
-    sequence: 0,
     animation: null,
 };
+
+// 切り替え処理番号
+let transitionSequence = 0;
 
 // ====================================================================================================
 // 選択中のデータ
@@ -386,7 +393,7 @@ function renderEvidenceDetailView(item) {
  * @returns {void}
  */
 function renderPersonDetailView(item) {
-    // 【【人物】】の詳細を表示
+    // 【人物】の詳細を表示
     renderPersonDetail(
         item,
         personTitle,
@@ -402,8 +409,44 @@ function renderPersonDetailView(item) {
 // CSS：拡大表示
 const classExpanded = "is-expanded";
 
-// CSS:トランジションなし
+// CSS：トランジションなし
 const classNoTransition = "no-transition";
+
+// ====================================================================================================
+// アニメーション制御
+// ====================================================================================================
+
+/**
+ * 現在の切り替え処理か確認
+ * @param {number} sequence 処理番号
+ * @returns {boolean}
+ */
+function isCurrentTransition(sequence) {
+    return sequence === transitionSequence;
+}
+
+/**
+ * 実行中のアニメーションを停止
+ * @param {Object} state アニメーション状態
+ * @returns {void}
+ */
+function cancelDetailAnimation(state) {
+    if (state.animation === null) {
+        return;
+    }
+
+    state.animation();
+    state.animation = null;
+}
+
+/**
+ * すべての詳細アニメーションを停止
+ * @returns {void}
+ */
+function cancelAllDetailAnimations() {
+    cancelDetailAnimation(evidenceDetailAnimation);
+    cancelDetailAnimation(personDetailAnimation);
+}
 
 /**
  * CSSトランジションの終了を待機
@@ -436,45 +479,46 @@ function playDetailAnimation(panel, className, state) {
     return new Promise(resolve => {
         // 最終処理
         const finish = (completed) => {
-            //
+            // イベント監視を解除
             panel.removeEventListener("animationend", onAnimationEnd);
+
+            // アニメーションクラスを解除
             panel.classList.remove(className);
 
-            // ●スライドアウト時
-            if (className.includes("out")) {
+            // スライドアウト完了時
+            if (completed && className.includes("out")) {
                 // 拡大表示を解除
                 panel.classList.remove(classNoTransition);
                 panel.classList.remove(classExpanded);
             }
 
-            //
+            // アニメーション状態を初期化
             if (state.animation === cancel) {
                 state.animation = null;
             }
 
-            // 解決
+            // 結果を返す
             resolve(completed);
         };
 
         // アニメーション終了
         const onAnimationEnd = (event) => {
-            //
+            // 子要素のイベントは無視
             if (event.target !== panel) {
                 return;
             }
 
-            //
+            // アニメーション名がない場合は無視
             if (event.animationName === "") {
                 return;
             }
 
-            // 最終処理の呼び出し
+            // 最終処理
             finish(true);
         };
 
         // キャンセル
         const cancel = () => {
-            // 最終処理の呼び出し
             finish(false);
         };
 
@@ -487,79 +531,240 @@ function playDetailAnimation(panel, className, state) {
     });
 }
 
+// ====================================================================================================
+// 詳細レイアウト
+// ====================================================================================================
+
 /**
- * 詳細をアニメーション付きで切り替え
+ * 詳細が両方とも空か確認
+ * @returns {boolean}
+ */
+function isDetailNothing() {
+    return (
+        evidencePanel.classList.contains("empty")
+        && personPanel.classList.contains("empty")
+    );
+}
+
+/**
+ * 拡大表示中の詳細を取得
+ * @returns {HTMLElement|null}
+ */
+function getExpandedDetail() {
+    if (evidencePanel.classList.contains(classExpanded)) {
+        return evidencePanel;
+    }
+
+    if (personPanel.classList.contains(classExpanded)) {
+        return personPanel;
+    }
+
+    return null;
+}
+
+/**
+ * 詳細を拡大表示
+ * @param {HTMLElement} panel 対象パネル
+ * @returns {void}
+ */
+function expandDetail(panel) {
+    panel.classList.remove(classNoTransition);
+    panel.classList.add(classExpanded);
+}
+
+/**
+ * 詳細の拡大表示を解除
+ * @param {HTMLElement} panel 対象パネル
+ * @returns {void}
+ */
+function collapseDetail(panel) {
+    panel.classList.remove(classNoTransition);
+    panel.classList.remove(classExpanded);
+}
+
+/**
+ * 詳細の拡大表示を準備
+ * @param {HTMLElement} panel 対象パネル
+ * @param {number} sequence 処理番号
+ * @returns {Promise<boolean>}
+ */
+async function prepareDetailLayout(panel, sequence) {
+    // 両方とも空の場合
+    if (isDetailNothing()) {
+        // 最初から拡大表示にする
+        panel.classList.add(classNoTransition);
+        panel.classList.add(classExpanded);
+
+        return true;
+    }
+
+    // 現在拡大表示中の詳細を取得
+    const expandedPanel = getExpandedDetail();
+
+    // 別の詳細が拡大表示中の場合
+    if (
+        expandedPanel
+        && expandedPanel !== panel
+    ) {
+        // 拡大表示を解除
+        collapseDetail(expandedPanel);
+
+        // トランジション終了を待機
+        await waitDetailTransition(expandedPanel);
+
+        // 古い処理なら終了
+        if (!isCurrentTransition(sequence)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * 閉じた詳細に合わせてレイアウトを更新
+ * @param {HTMLElement} panel 閉じたパネル
+ * @returns {void}
+ */
+function updateDetailLayout(panel) {
+    // 残された詳細を取得
+    const otherPanel = panel === evidencePanel
+        ? personPanel
+        : evidencePanel;
+
+    // 残された詳細が存在する場合
+    if (!otherPanel.classList.contains("empty")) {
+        // 残された詳細を拡大表示
+        expandDetail(otherPanel);
+        return;
+    }
+
+    // 両方とも空の場合は拡大表示を解除
+    collapseDetail(panel);
+}
+
+/**
+ * 推理ボタンの状態を更新
+ * @returns {void}
+ */
+function updateInferenceButton() {
+    inferenceButton.disabled = (
+        evidencePanel.classList.contains("empty")
+        || personPanel.classList.contains("empty")
+    );
+}
+
+// ====================================================================================================
+// 詳細切り替え
+// ====================================================================================================
+
+/**
+ * 詳細をスライドアウト
+ * @param {HTMLElement} panel 対象パネル
+ * @param {string} side リストの位置
+ * @param {Object} state アニメーション状態
+ * @param {number} sequence 処理番号
+ * @returns {Promise<boolean>}
+ */
+async function slideOutDetail(panel, side, state, sequence) {
+    // クラス設定
+    const className = side === "right"
+        ? "slide-out-right"
+        : "slide-out-left";
+
+    // アニメーション実行
+    const completed = await playDetailAnimation(
+        panel,
+        className,
+        state
+    );
+
+    // 完了状態と処理番号を確認
+    return completed && isCurrentTransition(sequence);
+}
+
+/**
+ * 詳細をスライドイン
+ * @param {HTMLElement} panel 対象パネル
+ * @param {string} side リストの位置
+ * @param {Object} state アニメーション状態
+ * @param {number} sequence 処理番号
+ * @returns {Promise<boolean>}
+ */
+async function slideInDetail(panel, side, state, sequence) {
+    // クラス設定
+    const className = side === "right"
+        ? "slide-in-right"
+        : "slide-in-left";
+
+    // アニメーション実行
+    const completed = await playDetailAnimation(
+        panel,
+        className,
+        state
+    );
+
+    // 完了状態と処理番号を確認
+    return completed && isCurrentTransition(sequence);
+}
+
+/**
+ * 詳細を描画して表示状態を更新
+ * @param {HTMLElement} panel 対象パネル
+ * @param {Object|undefined} item 表示するデータ
+ * @param {Function} renderFunction 描画関数
+ * @returns {void}
+ */
+function updateDetailContent(panel, item, renderFunction) {
+    // 詳細を描画
+    renderFunction(item);
+
+    // 表示状態を更新
+    if (item === undefined) {
+        panel.classList.add("empty");
+    } else {
+        panel.classList.remove("empty");
+    }
+
+    // 推理ボタンを更新
+    updateInferenceButton();
+}
+
+/**
+ * 詳細切り替え処理
  * @param {HTMLElement} panel 詳細パネル
- * @param {HTMLElement} title タイトル
- * @param {HTMLElement} detail 詳細本文
  * @param {Object|undefined} item 表示するデータ
  * @param {string} side リストの位置
  * @param {Object} state アニメーション状態
  * @param {Function} renderFunction 描画関数
+ * @param {number} sequence 処理番号
  * @returns {Promise<void>}
  */
-async function transitionDetail(
+async function runDetailTransition(
     panel,
-    title,
-    detail,
     item,
     side,
     state,
-    renderFunction
+    renderFunction,
+    sequence
 ) {
-    // ----------------------------------------------
-    // 準備
-    // ----------------------------------------------
-
-    // 詳細が開かれていない
-    const isDetailNothing = document.querySelectorAll(".empty").length >= 2;
-
-    // 拡大表示中の詳細
-    const isDetailExpand = document.querySelector("." + classExpanded);
-
-    // 【推理】ボタンを取得
-    const inferenceButton = document.querySelector(".inference button");
-
-    // アニメーション番号を更新
-    state.sequence++;
-
-    const sequence = state.sequence;
-
-    // 実行中のアニメーションを停止
-    if (state.animation !== null) {
-        state.animation();
-        state.animation = null;
-    }
-
-    // 現在詳細が表示されているか
-    const hasContent = (
-        title.textContent !== ""
-        || detail.innerHTML !== ""
-    );
+    // 現在の表示内容を確認
+    const hasContent = !panel.classList.contains("empty");
 
     // ----------------------------------------------
-    // 詳細拡大表示関連
+    // 詳細拡大表示の準備
     // ----------------------------------------------
 
-    // ●スライドイン
-    if (item) {
-        // ●片方の詳細を開く場合
-        if (isDetailNothing) {
-            // 開く詳細を、最初から拡大表示にする
-            panel.classList.add(classNoTransition);
-            panel.classList.add(classExpanded);
-        }
-        // ●別の詳細エリアが開かれている場合
-        else if (
-            isDetailExpand
-            && isDetailExpand !== panel
-        ) {
-            // 拡大表示を解除
-            isDetailExpand.classList.remove(classNoTransition);
-            isDetailExpand.classList.remove(classExpanded);
+    // 新しい詳細を開く場合
+    if (item !== undefined) {
+        const prepared = await prepareDetailLayout(
+            panel,
+            sequence
+        );
 
-            // アニメーションウェイト
-            await waitDetailTransition(isDetailExpand);
+        // 古い処理なら終了
+        if (!prepared || !isCurrentTransition(sequence)) {
+            return;
         }
     }
 
@@ -567,115 +772,92 @@ async function transitionDetail(
     // 古い詳細をスライドアウト
     // ----------------------------------------------
 
-    // ●詳細が表示されている
     if (hasContent) {
-        // ●スライドアウト
-        if (item === undefined) {
-            // 【推理】ボタンの非活性化
-            inferenceButton.disabled = true;
-        }
-
-        // クラス設定
-        const exitClass =
-            (side === "right")
-                ? "slide-out-right"
-                : "slide-out-left";
-
-        //
-        const completed = await playDetailAnimation(
+        // スライドアウト
+        const completed = await slideOutDetail(
             panel,
-            exitClass,
-            state
+            side,
+            state,
+            sequence
         );
 
-        //
-        if (!completed || sequence !== state.sequence) {
+        // 古い処理なら終了
+        if (!completed) {
             return;
         }
     }
 
     // ----------------------------------------------
-    // 残された詳細を拡大表示
+    // 詳細内容を更新
     // ----------------------------------------------
 
-    // ●
-    if (
-        item === undefined
-        && hasContent
-    ) {
-        // 残された詳細を取得
-        const otherPanel = panel.parentElement.querySelector(
-            panel.classList.contains("detail-evidence")
-                ? ".detail-person"
-                : ".detail-evidence"
-        );
-
-        // ●残された詳細が存在する
-        if (
-            otherPanel
-            && !otherPanel.classList.contains("empty")
-            && !otherPanel.classList.contains(classExpanded)
-        ) {
-            // トランジションなしクラスを除去
-            otherPanel.classList.remove(classNoTransition);
-
-            // 拡大表示
-            otherPanel.classList.add(classExpanded);
-        }
-    }
-
-    // ----------------------------------------------
-    // 新しい詳細を設定
-    // ----------------------------------------------
-
-    //
-    renderFunction(item);
-
-    // ●スライドアウト
-    if (item === undefined) {
-        // 非表示クラスを付与
-        panel.classList.add("empty");
-
+    // 古い処理なら終了
+    if (!isCurrentTransition(sequence)) {
         return;
     }
 
-    // 非表示クラスを除去
-    panel.classList.remove("empty");
+    updateDetailContent(
+        panel,
+        item,
+        renderFunction
+    );
 
     // ----------------------------------------------
-    // 【推理】ボタンを表示
+    // 詳細を閉じる
     // ----------------------------------------------
 
-    // ●既に別の詳細が表示されていた場合
-    if (
-        isDetailExpand
-        && isDetailExpand !== panel
-        && !isDetailNothing
-    ) {
-        // 活性化
-        inferenceButton.disabled = false;
+    if (item === undefined) {
+        updateDetailLayout(panel);
+        updateInferenceButton();
+
+        return;
     }
 
     // ----------------------------------------------
     // 新しい詳細をスライドイン
     // ----------------------------------------------
 
-    // クラスを設定
-    const enterClass = side === "right"
-        ? "slide-in-right"
-        : "slide-in-left";
-
-    //
-    const completed = await playDetailAnimation(
+    await slideInDetail(
         panel,
-        enterClass,
-        state
+        side,
+        state,
+        sequence
     );
+}
 
-    //
-    if (!completed || sequence !== state.sequence) {
-        return;
-    }
+/**
+ * 詳細切り替えを開始
+ * @param {HTMLElement} panel 詳細パネル
+ * @param {Object|undefined} item 表示するデータ
+ * @param {string} side リストの位置
+ * @param {Object} state アニメーション状態
+ * @param {Function} renderFunction 描画関数
+ * @returns {void}
+ */
+function transitionDetail(
+    panel,
+    item,
+    side,
+    state,
+    renderFunction
+) {
+    // 切り替え処理番号を更新
+    transitionSequence++;
+
+    const sequence = transitionSequence;
+
+    // 実行中のアニメーションを停止
+    cancelAllDetailAnimations();
+
+    // 切り替え処理を実行
+    runDetailTransition(
+        panel,
+        item,
+        side,
+        state,
+        renderFunction,
+        sequence
+    );
 }
 
 // ====================================================================================================
@@ -708,14 +890,12 @@ export function selectEvidence(id) {
         selectedEvidenceId = null;
     }
 
-    //
+    // リストの選択状態を更新
     updateEvidenceSelection(selectedEvidenceId);
 
-    //
+    // 詳細を切り替え
     transitionDetail(
         evidencePanel,
-        evidenceTitle,
-        evidenceDetail,
         getEvidence(selectedEvidenceId),
         "left",
         evidenceDetailAnimation,
@@ -729,7 +909,7 @@ export function selectEvidence(id) {
  * @returns {void}
  */
 export function selectPerson(id) {
-    // アクティブ変更
+    // ●アクティブ変更
     if (selectedPersonId !== id) {
         // アクティブ変更
         selectedPersonId = id;
@@ -743,20 +923,18 @@ export function selectPerson(id) {
             setTutorial(1);
         }
     }
-    // アクティブ解除
+    // ●アクティブ解除
     else {
         // アクティブ解除
         selectedPersonId = null;
     }
 
-    //
+    // リストの選択状態を更新
     updatePersonSelection(selectedPersonId);
 
-    //
+    // 詳細を切り替え
     transitionDetail(
         personPanel,
-        personTitle,
-        personDetail,
         getPerson(selectedPersonId),
         "right",
         personDetailAnimation,
@@ -792,6 +970,12 @@ export function initializeDetails() {
     if (selectedPersonId === null) {
         personPanel.classList.add("empty");
     }
+
+    // ----------------------------------------------
+    // 【推理】ボタン
+    // ----------------------------------------------
+
+    updateInferenceButton();
 
     // ----------------------------------------------
     // 【ストーリー進行】チュートリアル
