@@ -8,19 +8,12 @@
 
 const SAVE_KEY = "remains13_save";
 
-const SAVE_VERSION = "1.00";
-
 // --------------------------------------------------
 // 初期セーブデータ
 // --------------------------------------------------
 
 function createInitialSave() {
-
     return {
-
-        // バージョン
-        version: SAVE_VERSION,
-
         // 進行フラグ
         flag: [],
 
@@ -41,9 +34,7 @@ function createInitialSave() {
                 read: false,
             },
         ],
-
     };
-
 }
 
 // --------------------------------------------------
@@ -51,7 +42,6 @@ function createInitialSave() {
 // --------------------------------------------------
 
 function loadSave() {
-
     // ローカルストレージから取得
     const savedData = localStorage.getItem(SAVE_KEY);
 
@@ -60,34 +50,8 @@ function loadSave() {
         return createInitialSave();
     }
 
-    try {
-
-        const parsedData = JSON.parse(savedData);
-
-        // バージョン確認
-        if (parsedData.version !== SAVE_VERSION) {
-            return createInitialSave();
-        }
-
-        // データ形式の確認
-        if (
-            !Array.isArray(parsedData.flag)
-            || !Array.isArray(parsedData.evidence)
-            || !Array.isArray(parsedData.person)
-            || !Array.isArray(parsedData.mail)
-        ) {
-            return createInitialSave();
-        }
-
-        return parsedData;
-
-    } catch (error) {
-
-        // 読み込みに失敗した場合は初期状態に戻す
-        return createInitialSave();
-
-    }
-
+    // パースして返す
+    return JSON.parse(savedData);
 }
 
 // --------------------------------------------------
