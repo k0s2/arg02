@@ -482,15 +482,18 @@ function playDetailAnimation(panel, className, state) {
             // イベント監視を解除
             panel.removeEventListener("animationend", onAnimationEnd);
 
-            // アニメーションクラスを解除
-            panel.classList.remove(className);
-
             // スライドアウト完了時
             if (completed && className.includes("out")) {
+                // 非表示状態にする
+                panel.classList.add("empty");
+
                 // 拡大表示を解除
                 panel.classList.remove(classNoTransition);
                 panel.classList.remove(classExpanded);
             }
+
+            // アニメーションクラスを解除
+            panel.classList.remove(className);
 
             // アニメーション状態を初期化
             if (state.animation === cancel) {
@@ -710,7 +713,7 @@ async function slideInDetail(panel, side, state, sequence) {
 
 /**
  * 詳細を描画して表示状態を更新
- * @param {HTMLElement} panel 対象パネル
+ * @param {HTMLElement} panel 詳細パネル
  * @param {Object|undefined} item 表示するデータ
  * @param {Function} renderFunction 描画関数
  * @returns {void}
