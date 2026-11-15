@@ -473,9 +473,15 @@ async function waitDetailTransition(element) {
  * @param {HTMLElement} panel 詳細パネル
  * @param {string} className アニメーションクラス
  * @param {Object} state アニメーション状態
+ * @param {boolean} preserveExpanded 拡大表示を維持するか
  * @returns {Promise<boolean>}
  */
-function playDetailAnimation(panel, className, state) {
+function playDetailAnimation(
+    panel,
+    className,
+    state,
+    preserveExpanded = false
+) {
     return new Promise(resolve => {
         // 最終処理
         const finish = (completed) => {
@@ -488,8 +494,10 @@ function playDetailAnimation(panel, className, state) {
                 panel.classList.add("empty");
 
                 // 拡大表示を解除
-                panel.classList.remove(classNoTransition);
-                panel.classList.remove(classExpanded);
+                if (!preserveExpanded) {
+                    panel.classList.remove(classNoTransition);
+                    panel.classList.remove(classExpanded);
+                }
             }
 
             // アニメーションクラスを解除
@@ -667,9 +675,16 @@ function updateInferenceButton() {
  * @param {string} side リストの位置
  * @param {Object} state アニメーション状態
  * @param {number} sequence 処理番号
+ * @param {boolean} preserveExpanded 拡大表示を維持するか
  * @returns {Promise<boolean>}
  */
-async function slideOutDetail(panel, side, state, sequence) {
+async function slideOutDetail(
+    panel,
+    side,
+    state,
+    sequence,
+    preserveExpanded
+) {
     // クラス設定
     const className = side === "right"
         ? "slide-out-right"
@@ -679,7 +694,8 @@ async function slideOutDetail(panel, side, state, sequence) {
     const completed = await playDetailAnimation(
         panel,
         className,
-        state
+        state,
+        preserveExpanded
     );
 
     // 完了状態と処理番号を確認
@@ -754,6 +770,12 @@ async function runDetailTransition(
     // 現在の表示内容を確認
     const hasContent = !panel.classList.contains("empty");
 
+    // 現在の拡大状態を確認
+    const preserveExpanded = (
+        item !== undefined
+        && panel.classList.contains(classExpanded)
+    );
+
     // ----------------------------------------------
     // 詳細拡大表示の準備
     // ----------------------------------------------
@@ -781,7 +803,8 @@ async function runDetailTransition(
             panel,
             side,
             state,
-            sequence
+            sequence,
+            preserveExpanded
         );
 
         // 古い処理なら終了
