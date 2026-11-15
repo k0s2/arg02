@@ -67,7 +67,7 @@ export default [
 
             {
                 id: "201",
-                name: "2031.06.22",
+                name: "アーカイブ {date(-3)}",
                 note: "立花との、最初のやりとり",
                 detail: [
                     '<span class="mailTitle">谷戸俊道　t.yato@a-mail.co.jp</span>',

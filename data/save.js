@@ -1,5 +1,5 @@
 // ====================================================================================================
-// ファイル内メソッド
+// セーブ
 // ====================================================================================================
 
 // --------------------------------------------------
@@ -41,9 +41,6 @@ function createInitialSave() {
                 read: false,
             },
         ],
-
-        // メール
-        mail: [],
 
     };
 
@@ -136,12 +133,8 @@ window.addEventListener("storage", (event) => {
 const saveData = loadSave();
 
 // ====================================================================================================
-// ファイル外メソッド
+// 【証拠】【人物】アイテム
 // ====================================================================================================
-
-// --------------------------------------------------
-// 情報
-// --------------------------------------------------
 
 /**
  * 登録済みIDを取得
@@ -294,9 +287,9 @@ export function markRead(type, id) {
 
 }
 
-// --------------------------------------------------
+// ====================================================================================================
 // フラグ
-// --------------------------------------------------
+// ====================================================================================================
 
 /**
  * フラグを立てる
@@ -327,84 +320,4 @@ export function flagOn(name) {
  */
 export function isFlagOn(name) {
     return saveData.flag.includes(name);
-}
-
-// --------------------------------------------------
-// メール
-// --------------------------------------------------
-
-/**
- * メール情報を取得
- * @returns {Object[]} メール情報
- */
-export function getMailRecords() {
-    return saveData.mail;
-}
-
-/**
- * メールを追加
- * @param {string} type receive / send
- * @param {string} id メールID
- * @param {string} date 受信・送信日
- * @param {boolean} read 既読状態
- * @returns {boolean} 新規追加されたか
- */
-export function addMailRecord(type, id, date, read = false) {
-
-    // 対応していない種類なら処理しない
-    if (type != "receive" && type != "send") {
-        return false;
-    }
-
-    // 登録済みなら処理しない
-    if (saveData.mail.some(mail => mail.id == id)) {
-        return false;
-    }
-
-    // メールを追加
-    saveData.mail.unshift({
-        type,
-        id,
-        date,
-        favorite: false,
-        read,
-    });
-
-    // 保存
-    save();
-
-    return true;
-
-}
-
-/**
- * メール情報を更新
- * @param {string} id メールID
- * @param {Object} updates 更新内容
- * @returns {boolean} 更新されたか
- */
-export function updateMailRecord(id, updates) {
-
-    const mail = saveData.mail.find(mail => mail.id == id);
-
-    if (!mail) {
-        return false;
-    }
-
-    Object.assign(mail, updates);
-
-    // 保存
-    save();
-
-    return true;
-
-}
-
-/**
- * メールを受け取っているか
- * @param {string} mailId メールID
- * @returns {boolean} メールを受け取っているか
- */
-export function isReceivedMail(mailId) {
-    return saveData.mail.some(item => item.id == mailId && item.type == "receive");
 }
