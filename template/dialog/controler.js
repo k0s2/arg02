@@ -23,8 +23,9 @@ function hideDialog() {
     // 閉じる処理
     // --------------------------------------------------
 
-    // ダイアログを取得
-    const target = resultContainer.querySelector("#dialog");
+    // 現在のダイアログを保持
+    const currentContainer = resultContainer;
+    const target = currentContainer.querySelector("#dialog");
 
     // トランジション終了イベント
     const onTransitionEnd = (event) => {
@@ -36,8 +37,8 @@ function hideDialog() {
         // イベントリスナーを解除
         target.removeEventListener("transitionend", onTransitionEnd);
 
-        // ダイアログ要素を削除
-        resultContainer.remove();
+        // 対象のダイアログ要素を削除
+        currentContainer.remove();
     };
     target.addEventListener("transitionend", onTransitionEnd);
 

@@ -16,6 +16,7 @@ import {
 
 import {
     showDialog,
+    showThinkDialog,
 } from "../../template/dialog/controler.js";
 
 // --------------------------------------------------
@@ -30,6 +31,15 @@ import {
     updateEvidenceSelection,
     updatePersonSelection,
 } from "./list.js";
+
+// --------------------------------------------------
+// ノイズ
+// --------------------------------------------------
+
+import {
+    startGlitch,
+    stopGlitch,
+} from "./noise.js"
 
 // --------------------------------------------------
 // データ
@@ -346,8 +356,23 @@ function renderEvidenceDetail(item, title, detail, acquireItem) {
     const targetSpecial = detail.querySelector(".dummyLink");
 
     if (targetSpecial) {
-        targetSpecial.addEventListener("click", () => {
-            showDialog("既にインストールされています。");
+        targetSpecial.addEventListener("click", async () => {
+            // ノイズON
+            startGlitch();
+
+            // ダイアログ1
+            const res = await showDialog("既にインストールされています。");
+
+            // ダイアログ2
+            if (res == 0) {
+                // ノイズOFF
+                stopGlitch();
+
+                await showThinkDialog([
+                    "既にインストールされてる……？",
+                    "なぜ……？",
+                ]);
+            }
         });
     }
 }
