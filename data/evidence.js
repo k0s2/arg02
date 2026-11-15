@@ -67,8 +67,8 @@ export default [
 
             {
                 id: "201",
-                name: "やりとり1",
-                note: "",
+                name: "2031.06.22",
+                note: "立花との、最初のやりとり",
                 detail: [
                     '<span class="mailTitle">谷戸俊道　t.yato@a-mail.co.jp</span>',
                     '初めまして、あなたの甥の谷戸俊道です。',
@@ -98,45 +98,26 @@ export default [
 
                     '<span class="mailTitle">谷戸俊道　t.yato@a-mail.co.jp</span>',
                     'はい。どうしても。',
+                    '',
+
+                    // --------------------------------------------------
+
+                    '<span class="mailTitle">立花幸男　snow-man@a-mail.co.jp</span>',
+                    '俺が持ち出した情報と、現役時代に使っていた捜査システムを送る。',
+                    '活用してくれ',
+                    '',
+                    'システムは<button class="dummyLink">ここ</button>からインストールしてくれ。',
+                    '若者なら、なんとなく使い方は分かるだろ。',
+
                 ],
             },
 
             {
                 id: "202",
-                name: "やりとり2",
-                note: "",
-                detail: [
-                    '<span class="mailTitle">立花幸男　snow-man@a-mail.co.jp</span>',
-                    '俺が持ち出した情報と、現役時代に開発した捜査システムを送る。',
-                    '活用してくれ',
-                    '',
-
-                    // --------------------------------------------------
-
-                    '<span class="mailTitle">谷戸俊道　t.yato@a-mail.co.jp</span>',
-                    'システムを開発？',
-                    '立花さんはプログラミングもできるんですか？',
-                    '',
-
-                    // --------------------------------------------------
-
-                    '<span class="mailTitle">立花幸男　snow-man@a-mail.co.jp</span>',
-                    '家族との時間を増やすためさ。',
-                    '',
-                    'システムは<button class="dummyLink">ここ</button>からインストールしてくれ。',
-                    '若者なら、なんとなく使い方は分かるだろ。',
-                    '',
-                ],
-            },
-
-            {
-                id: "203",
                 name: "事件概要",
-                note: "送られてきた警察の極秘情報",
+                note: "立花から送られてきた、警察の極秘情報",
                 detail: [
-                    '何者かによってメールで送られてきた、警察の極秘情報……らしきもの。',
                     '',
-                    '文章を読むに、俺のじいちゃんが5年前に起きたとある事件に関わっていたらしい。',
                 ],
             },
 
@@ -171,7 +152,7 @@ export default [
                     '<button class="keyword" getEvidence="301">風路山</button>の麓にある、立花が経営するペンション。',
                     '客入りは少ないようだが、何故か１０年以上続いている。',
                     '',
-                    '連絡先は、<button class="keyword" getEvidence="201,202">guardiano@a-mail.co.jp</button>。',
+                    '連絡先は、<button class="keyword" getEvidence="201">guardiano@a-mail.co.jp</button>。',
                 ],
             },
 
