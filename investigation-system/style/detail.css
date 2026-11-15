@@ -46,6 +46,7 @@
         right: 100%;
         color: var(--color-line);
         font-size: 32px;
+        transform: translateY(-50%);
     }
 
     /* コンテンツ */
@@ -160,7 +161,8 @@
 
     &::before {
         content: "》";
-        right: calc(100% - 24px);
+        right: 100%;
+        margin-right: -24px;
     }
 
 }
@@ -176,7 +178,8 @@
 
     &::before {
         content: "《";
-        left: calc(100% - 24px);
+        left: 100%;
+        margin-left: -24px;
     }
 
 }
