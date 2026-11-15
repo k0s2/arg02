@@ -227,7 +227,7 @@ main {
         .title {
             opacity: 0.5;
             margin-right: 16px;
-            font-family: "smartFont";
+            font-family: "smartFont" !important;
         }
 
         /* 段落 */

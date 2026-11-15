@@ -510,6 +510,11 @@ async function transitionDetail(
     // 【推理】ボタンを取得
     const inferenceButton = document.querySelector(".inference button");
 
+    // 詳細が開かれていない
+    const isDetailNothing = document.querySelectorAll(".empty").length >= 2;
+    console.dir(document.querySelectorAll(".empty"));
+    console.dir(isDetailNothing);
+
     // アニメーション番号を更新
     state.sequence++;
 
@@ -533,8 +538,14 @@ async function transitionDetail(
 
     // ●スライドイン
     if (item) {
+        // ●片方の詳細を開く場合
+        if (isDetailNothing) {
+            // 開く詳細を、最初から拡大表示にする
+            panel.classList.add(classNoTransition);
+            panel.classList.add(classExpanded);
+        }
         // ●別の詳細エリアが開かれている場合
-        if (
+        else if (
             isDetailExpand
             && isDetailExpand !== panel
         ) {
@@ -544,15 +555,6 @@ async function transitionDetail(
 
             // アニメーションウェイト
             await waitDetailTransition(isDetailExpand);
-        }
-        // ●片方の詳細を開く場合
-        else if (
-            !hasContent
-            && !isDetailExpand
-        ) {
-            // 開く詳細を、最初から拡大表示にする
-            panel.classList.add(classNoTransition);
-            panel.classList.add(classExpanded);
         }
     }
 
@@ -643,6 +645,7 @@ async function transitionDetail(
     if (
         isDetailExpand
         && isDetailExpand !== panel
+        && !isDetailNothing
     ) {
         // 活性化
         inferenceButton.disabled = false;

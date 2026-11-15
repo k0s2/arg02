@@ -236,7 +236,7 @@
 
         /* 英字 */
         .subTitle {
-            font-family: "smartFont";
+            font-family: "smartFont" !important;
             font-size: 0.5em;
             opacity: 0.75;
             line-height: normal;
