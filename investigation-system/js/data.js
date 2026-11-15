@@ -74,21 +74,18 @@ export function getPerson(id) {
  * @returns {Object|undefined} 該当するデータ
  */
 export function getItemData(type, id) {
-
+    // 【証拠】
     if (type === "evidence") {
         return getEvidence(id);
     }
 
+    // 【人物】
     if (type === "person") {
         return getPerson(id);
     }
 
-    if (type === "keyword") {
-        return getKeyword(id);
-    }
-
+    // 不一致
     return undefined;
-
 }
 
 /**
