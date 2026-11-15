@@ -24,7 +24,7 @@ function createInitialSave() {
         // 進行フラグ
         flag: [],
 
-        // 証拠
+        // 【証拠】
         evidence: [
             // 古びた便箋
             {
@@ -33,7 +33,7 @@ function createInitialSave() {
             },
         ],
 
-        // 人物
+        // 【人物】
         person: [
             // 谷戸　俊道
             {

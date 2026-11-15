@@ -61,7 +61,7 @@
 
 }
 
-/* 証拠リスト */
+/* 【証拠】リスト */
 .itemList {
 
     border-top: solid 1px var(--color-line);
@@ -287,22 +287,22 @@
 
 }
 
-/* 証拠追加 */
+/* 【証拠】追加 */
 .pannel-left .itemList li.slide-in {
     animation: slideInLeft 0.25s ease both;
 }
 
-/* 証拠グループ追加 */
+/* 【証拠】グループ追加 */
 .pannel-left .itemList .itemGroup.slide-in {
     animation: slideInLeft 0.25s ease both;
 }
 
-/* 人物追加 */
+/* 【人物】追加 */
 .pannel-right .itemList li.slide-in {
     animation: slideInRight 0.25s ease both;
 }
 
-/* 人物グループ追加 */
+/* 【人物】グループ追加 */
 .pannel-right .itemList .itemGroup.slide-in {
     animation: slideInRight 0.25s ease both;
 }

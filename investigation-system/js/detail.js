@@ -1,5 +1,5 @@
 // ====================================================================================================
-// 詳細表示
+// インポート
 // ====================================================================================================
 
 // --------------------------------------------------
@@ -10,32 +10,179 @@ import {
     setTutorial,
 } from "../../js/common.js";
 
-
 // --------------------------------------------------
 // ダイアログ
 // --------------------------------------------------
 
 import {
     showDialog,
-} from "../../template/dialog/controler.js"
+} from "../../template/dialog/controler.js";
 
 // --------------------------------------------------
-// データ取得
+// リスト
 // --------------------------------------------------
 
 import {
-    getItemCategory,
-} from "./data.js";
+    addEvidence as addEvidenceList,
+    addPerson as addPersonList,
+    markEvidenceRead,
+    markPersonRead,
+    updateEvidenceSelection,
+    updatePersonSelection,
+} from "./list.js";
 
 // --------------------------------------------------
-// セーブデータ
+// データ
 // --------------------------------------------------
 
+// セーブ
 import {
     isUnlocked,
     flagOn,
     isFlagOn,
 } from "../../data/save.js";
+
+// データ取得
+import {
+    getEvidence,
+    getPerson,
+    getItemCategory,
+    acquireItem as unlockItem,
+} from "./data.js";
+
+// ====================================================================================================
+// 要素取得
+// ====================================================================================================
+
+// --------------------------------------------------
+// 【証拠】詳細
+// --------------------------------------------------
+
+// コンテナ
+const evidencePanel = document.querySelector(".detail-evidence");
+
+// タイトル
+const evidenceTitle = document.querySelector(".detail-evidence h2");
+
+// 説明文
+const evidenceDetail = document.querySelector(".detail-evidence .text");
+
+// --------------------------------------------------
+// 【人物】詳細
+// --------------------------------------------------
+
+// コンテナ
+const personPanel = document.querySelector(".detail-person");
+
+// タイトル
+const personTitle = document.querySelector(".detail-person h2");
+
+// 説明文
+const personDetail = document.querySelector(".detail-person .text");
+
+// ====================================================================================================
+// 詳細アニメーション
+// ====================================================================================================
+
+// 【証拠】
+const evidenceDetailAnimation = {
+    sequence: 0,
+    animation: null,
+};
+
+// 【人物】
+const personDetailAnimation = {
+    sequence: 0,
+    animation: null,
+};
+
+// ====================================================================================================
+// 選択中のデータ
+// ====================================================================================================
+
+// 現在選択中の【証拠】ID
+let selectedEvidenceId = null;
+
+// 現在選択中の【人物】ID
+let selectedPersonId = null;
+
+/**
+ * 選択中の【証拠】IDを取得
+ * @returns {string|null} 【証拠】ID
+ */
+export function getSelectedEvidenceId() {
+    return selectedEvidenceId;
+}
+
+/**
+ * 選択中の【人物】IDを取得
+ * @returns {string|null} 【人物】ID
+ */
+export function getSelectedPersonId() {
+    return selectedPersonId;
+}
+
+// ====================================================================================================
+// アイテム解放
+// ====================================================================================================
+
+/**
+ * 指定したアイテムを解放
+ * @param {string} type データの種類
+ * @param {number|string} id アイテムID
+ * @param {boolean|undefined} render 画面に反映するか
+ * @returns {boolean} 新規解放されたか
+ */
+export function acquireItem(type, id, render = true) {
+    // データを取得して解放
+    const unlocked = unlockItem(type, id);
+
+    // すでに解放済みの場合
+    if (!unlocked) {
+        return false;
+    }
+
+    // 画面に反映
+    if (render) {
+
+        if (type === "evidence") {
+            addEvidence([getEvidence(id)]);
+        }
+
+        if (type === "person") {
+            addPerson([getPerson(id)]);
+        }
+
+    }
+
+    return true;
+}
+
+/**
+ * 解放された【証拠】をリストに追加
+ * @param {Object[]} items 追加する【証拠】データ
+ * @returns {void}
+ */
+export function addEvidence(items) {
+    addEvidenceList(
+        items,
+        selectedEvidenceId,
+        selectEvidence
+    );
+}
+
+/**
+ * 解放された【人物】をリストに追加
+ * @param {Object[]} items 追加する【人物】データ
+ * @returns {void}
+ */
+export function addPerson(items) {
+    addPersonList(
+        items,
+        selectedPersonId,
+        selectPerson
+    );
+}
 
 // ====================================================================================================
 // キーワード設定
@@ -144,7 +291,7 @@ function setKeyword(detailElement, acquireItem) {
  * @returns {void}
  */
 function renderDetailTitle(title, item, type) {
-
+    // 初期化
     title.innerHTML = "";
 
     // 項目名
@@ -156,20 +303,19 @@ function renderDetailTitle(title, item, type) {
     category.className = "category";
     category.textContent = getItemCategory(type, item.id);
 
+    // 要素を追加
     title.appendChild(category);
-
 }
 
 /**
- * 証拠の詳細を表示
+ * 【証拠】の詳細を表示
  * @param {Object|undefined} item 表示するデータ
  * @param {HTMLElement} title タイトル要素
  * @param {HTMLElement} detail 詳細本文
  * @param {Function} acquireItem アイテム解放関数
  * @returns {void}
  */
-export function renderEvidenceDetail(item, title, detail, acquireItem) {
-
+function renderEvidenceDetail(item, title, detail, acquireItem) {
     if (item === undefined) {
         title.innerHTML = "";
         detail.innerHTML = "";
@@ -184,7 +330,7 @@ export function renderEvidenceDetail(item, title, detail, acquireItem) {
     setKeyword(detail, acquireItem);
 
     // --------------------------------------------------
-    // 特殊処理
+    // 【ストーリー進行】
     // --------------------------------------------------
 
     const targetSpecial = detail.querySelector(".dummyLink");
@@ -192,20 +338,19 @@ export function renderEvidenceDetail(item, title, detail, acquireItem) {
     if (targetSpecial) {
         targetSpecial.addEventListener("click", () => {
             showDialog("既にインストールされています。");
-        })
+        });
     }
 }
 
 /**
- * 人物の詳細を表示
+ * 【人物】の詳細を表示
  * @param {Object|undefined} item 表示するデータ
  * @param {HTMLElement} title タイトル要素
  * @param {HTMLElement} detail 詳細本文
  * @param {Function} acquireItem アイテム解放関数
  * @returns {void}
  */
-export function renderPersonDetail(item, title, detail, acquireItem) {
-
+function renderPersonDetail(item, title, detail, acquireItem) {
     if (item === undefined) {
         title.innerHTML = "";
         detail.innerHTML = "";
@@ -218,7 +363,36 @@ export function renderPersonDetail(item, title, detail, acquireItem) {
     detail.scrollTo(0, 0);
 
     setKeyword(detail, acquireItem);
+}
 
+/**
+ * 【証拠】の詳細を描画
+ * @param {Object|undefined} item 表示するデータ
+ * @returns {void}
+ */
+function renderEvidenceDetailView(item) {
+    // 【証拠】の詳細を表示
+    renderEvidenceDetail(
+        item,
+        evidenceTitle,
+        evidenceDetail,
+        acquireItem
+    );
+}
+
+/**
+ * 【人物】の詳細を描画
+ * @param {Object|undefined} item 表示するデータ
+ * @returns {void}
+ */
+function renderPersonDetailView(item) {
+    // 【【人物】】の詳細を表示
+    renderPersonDetail(
+        item,
+        personTitle,
+        personDetail,
+        acquireItem
+    );
 }
 
 // ====================================================================================================
@@ -237,7 +411,6 @@ const classNoTransition = "no-transition";
  * @returns {Promise<void>}
  */
 async function waitDetailTransition(element) {
-
     // スタイルを反映
     getComputedStyle(element).top;
 
@@ -250,7 +423,6 @@ async function waitDetailTransition(element) {
             animation.finished.catch(() => { })
         )
     );
-
 }
 
 /**
@@ -261,40 +433,41 @@ async function waitDetailTransition(element) {
  * @returns {Promise<boolean>}
  */
 function playDetailAnimation(panel, className, state) {
-
     return new Promise(resolve => {
-
         // 最終処理
         const finish = (completed) => {
-
+            //
             panel.removeEventListener("animationend", onAnimationEnd);
             panel.classList.remove(className);
 
+            //
             if (state.animation === cancel) {
                 state.animation = null;
             }
 
+            // 解決
             resolve(completed);
-
         };
 
         // アニメーション終了
         const onAnimationEnd = (event) => {
-
+            //
             if (event.target !== panel) {
                 return;
             }
 
+            //
             if (event.animationName === "") {
                 return;
             }
 
+            // 最終処理の呼び出し
             finish(true);
-
         };
 
         // キャンセル
         const cancel = () => {
+            // 最終処理の呼び出し
             finish(false);
         };
 
@@ -304,9 +477,7 @@ function playDetailAnimation(panel, className, state) {
         // CSSクラスを付与
         state.animation = cancel;
         panel.classList.add(className);
-
     });
-
 }
 
 /**
@@ -320,7 +491,7 @@ function playDetailAnimation(panel, className, state) {
  * @param {Function} renderFunction 描画関数
  * @returns {Promise<void>}
  */
-export async function transitionDetail(
+async function transitionDetail(
     panel,
     title,
     detail,
@@ -336,7 +507,7 @@ export async function transitionDetail(
     // 拡大表示中の詳細
     const isDetailExpand = document.querySelector("." + classExpanded);
 
-    // 推理ボタンを取得
+    // 【推理】ボタンを取得
     const inferenceButton = document.querySelector(".inference button");
 
     // アニメーション番号を更新
@@ -389,40 +560,42 @@ export async function transitionDetail(
     // 古い詳細をスライドアウト
     // ----------------------------------------------
 
+    // ●詳細が表示されている
     if (hasContent) {
-
         // ●スライドアウト
         if (item === undefined) {
-            // 「推理」ボタンの非活性化
+            // 【推理】ボタンの非活性化
             inferenceButton.disabled = true;
         }
 
+        // クラス設定
         const exitClass =
             (side === "right")
                 ? "slide-out-right"
                 : "slide-out-left";
 
+        //
         const completed = await playDetailAnimation(
             panel,
             exitClass,
             state
         );
 
+        //
         if (!completed || sequence !== state.sequence) {
             return;
         }
-
     }
 
     // ----------------------------------------------
     // 残された詳細を拡大表示
     // ----------------------------------------------
 
+    // ●
     if (
         item === undefined
         && hasContent
     ) {
-
         // 残された詳細を取得
         const otherPanel = panel.parentElement.querySelector(
             panel.classList.contains("detail-evidence")
@@ -442,7 +615,6 @@ export async function transitionDetail(
             // 拡大表示
             otherPanel.classList.add(classExpanded);
         }
-
     }
 
     // ----------------------------------------------
@@ -464,7 +636,7 @@ export async function transitionDetail(
     panel.classList.remove("empty");
 
     // ----------------------------------------------
-    // 「推理」ボタンを表示
+    // 【推理】ボタンを表示
     // ----------------------------------------------
 
     // ●既に別の詳細が表示されていた場合
@@ -480,18 +652,153 @@ export async function transitionDetail(
     // 新しい詳細をスライドイン
     // ----------------------------------------------
 
+    // クラスを設定
     const enterClass = side === "right"
         ? "slide-in-right"
         : "slide-in-left";
 
+    //
     const completed = await playDetailAnimation(
         panel,
         enterClass,
         state
     );
 
+    //
     if (!completed || sequence !== state.sequence) {
         return;
     }
+}
 
+// ====================================================================================================
+// 選択処理
+// ====================================================================================================
+
+/**
+ * 【証拠】を選択
+ * @param {string} id 【証拠】ID
+ * @returns {void}
+ */
+export function selectEvidence(id) {
+    // ●アクティブ変更
+    if (selectedEvidenceId !== id) {
+        // アクティブ変更
+        selectedEvidenceId = id;
+
+        // 既読にする
+        markEvidenceRead(id);
+
+        // 【ストーリー進行】チュートリアル
+        if (isFlagOn("tutorial-2") == false) {
+            flagOn("tutorial-1");
+            setTutorial(1);
+        }
+    }
+    // ●アクティブ解除
+    else {
+        // アクティブ解除
+        selectedEvidenceId = null;
+    }
+
+    //
+    updateEvidenceSelection(selectedEvidenceId);
+
+    //
+    transitionDetail(
+        evidencePanel,
+        evidenceTitle,
+        evidenceDetail,
+        getEvidence(selectedEvidenceId),
+        "left",
+        evidenceDetailAnimation,
+        renderEvidenceDetailView
+    );
+}
+
+/**
+ * 【人物】を選択
+ * @param {string} id 【人物】ID
+ * @returns {void}
+ */
+export function selectPerson(id) {
+    // アクティブ変更
+    if (selectedPersonId !== id) {
+        // アクティブ変更
+        selectedPersonId = id;
+
+        // 既読にする
+        markPersonRead(id);
+
+        // 【ストーリー進行】チュートリアル
+        if (isFlagOn("tutorial-2") == false) {
+            flagOn("tutorial-1");
+            setTutorial(1);
+        }
+    }
+    // アクティブ解除
+    else {
+        // アクティブ解除
+        selectedPersonId = null;
+    }
+
+    //
+    updatePersonSelection(selectedPersonId);
+
+    //
+    transitionDetail(
+        personPanel,
+        personTitle,
+        personDetail,
+        getPerson(selectedPersonId),
+        "right",
+        personDetailAnimation,
+        renderPersonDetailView
+    );
+}
+
+// ====================================================================================================
+// 初期化
+// ====================================================================================================
+
+/**
+ * 詳細を初期化
+ * @returns {void}
+ */
+export function initializeDetails() {
+    // ----------------------------------------------
+    // 【証拠】
+    // ----------------------------------------------
+
+    renderEvidenceDetailView(getEvidence(selectedEvidenceId));
+
+    if (selectedEvidenceId === null) {
+        evidencePanel.classList.add("empty");
+    }
+
+    // ----------------------------------------------
+    // 【人物】
+    // ----------------------------------------------
+
+    renderPersonDetailView(getPerson(selectedPersonId));
+
+    if (selectedPersonId === null) {
+        personPanel.classList.add("empty");
+    }
+
+    // ----------------------------------------------
+    // 【ストーリー進行】チュートリアル
+    // ----------------------------------------------
+
+    if (isFlagOn("tutorial-1") == false) {
+        setTutorial(0);
+    }
+    else if (isFlagOn("tutorial-2") == false) {
+        setTutorial(1);
+    }
+    else if (isFlagOn("tutorial-3") == false) {
+        setTutorial(2);
+    }
+    else if (isFlagOn("tutorial-4") == false) {
+        setTutorial(3);
+    }
 }

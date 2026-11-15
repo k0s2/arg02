@@ -1,25 +1,30 @@
 // ====================================================================================================
-// データ取得
+// インポート
 // ====================================================================================================
 
 // --------------------------------------------------
-// インポート
+// データ
 // --------------------------------------------------
 
-// 証拠データ
+// 【証拠】
 import evidenceData from "../../data/evidence.js";
 
-// 人物データ
+// 【人物】
 import personData from "../../data/person.js";
+
+// セーブ
+import {
+    unlockItem,
+} from "../../data/save.js";
 
 // ====================================================================================================
 // データ取得
 // ====================================================================================================
 
 /**
- * 証拠データを取得
- * @param {string} id 証拠ID
- * @returns {Object|undefined} 該当する証拠データ
+ * 【証拠】データを取得
+ * @param {string} id 【証拠】ID
+ * @returns {Object|undefined} 該当する【証拠】データ
  */
 export function getEvidence(id) {
 
@@ -40,9 +45,9 @@ export function getEvidence(id) {
 }
 
 /**
- * 人物データを取得
- * @param {string} id 人物ID
- * @returns {Object|undefined} 該当する人物データ
+ * 【人物】データを取得
+ * @param {string} id 【人物】ID
+ * @returns {Object|undefined} 該当する【人物】データ
  */
 export function getPerson(id) {
 
@@ -117,5 +122,30 @@ export function getItemCategory(type, id) {
     }
 
     return "";
+
+}
+
+// ====================================================================================================
+// アイテム解放
+// ====================================================================================================
+
+/**
+ * 指定したアイテムを解放
+ * @param {string} type データの種類
+ * @param {number|string} id アイテムID
+ * @returns {boolean} 新規解放されたか
+ */
+export function acquireItem(type, id) {
+
+    // データを取得
+    const item = getItemData(type, id);
+
+    // データが存在しない場合
+    if (item === undefined) {
+        return false;
+    }
+
+    // セーブデータに解放状態を登録
+    return unlockItem(type, id);
 
 }

@@ -1,11 +1,18 @@
 // ====================================================================================================
-// リスト
+// インポート
 // ====================================================================================================
 
 // --------------------------------------------------
-// セーブデータ
+// データ
 // --------------------------------------------------
 
+// 【証拠】
+import evidenceData from "../../data/evidence.js";
+
+// 【人物】
+import personData from "../../data/person.js";
+
+// セーブ
 import {
     getUnlockedIds,
     getUnreadIds,
@@ -16,10 +23,10 @@ import {
 // 要素取得
 // ====================================================================================================
 
-// 証拠グループ
+// 【証拠】グループ
 const evidenceList = document.querySelector(".pannel-left .itemList .groups");
 
-// 人物グループ
+// 【人物】グループ
 const personList = document.querySelector(".pannel-right .itemList .groups");
 
 // ====================================================================================================
@@ -247,20 +254,18 @@ function renderGroupedList(
 }
 
 // ====================================================================================================
-// 証拠リスト描画
+// 【証拠】リスト描画
 // ====================================================================================================
 
 /**
- * 解放済みの証拠リストを描画
- * @param {Object[]} groups 証拠グループデータ
- * @param {string|null} selectedId 選択中の証拠ID
+ * 解放済みの【証拠】リストを描画
+ * @param {string|null} selectedId 選択中の【証拠】ID
  * @param {Function} selectFunction 選択時に呼び出す関数
  * @param {string[]|undefined} openGroupIds 展開するグループID
- * @param {string[]|undefined} animatedIds アニメーションさせる証拠ID
+ * @param {string[]|undefined} animatedIds アニメーションさせる【証拠】ID
  * @returns {void}
  */
-export function renderEvidenceList(
-    groups,
+function renderEvidenceList(
     selectedId,
     selectFunction,
     openGroupIds,
@@ -268,7 +273,7 @@ export function renderEvidenceList(
 ) {
 
     if (openGroupIds === undefined) {
-        openGroupIds = getInitialOpenGroupIds(groups, "evidence");
+        openGroupIds = getInitialOpenGroupIds(evidenceData, "evidence");
     }
 
     if (animatedIds === undefined) {
@@ -277,7 +282,7 @@ export function renderEvidenceList(
 
     renderGroupedList(
         evidenceList,
-        groups,
+        evidenceData,
         "evidence",
         selectedId,
         selectFunction,
@@ -288,20 +293,18 @@ export function renderEvidenceList(
 }
 
 // ====================================================================================================
-// 人物リスト描画
+// 【人物】リスト描画
 // ====================================================================================================
 
 /**
- * 解放済みの人物リストを描画
- * @param {Object[]} groups 人物グループデータ
- * @param {string|null} selectedId 選択中の人物ID
+ * 解放済みの【人物】リストを描画
+ * @param {string|null} selectedId 選択中の【人物】ID
  * @param {Function} selectFunction 選択時に呼び出す関数
  * @param {string[]|undefined} openGroupIds 展開するグループID
- * @param {string[]|undefined} animatedIds アニメーションさせる人物ID
+ * @param {string[]|undefined} animatedIds アニメーションさせる【人物】ID
  * @returns {void}
  */
-export function renderPersonList(
-    groups,
+function renderPersonList(
     selectedId,
     selectFunction,
     openGroupIds,
@@ -309,7 +312,7 @@ export function renderPersonList(
 ) {
 
     if (openGroupIds === undefined) {
-        openGroupIds = getInitialOpenGroupIds(groups, "person");
+        openGroupIds = getInitialOpenGroupIds(personData, "person");
     }
 
     if (animatedIds === undefined) {
@@ -318,12 +321,38 @@ export function renderPersonList(
 
     renderGroupedList(
         personList,
-        groups,
+        personData,
         "person",
         selectedId,
         selectFunction,
         openGroupIds,
         animatedIds
+    );
+
+}
+
+// ====================================================================================================
+// 初期化
+// ====================================================================================================
+
+/**
+ * リストを初期化
+ * @param {Function} selectEvidence 【証拠】選択関数
+ * @param {Function} selectPerson 【人物】選択関数
+ * @returns {void}
+ */
+export function initializeLists(selectEvidence, selectPerson) {
+
+    // 【証拠】
+    renderEvidenceList(
+        null,
+        selectEvidence
+    );
+
+    // 【人物】
+    renderPersonList(
+        null,
+        selectPerson
     );
 
 }
@@ -362,26 +391,24 @@ function getUpdatedOpenGroupIds(groups, items, openGroupIds) {
 }
 
 /**
- * 解放された証拠をリストに追加
- * @param {Object[]} groups 証拠グループデータ
- * @param {Object[]} items 追加する証拠データ
- * @param {string|null} selectedId 選択中の証拠ID
+ * 解放された【証拠】をリストに追加
+ * @param {Object[]} items 追加する【証拠】データ
+ * @param {string|null} selectedId 選択中の【証拠】ID
  * @param {Function} selectFunction 選択時に呼び出す関数
  * @returns {void}
  */
-export function addEvidence(groups, items, selectedId, selectFunction) {
+export function addEvidence(items, selectedId, selectFunction) {
 
     const openGroupIds = getOpenGroupIds(evidenceList);
 
     // 取得したアイテムが属するグループを展開
-    getUpdatedOpenGroupIds(groups, items, openGroupIds);
+    getUpdatedOpenGroupIds(evidenceData, items, openGroupIds);
 
     const animatedIds = items.map((item) => {
         return item.id;
     });
 
     renderEvidenceList(
-        groups,
         selectedId,
         selectFunction,
         openGroupIds,
@@ -391,26 +418,24 @@ export function addEvidence(groups, items, selectedId, selectFunction) {
 }
 
 /**
- * 解放された人物をリストに追加
- * @param {Object[]} groups 人物グループデータ
- * @param {Object[]} items 追加する人物データ
- * @param {string|null} selectedId 選択中の人物ID
+ * 解放された【人物】をリストに追加
+ * @param {Object[]} items 追加する【人物】データ
+ * @param {string|null} selectedId 選択中の【人物】ID
  * @param {Function} selectFunction 選択時に呼び出す関数
  * @returns {void}
  */
-export function addPerson(groups, items, selectedId, selectFunction) {
+export function addPerson(items, selectedId, selectFunction) {
 
     const openGroupIds = getOpenGroupIds(personList);
 
     // 取得したアイテムが属するグループを展開
-    getUpdatedOpenGroupIds(groups, items, openGroupIds);
+    getUpdatedOpenGroupIds(personData, items, openGroupIds);
 
     const animatedIds = items.map((item) => {
         return item.id;
     });
 
     renderPersonList(
-        groups,
         selectedId,
         selectFunction,
         openGroupIds,
@@ -424,8 +449,8 @@ export function addPerson(groups, items, selectedId, selectFunction) {
 // ====================================================================================================
 
 /**
- * 証拠を既読にする
- * @param {string} id 証拠ID
+ * 【証拠】を既読にする
+ * @param {string} id 【証拠】ID
  * @returns {void}
  */
 export function markEvidenceRead(id) {
@@ -443,8 +468,8 @@ export function markEvidenceRead(id) {
 }
 
 /**
- * 人物を既読にする
- * @param {string} id 人物ID
+ * 【人物】を既読にする
+ * @param {string} id 【人物】ID
  * @returns {void}
  */
 export function markPersonRead(id) {
@@ -490,8 +515,8 @@ function updateListSelection(list, selectedId) {
 }
 
 /**
- * 証拠リストの選択状態を更新
- * @param {string|null} selectedId 選択中の証拠ID
+ * 【証拠】リストの選択状態を更新
+ * @param {string|null} selectedId 選択中の【証拠】ID
  * @returns {void}
  */
 export function updateEvidenceSelection(selectedId) {
@@ -501,8 +526,8 @@ export function updateEvidenceSelection(selectedId) {
 }
 
 /**
- * 人物リストの選択状態を更新
- * @param {string|null} selectedId 選択中の人物ID
+ * 【人物】リストの選択状態を更新
+ * @param {string|null} selectedId 選択中の【人物】ID
  * @returns {void}
  */
 export function updatePersonSelection(selectedId) {

@@ -17,41 +17,38 @@ import {
 
 import {
     showDialog,
-    showThinkDialog
-} from "../../template/dialog/controler.js"
+    showThinkDialog,
+} from "../../template/dialog/controler.js";
 
 // --------------------------------------------------
 // データ
 // --------------------------------------------------
 
-// 推理データ
+// 【推理】データ
 import inferenceData from "../../data/inference.js";
+
+// セーブ
+import {
+    flagOn,
+    isFlagOn,
+} from "../../data/save.js";
 
 // データ取得
 import {
     getItemData,
 } from "./data.js";
 
-// --------------------------------------------------
-// セーブデータ
-// --------------------------------------------------
-
-import {
-    flagOn,
-    isFlagOn,
-} from "../../data/save.js";
-
 // ====================================================================================================
-// 推理処理
+// 【推理】処理
 // ====================================================================================================
 
 /**
- * 選択中の証拠と人物から新しい情報を解放
- * @param {string|null} selectedEvidenceId 選択中の証拠ID
- * @param {string|null} selectedPersonId 選択中の人物ID
+ * 選択中の【証拠】と【人物】から新しい情報を解放
+ * @param {string|null} selectedEvidenceId 選択中の【証拠】ID
+ * @param {string|null} selectedPersonId 選択中の【人物】ID
  * @param {Function} acquireItem アイテム解放関数
- * @param {Function} addEvidence 証拠追加関数
- * @param {Function} addPerson 人物追加関数
+ * @param {Function} addEvidence 【証拠】追加関数
+ * @param {Function} addPerson 【人物】追加関数
  * @returns {void}
  */
 export async function executeInference(
@@ -61,40 +58,46 @@ export async function executeInference(
     addEvidence,
     addPerson
 ) {
-
+    // --------------------------------------------------
     // どちらかが未選択なら処理しない
+    // --------------------------------------------------
+
+    // 【証拠】
     if (selectedEvidenceId === null) {
         return;
     }
 
+    // 【人物】
     if (selectedPersonId === null) {
         return;
     }
 
     // ----------------------------------------------
-    // 推理条件の照合
+    // 【推理】条件の照合
     // ----------------------------------------------
 
+    // 条件ごとに処理
     const results = inferenceData.filter((rule) => {
-
+        // 【証拠】の不一致
         if (rule.evidenceId !== selectedEvidenceId) {
             return false;
         }
 
+        // 【【人物】】の不一致
         if (rule.personId !== selectedPersonId) {
             return false;
         }
 
+        // 条件の一致
         return true;
-
     });
 
     // 不一致
     if (results.length == 0) {
-        // 証拠名
+        // 【証拠】名
         const nameEvidence = getItemData("evidence", selectedEvidenceId).name;
 
-        // 人物名
+        // 【人物】名
         const namePerson = getItemData("person", selectedPersonId).name;
 
         // ダイアログ表示
@@ -135,12 +138,12 @@ export async function executeInference(
 
             // 新規解放された場合
             if (unlocked) {
-                // 証拠
+                // 【証拠】
                 if (info.type === "evidence") {
                     newEvidence.push(item);
                 }
 
-                // 人物
+                // 【人物】
                 if (info.type === "person") {
                     newPersons.push(item);
                 }
@@ -179,5 +182,43 @@ export async function executeInference(
     if (newPersons.length > 0) {
         addPerson(newPersons);
     }
+
+}
+
+// ====================================================================================================
+// イベント設定
+// ====================================================================================================
+
+/**
+ * 【推理】ボタンを初期化
+ * @param {Function} getSelectedEvidenceId 選択中の【証拠】ID取得関数
+ * @param {Function} getSelectedPersonId 選択中の【人物】ID取得関数
+ * @param {Function} acquireItem アイテム解放関数
+ * @param {Function} addEvidence 【証拠】追加関数
+ * @param {Function} addPerson 【人物】追加関数
+ * @returns {void}
+ */
+export function initializeInference(
+    getSelectedEvidenceId,
+    getSelectedPersonId,
+    acquireItem,
+    addEvidence,
+    addPerson
+) {
+
+    // 【推理】ボタン
+    const inferenceButton = document.querySelector(".inference button");
+
+    inferenceButton.addEventListener("click", () => {
+
+        executeInference(
+            getSelectedEvidenceId(),
+            getSelectedPersonId(),
+            acquireItem,
+            addEvidence,
+            addPerson
+        );
+
+    });
 
 }
