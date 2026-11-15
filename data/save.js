@@ -176,10 +176,10 @@ export function getUnreadIds(type) {
  * アイテムを解放
  * @param {string} type データの種類
  * @param {number|string} id アイテムID
+ * @param {string|undefined} title 保存するタイトル
  * @returns {boolean} 新規解放されたか
  */
-export function unlockItem(type, id) {
-
+export function unlockItem(type, id, title) {
     const records = saveData[type];
 
     // 対応していない種類なら処理しない
@@ -193,16 +193,22 @@ export function unlockItem(type, id) {
     }
 
     // 解放
-    records.push({
+    const record = {
         id,
         read: false,
-    });
+    };
+
+    // タイトルが指定されている場合
+    if (title !== undefined) {
+        record.title = title;
+    }
+
+    records.push(record);
 
     // 保存
     save();
 
     return true;
-
 }
 
 /**
@@ -285,6 +291,25 @@ export function markRead(type, id) {
     // 保存
     save();
 
+}
+
+/**
+ * アイテムの表示タイトルを取得
+ * @param {string} type データの種類
+ * @param {number|string} id アイテムID
+ * @param {string} defaultTitle 通常のタイトル
+ * @returns {string} 表示タイトル
+ */
+export function getItemTitle(type, id, defaultTitle) {
+    const records = saveData[type];
+
+    if (!Array.isArray(records)) {
+        return defaultTitle;
+    }
+
+    const target = records.find(item => item.id == id);
+
+    return target?.title || defaultTitle;
 }
 
 // ====================================================================================================

@@ -127,13 +127,55 @@ export function getItemCategory(type, id) {
 // ====================================================================================================
 
 /**
+ * 取得時点の日付・時刻でタイトルを生成
+ * @param {string} title 元のタイトル
+ * @returns {string|undefined} 生成したタイトル
+ */
+function createAcquiredTitle(title) {
+
+    // 動的な日付指定がなければ保存しない
+    if (!/\{date\([+-]?\d+\)\}/.test(title)) {
+        return undefined;
+    }
+
+    // 取得時点の日時
+    const acquiredAt = new Date();
+
+    // 日付・時刻を整形
+    const formatDate = (date) => {
+        const pad = (value) => {
+            return String(value).padStart(2, "0");
+        };
+
+        return (
+            `${date.getFullYear()}/`
+            + `${pad(date.getMonth() + 1)}/`
+            + `${pad(date.getDate())}`
+        );
+    };
+
+    // 日付指定を置換
+    return title.replace(
+        /\{date\(([+-]?\d+)\)\}/g,
+        (match, offset) => {
+            const date = new Date(acquiredAt);
+
+            // 指定日数を加算
+            date.setDate(date.getDate() + Number(offset));
+
+            return formatDate(date);
+        }
+    );
+
+}
+
+/**
  * 指定したアイテムを解放
  * @param {string} type データの種類
  * @param {number|string} id アイテムID
  * @returns {boolean} 新規解放されたか
  */
 export function acquireItem(type, id) {
-
     // データを取得
     const item = getItemData(type, id);
 
@@ -142,7 +184,9 @@ export function acquireItem(type, id) {
         return false;
     }
 
-    // セーブデータに解放状態を登録
-    return unlockItem(type, id);
+    // 取得時点のタイトルを生成
+    const title = createAcquiredTitle(item.name);
 
+    // セーブデータに解放状態とタイトルを登録
+    return unlockItem(type, id, title);
 }

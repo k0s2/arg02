@@ -38,6 +38,7 @@ import {
 // セーブ
 import {
     isUnlocked,
+    getItemTitle,
     flagOn,
     isFlagOn,
 } from "../../data/save.js";
@@ -302,7 +303,9 @@ function renderDetailTitle(title, item, type) {
     title.innerHTML = "";
 
     // 項目名
-    const name = document.createTextNode(item.name);
+    const name = document.createTextNode(
+        getItemTitle(type, item.id, item.name)
+    );
     title.appendChild(name);
 
     // カテゴリー

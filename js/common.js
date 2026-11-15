@@ -14,7 +14,6 @@ import tutorialMessage from "../data/tutorial.js";
 
 import {
     isFlagOn,
-    getMailRecords,
 } from "../data/save.js";
 
 // ====================================================================================================
