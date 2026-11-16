@@ -15,6 +15,7 @@ import personData from "../../data/person.js";
 // セーブ
 import {
     unlockItem,
+    getGameStartDate,
 } from "../../data/save.js";
 
 // ====================================================================================================
@@ -126,26 +127,44 @@ export function getItemCategory(type, id) {
 // アイテム解放
 // ====================================================================================================
 
+// 日付置換パターン
+const DATE_PATTERN = /\{date(?:\(\s*([+-]?\d+)?\s*(?:,\s*["']([^"']*)["'])?\s*\))?\}/g;
+
 /**
- * 取得時点の日付で文章を生成
+ * 日付指定が含まれているか確認
+ * @param {string} text 対象の文章
+ * @returns {boolean}
+ */
+function hasDateToken(text) {
+    DATE_PATTERN.lastIndex = 0;
+
+    const exists = DATE_PATTERN.test(text);
+
+    DATE_PATTERN.lastIndex = 0;
+
+    return exists;
+}
+
+/**
+ * 日付指定を置換
  * @param {string} text 元の文章
- * @param {Date} acquiredAt 取得日時
+ * @param {Date} baseDate 基準日
  * @returns {string|undefined} 生成した文章
  */
-function formatAcquiredText(text, acquiredAt) {
+function formatAcquiredText(text, baseDate) {
 
     // 日付指定がなければ保存しない
-    if (!/\{date(?:\([+-]?\d+(?:,\s*["'][^"']+["'])?\))?\}/.test(text)) {
+    if (!hasDateToken(text)) {
         return undefined;
     }
 
     // 日付指定を置換
     return text.replace(
-        /\{date(?:\(([+-]?\d+)?(?:,\s*["']([^"']+)["'])?\))?\}/g,
+        DATE_PATTERN,
         (match, offset, format) => {
-            const date = new Date(acquiredAt);
+            const date = new Date(baseDate);
 
-            // 指定日数を加算
+            // 基準日から指定日数を加算
             date.setDate(date.getDate() + Number(offset || 0));
 
             // 表示形式
@@ -171,36 +190,32 @@ function formatAcquiredText(text, acquiredAt) {
 }
 
 /**
- * 取得時点の日付でタイトルを生成
+ * 日付指定を含むタイトルを生成
  * @param {string} title 元のタイトル
- * @param {Date} acquiredAt 取得日時
+ * @param {Date} baseDate 基準日
  * @returns {string|undefined} 生成したタイトル
  */
-function createAcquiredTitle(title, acquiredAt) {
-    return formatAcquiredText(title, acquiredAt);
+function createAcquiredTitle(title, baseDate) {
+    return formatAcquiredText(title, baseDate);
 }
 
 /**
- * 取得時点の日付で詳細本文を生成
+ * 日付指定を含む詳細本文を生成
  * @param {Array} detail 元の詳細本文
- * @param {Date} acquiredAt 取得日時
+ * @param {Date} baseDate 基準日
  * @returns {Array|undefined} 生成した詳細本文
  */
-function createAcquiredDetail(detail, acquiredAt) {
-
-    // 各文章の日付を置換
-    const formatted = detail.map(text =>
-        formatAcquiredText(text, acquiredAt) ?? text
-    );
+function createAcquiredDetail(detail, baseDate) {
 
     // 日付指定がなければ保存しない
-    if (!detail.some(text =>
-        /\{date(?:\([+-]?\d+(?:,\s*["'][^"']+["'])?\))?\}/.test(text)
-    )) {
+    if (!detail.some(text => hasDateToken(text))) {
         return undefined;
     }
 
-    return formatted;
+    // 各文章の日付を置換
+    return detail.map(text =>
+        formatAcquiredText(text, baseDate) ?? text
+    );
 
 }
 
@@ -219,12 +234,12 @@ export function acquireItem(type, id) {
         return false;
     }
 
-    // 取得時点の日時
-    const acquiredAt = new Date();
+    // ゲーム起動日を取得
+    const baseDate = getGameStartDate();
 
-    // 取得時点のタイトルと詳細を生成
-    const title = createAcquiredTitle(item.name, acquiredAt);
-    const detail = createAcquiredDetail(item.detail, acquiredAt);
+    // 基準日からタイトルと詳細を生成
+    const title = createAcquiredTitle(item.name, baseDate);
+    const detail = createAcquiredDetail(item.detail, baseDate);
 
     // セーブデータに解放状態と置換結果を登録
     return unlockItem(type, id, title, detail);

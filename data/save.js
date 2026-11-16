@@ -94,10 +94,39 @@ window.addEventListener("storage", (event) => {
 });
 
 // --------------------------------------------------
-// セーブデータ本体
+// セーブデータをロード
 // --------------------------------------------------
 
+// ロード
 const saveData = loadSave();
+
+// 起動日が未登録の場合
+if (!saveData.date) {
+    const today = new Date();
+
+    // ローカル日付を保存
+    saveData.date = [
+        today.getFullYear(),
+        String(today.getMonth() + 1).padStart(2, "0"),
+        String(today.getDate()).padStart(2, "0"),
+    ].join("-");
+
+    save();
+}
+
+// ====================================================================================================
+// 起動日
+// ====================================================================================================
+
+/**
+ * ゲーム起動日を取得
+ * @returns {Date} ゲーム起動日
+ */
+export function getGameStartDate() {
+    const [year, month, day] = saveData.date.split("-").map(Number);
+
+    return new Date(year, month - 1, day);
+}
 
 // ====================================================================================================
 // 【証拠】【人物】アイテム

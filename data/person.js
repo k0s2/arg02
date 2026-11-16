@@ -114,7 +114,7 @@ export default [
                 name: "死体#001",
                 note: "６０代・男性",
                 detail: [
-                    '',
+                    '死亡推定時刻：　{date(-1825, "yyyy/08/06")}',
                 ],
             },
 
