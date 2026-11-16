@@ -141,7 +141,7 @@ export default [
                     '情報を入力すれば、それらを照らし合わせて新たな情報を導き出してくれる優れものだ。',
                     '活用してくれ。',
                     '',
-                    '<button class="keyword file get">investigation_system_ver.1.2.0</button><button class="keyword file" getEvidence="202">case_kazamichi.pdf</button>',
+                    '<button class="keyword file get">investigation_system_setup.exe</button><button class="keyword file" getEvidence="202">case_kazamichi.pdf</button>',
 
                 ],
             },
@@ -155,89 +155,13 @@ export default [
                     '',
                     '',
                     '発見された遺体は以下の通り。',
-                    '●<button class="keyword" getEvidence="401">６０代男性</button>',
-                    '●<button class="keyword" getEvidence="402">年齢不明・男性</button>',
-                    '●<button class="keyword" getEvidence="403">年齢不明・男性</button>',
-                    '●<button class="keyword" getEvidence="404">年齢不明・男性</button>',
-                    '●<button class="keyword" getEvidence="405">年齢不明・女性</button>',
-                    '●<button class="keyword" getEvidence="406">年齢不明・女性</button>',
-                    '●<button class="keyword" getEvidence="407">年齢不明・性別不明</button>',
-                ],
-            },
-
-        ],
-    },
-
-    // --------------------------------------------------
-    // 検死報告書
-    // --------------------------------------------------
-
-
-    {
-        id: "4",
-        name: "検死報告書",
-        items: [
-
-            {
-                id: "401",
-                name: "６０代男性",
-                note: "",
-                detail: [
-                    '',
-                ],
-            },
-
-            {
-                id: "402",
-                name: "",
-                note: "",
-                detail: [
-                    '',
-                ],
-            },
-
-            {
-                id: "403",
-                name: "",
-                note: "",
-                detail: [
-                    '',
-                ],
-            },
-
-            {
-                id: "404",
-                name: "",
-                note: "",
-                detail: [
-                    '',
-                ],
-            },
-
-            {
-                id: "405",
-                name: "",
-                note: "",
-                detail: [
-                    '',
-                ],
-            },
-
-            {
-                id: "406",
-                name: "",
-                note: "",
-                detail: [
-                    '',
-                ],
-            },
-
-            {
-                id: "407",
-                name: "",
-                note: "",
-                detail: [
-                    '',
+                    '●<button class="keyword" getPerson="401">６０代男性</button>',
+                    '●<button class="keyword" getPerson="402">年齢不明・男性</button>',
+                    '●<button class="keyword" getPerson="403">年齢不明・男性</button>',
+                    '●<button class="keyword" getPerson="404">年齢不明・男性</button>',
+                    '●<button class="keyword" getPerson="405">年齢不明・女性</button>',
+                    '●<button class="keyword" getPerson="406">年齢不明・女性</button>',
+                    '●<button class="keyword" getPerson="407">年齢不明・性別不明</button>',
                 ],
             },
 
