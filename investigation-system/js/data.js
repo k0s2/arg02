@@ -124,50 +124,33 @@ export function getItemCategory(type, id) {
 }
 
 // ====================================================================================================
-// アイテム解放
+// 日付置換
 // ====================================================================================================
 
 // 日付置換パターン
 const DATE_PATTERN = /\{date(?:\(\s*([+-]?\d+)?\s*(?:,\s*["']([^"']*)["'])?\s*\))?\}/g;
 
 /**
- * 日付指定が含まれているか確認
- * @param {string} text 対象の文章
- * @returns {boolean}
- */
-function hasDateToken(text) {
-    DATE_PATTERN.lastIndex = 0;
-
-    const exists = DATE_PATTERN.test(text);
-
-    DATE_PATTERN.lastIndex = 0;
-
-    return exists;
-}
-
-/**
- * 日付指定を置換
+ * 日付指定を含む文字列を置換
  * @param {string} text 元の文章
- * @param {Date} baseDate 基準日
- * @returns {string|undefined} 生成した文章
+ * @returns {string} 置換した文章
  */
-function formatAcquiredText(text, baseDate) {
+export function formatDateText(text) {
 
-    // 日付指定がなければ保存しない
-    if (!hasDateToken(text)) {
-        return undefined;
-    }
+    // ゲーム起動日を取得
+    const baseDate = getGameStartDate();
 
-    // 日付指定を置換
     return text.replace(
         DATE_PATTERN,
         (match, offset, format) => {
+
+            // 基準日を複製
             const date = new Date(baseDate);
 
-            // 基準日から指定日数を加算
+            // 指定日数を加算
             date.setDate(date.getDate() + Number(offset || 0));
 
-            // 表示形式
+            // 日付の各要素
             const values = {
                 yyyy: String(date.getFullYear()),
                 yy: String(date.getFullYear()).slice(-2),
@@ -177,47 +160,22 @@ function formatAcquiredText(text, baseDate) {
                 d: String(date.getDate()),
             };
 
-            // 形式を指定していない場合
+            // 表示形式
             const pattern = format || "yyyy/mm/dd";
 
             return pattern.replace(
                 /yyyy|yy|mm|m|dd|d/g,
                 token => values[token]
             );
+
         }
     );
 
 }
 
-/**
- * 日付指定を含むタイトルを生成
- * @param {string} title 元のタイトル
- * @param {Date} baseDate 基準日
- * @returns {string|undefined} 生成したタイトル
- */
-function createAcquiredTitle(title, baseDate) {
-    return formatAcquiredText(title, baseDate);
-}
-
-/**
- * 日付指定を含む詳細本文を生成
- * @param {Array} detail 元の詳細本文
- * @param {Date} baseDate 基準日
- * @returns {Array|undefined} 生成した詳細本文
- */
-function createAcquiredDetail(detail, baseDate) {
-
-    // 日付指定がなければ保存しない
-    if (!detail.some(text => hasDateToken(text))) {
-        return undefined;
-    }
-
-    // 各文章の日付を置換
-    return detail.map(text =>
-        formatAcquiredText(text, baseDate) ?? text
-    );
-
-}
+// ====================================================================================================
+// アイテム解放
+// ====================================================================================================
 
 /**
  * 指定したアイテムを解放
@@ -226,21 +184,15 @@ function createAcquiredDetail(detail, baseDate) {
  * @returns {boolean} 新規解放されたか
  */
 export function acquireItem(type, id) {
-    // データを取得
+
+    // データが存在するか確認
     const item = getItemData(type, id);
 
-    // データが存在しない場合
     if (item === undefined) {
         return false;
     }
 
-    // ゲーム起動日を取得
-    const baseDate = getGameStartDate();
+    // 解放
+    return unlockItem(type, id);
 
-    // 基準日からタイトルと詳細を生成
-    const title = createAcquiredTitle(item.name, baseDate);
-    const detail = createAcquiredDetail(item.detail, baseDate);
-
-    // セーブデータに解放状態と置換結果を登録
-    return unlockItem(type, id, title, detail);
 }

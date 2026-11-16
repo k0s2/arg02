@@ -172,11 +172,9 @@ export function getUnreadIds(type) {
  * アイテムを解放
  * @param {string} type データの種類
  * @param {number|string} id アイテムID
- * @param {string|undefined} title 保存するタイトル
- * @param {Array|undefined} detail 保存する詳細本文
  * @returns {boolean} 新規解放されたか
  */
-export function unlockItem(type, id, title, detail) {
+export function unlockItem(type, id) {
     const records = saveData[type];
 
     // 対応していない種類なら処理しない
@@ -190,22 +188,10 @@ export function unlockItem(type, id, title, detail) {
     }
 
     // 解放
-    const record = {
+    records.push({
         id,
         read: false,
-    };
-
-    // タイトルが指定されている場合
-    if (title !== undefined) {
-        record.title = title;
-    }
-
-    // 詳細本文が指定されている場合
-    if (detail !== undefined) {
-        record.detail = detail;
-    }
-
-    records.push(record);
+    });
 
     // 保存
     save();
@@ -293,44 +279,6 @@ export function markRead(type, id) {
     // 保存
     save();
 
-}
-
-/**
- * アイテムの表示タイトルを取得
- * @param {string} type データの種類
- * @param {number|string} id アイテムID
- * @param {string} defaultTitle 通常のタイトル
- * @returns {string} 表示タイトル
- */
-export function getItemTitle(type, id, defaultTitle) {
-    const records = saveData[type];
-
-    if (!Array.isArray(records)) {
-        return defaultTitle;
-    }
-
-    const target = records.find(item => item.id == id);
-
-    return target?.title || defaultTitle;
-}
-
-/**
- * アイテムの表示詳細を取得
- * @param {string} type データの種類
- * @param {number|string} id アイテムID
- * @param {Array} defaultDetail 通常の詳細本文
- * @returns {Array} 表示する詳細本文
- */
-export function getItemDetail(type, id, defaultDetail) {
-    const records = saveData[type];
-
-    if (!Array.isArray(records)) {
-        return defaultDetail;
-    }
-
-    const target = records.find(item => item.id == id);
-
-    return target?.detail ?? defaultDetail;
 }
 
 // ====================================================================================================

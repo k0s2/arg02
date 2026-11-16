@@ -6,6 +6,11 @@
 // データ
 // --------------------------------------------------
 
+// データ取得
+import {
+    formatDateText,
+} from "./data.js";
+
 // 【証拠】
 import evidenceData from "../../data/evidence.js";
 
@@ -16,7 +21,6 @@ import personData from "../../data/person.js";
 import {
     getUnlockedIds,
     getUnreadIds,
-    getItemTitle,
     markRead,
 } from "../../data/save.js";
 
@@ -107,7 +111,7 @@ function createListItem(item, selectedId, type, selectFunction) {
     // 名称
     const name = document.createElement("div");
     name.className = "name";
-    name.textContent = getItemTitle(type, item.id, item.name);
+    name.textContent = formatDateText(item.name);
 
     // 簡易詳細
     const note = document.createElement("div");

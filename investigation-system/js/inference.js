@@ -24,6 +24,12 @@ import {
 // データ
 // --------------------------------------------------
 
+// データ取得
+import {
+    getItemData,
+    formatDateText,
+} from "./data.js";
+
 // 【推理】データ
 import inferenceData from "../../data/inference.js";
 
@@ -31,13 +37,7 @@ import inferenceData from "../../data/inference.js";
 import {
     flagOn,
     isFlagOn,
-    getItemTitle,
 } from "../../data/save.js";
-
-// データ取得
-import {
-    getItemData,
-} from "./data.js";
 
 // ====================================================================================================
 // 【推理】処理
@@ -100,8 +100,8 @@ export async function executeInference(
         nameEvidence = getItemTitle("evidence", selectedEvidenceId, nameEvidence);
 
         // 【人物】名
-        let namePerson = getItemData("person", selectedPersonId).name;
-        namePerson = getItemTitle("person", selectedPersonId, namePerson);
+        let namePerson = formatDateText(getItemData("person", selectedPersonId).name);
+        namePerson = formatDateText(getItemTitle("person", selectedPersonId, namePerson));
 
         // ダイアログ表示
         const res = await showDialog("「" + nameEvidence + "」と「" + namePerson + "」の組み合わせから、得られる情報は無さそうだ。");

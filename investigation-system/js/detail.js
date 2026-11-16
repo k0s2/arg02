@@ -35,22 +35,21 @@ import {
 // データ
 // --------------------------------------------------
 
-// セーブ
-import {
-    isUnlocked,
-    getItemTitle,
-    getItemDetail,
-    flagOn,
-    isFlagOn,
-} from "../../data/save.js";
-
 // データ取得
 import {
     getEvidence,
     getPerson,
     getItemCategory,
     acquireItem as unlockItem,
+    formatDateText,
 } from "./data.js";
+
+// セーブ
+import {
+    isUnlocked,
+    flagOn,
+    isFlagOn,
+} from "../../data/save.js";
 
 // ====================================================================================================
 // 要素取得
@@ -309,9 +308,7 @@ function renderDetailTitle(title, item, type) {
     title.innerHTML = "";
 
     // 項目名
-    const name = document.createTextNode(
-        getItemTitle(type, item.id, item.name)
-    );
+    const name = document.createTextNode(formatDateText(item.name));
     title.appendChild(name);
 
     // カテゴリー
@@ -344,11 +341,7 @@ function renderEvidenceDetail(item, title, detail, acquireItem) {
     renderDetailTitle(title, item, "evidence");
 
     // 文章
-    detail.innerHTML = getItemDetail(
-        "evidence",
-        item.id,
-        item.detail
-    ).join("<br>");
+    detail.innerHTML = item.detail.map(formatDateText).join("<br>");
 
     // スクロールを戻す
     detail.scrollTo(0, 0);
@@ -378,11 +371,7 @@ function renderPersonDetail(item, title, detail, acquireItem) {
     renderDetailTitle(title, item, "person");
 
     // 文章
-    detail.innerHTML = getItemDetail(
-        "person",
-        item.id,
-        item.detail
-    ).join("<br>");
+    detail.innerHTML = item.detail.map(formatDateText).join("<br>");
 
     // スクロールを戻す
     detail.scrollTo(0, 0);
