@@ -170,6 +170,11 @@
                 border-top: solid 1px var(--color-line);
                 border-bottom: solid 1px var(--color-line);
                 font-size: 12px;
+
+                /* 間隔 */
+                br+& {
+                    margin-top: 2em;
+                }
             }
 
         }

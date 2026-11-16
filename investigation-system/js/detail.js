@@ -208,8 +208,6 @@ function setKeyword(detailElement, acquireItem) {
 
     // 要素ごとに処理
     targets.forEach((target) => {
-        console.dir(target.classList);
-
         // 解放対象を取得
         const items = [
             {

@@ -171,7 +171,6 @@ function renderGroupedList(
         // グループ
         const groupElement = document.createElement("details");
         groupElement.className = "itemGroup";
-        groupElement.open = true;
         groupElement.dataset.groupId = String(group.id);
 
         // グループ名
