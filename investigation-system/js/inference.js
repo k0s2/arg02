@@ -31,6 +31,7 @@ import inferenceData from "../../data/inference.js";
 import {
     flagOn,
     isFlagOn,
+    getItemTitle,
 } from "../../data/save.js";
 
 // データ取得
@@ -95,10 +96,12 @@ export async function executeInference(
     // 不一致
     if (results.length == 0) {
         // 【証拠】名
-        const nameEvidence = getItemData("evidence", selectedEvidenceId).name;
+        let nameEvidence = getItemData("evidence", selectedEvidenceId).name;
+        nameEvidence = getItemTitle("evidence", selectedEvidenceId, nameEvidence);
 
         // 【人物】名
-        const namePerson = getItemData("person", selectedPersonId).name;
+        let namePerson = getItemData("person", selectedPersonId).name;
+        namePerson = getItemTitle("person", selectedPersonId, namePerson);
 
         // ダイアログ表示
         const res = await showDialog("「" + nameEvidence + "」と「" + namePerson + "」の組み合わせから、得られる情報は無さそうだ。");
@@ -129,7 +132,7 @@ export async function executeInference(
             return;
         }
 
-        rule.newInfo.forEach((info) => {
+        rule.newInfo.forEach(async (info) => {
 
             const item = getItemData(info.type, info.id);
 
@@ -149,16 +152,18 @@ export async function executeInference(
                 }
 
                 // ダイアログ表示
-                showThinkDialog(rule.dialog);
+                const res = await showThinkDialog(rule.dialog);
 
                 // 【ストーリー進行】チュートリアル
-                if (isFlagOn("tutorial-5") == false) {
-                    flagOn("tutorial-1");
-                    flagOn("tutorial-2");
-                    flagOn("tutorial-3");
-                    flagOn("tutorial-4");
-                    flagOn("tutorial-5");
-                    hideTutorial();
+                if (res == 0) {
+                    if (isFlagOn("tutorial-5") == false) {
+                        flagOn("tutorial-1");
+                        flagOn("tutorial-2");
+                        flagOn("tutorial-3");
+                        flagOn("tutorial-4");
+                        flagOn("tutorial-5");
+                        hideTutorial();
+                    }
                 }
 
             }

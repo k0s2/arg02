@@ -1,12 +1,12 @@
 export default [
 
     // --------------------------------------------------
-    // 谷戸家
+    // 祖母の葬式
     // --------------------------------------------------
 
     {
         id: "1",
-        name: "谷戸家",
+        name: "祖母の葬式",
         items: [
 
             {
@@ -106,15 +106,14 @@ export default [
                     '俺が持ち出した情報と、現役時代に使っていた捜査システムを送る。',
                     '活用してくれ',
                     '',
-                    'システムは<button class="dummyLink">ここ</button>からインストールしてくれ。',
-                    '若者なら、なんとなく使い方は分かるだろ。',
+                    '<button class="keyword file get">investigation_system_ver.1.2.0</button><button class="keyword file" getEvidence="202">case_kazamichi.pdf</button>',
 
                 ],
             },
 
             {
                 id: "202",
-                name: "事件概要",
+                name: "風路山殺人事件概要",
                 note: "立花から送られてきた、警察の極秘情報",
                 detail: [
                     '',

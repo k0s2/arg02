@@ -104,16 +104,58 @@
                 cursor: pointer;
                 transition: color 0.25s;
 
-                /* 獲得済み */
-                &.get {
-                    cursor: initial;
-                }
-
                 /* ホバー */
                 @media (hover: hover) {
                     &:not(.get):hover {
                         color: var(--color-main);
                     }
+                }
+
+                /* 獲得済み */
+                &.get {
+                    cursor: initial;
+                }
+
+                /* 添付ファイル */
+                &.file {
+
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 4px 8px;
+                    background: rgba(255, 255, 255, 0.25);
+                    border-radius: 8px;
+                    cursor: pointer;
+
+                    /* アイコン */
+                    &::before {
+                        content: "";
+                        display: inline-block;
+                        width: 16px;
+                        height: 16px;
+                        margin-right: 8px;
+                        background-color: currentColor;
+                        mask: url("../../image/file.svg") center / contain no-repeat;
+                    }
+
+                    /* 獲得済み */
+                    &.get {
+                        color: #a8f;
+                        text-decoration: underline;
+                        transition: color 0.25s;
+
+                        /* ホバー */
+                        @media (hover: hover) {
+                            &:hover {
+                                color: var(--color-main);
+                            }
+                        }
+                    }
+
+                    /* 間隔 */
+                    &+& {
+                        margin-left: 8px;
+                    }
+
                 }
 
             }
@@ -128,20 +170,6 @@
                 border-top: solid 1px var(--color-line);
                 border-bottom: solid 1px var(--color-line);
                 font-size: 12px;
-            }
-
-            /* ダミーリンク */
-            .dummyLink {
-                color: #a8f;
-                text-decoration: underline;
-                transition: color 0.25s;
-
-                /* ホバー */
-                @media (hover: hover) {
-                    &:hover {
-                        color: var(--color-main);
-                    }
-                }
             }
 
         }

@@ -244,20 +244,27 @@ main {
 
         }
 
+        body.loaded &.update {
+            animation: update 2.0s ease;
+        }
+
     }
 
 }
 
 /* 更新アニメ */
-.update {
-    animation: update 2.0s ease;
-}
-
 @keyframes update {
-    0% {}
 
+    0%,
+    20%,
+    40% {
+        background-color: var(--color-font);
+    }
+
+    10%,
+    30%,
     50% {
-        background-color: var(--color-focus-1);
+        background-color: var(--color-main);
     }
 
     100% {}

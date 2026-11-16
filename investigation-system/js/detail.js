@@ -16,7 +16,6 @@ import {
 
 import {
     showDialog,
-    showThinkDialog,
 } from "../../template/dialog/controler.js";
 
 // --------------------------------------------------
@@ -31,15 +30,6 @@ import {
     updateEvidenceSelection,
     updatePersonSelection,
 } from "./list.js";
-
-// --------------------------------------------------
-// ノイズ
-// --------------------------------------------------
-
-import {
-    startGlitch,
-    stopGlitch,
-} from "./noise.js"
 
 // --------------------------------------------------
 // データ
@@ -218,6 +208,7 @@ function setKeyword(detailElement, acquireItem) {
 
     // 要素ごとに処理
     targets.forEach((target) => {
+        console.dir(target.classList);
 
         // 解放対象を取得
         const items = [
@@ -245,20 +236,26 @@ function setKeyword(detailElement, acquireItem) {
 
         });
 
-        // 解放対象がなければ終了
-        const unlockItems = items.filter(item => item.ids.length > 0);
-
-        if (unlockItems.length === 0) {
-            return;
-        }
-
         // すべて取得済みなら取得済み表示
+        const unlockItems = items.filter(item => item.ids.length > 0);
         const isComplete = () => unlockItems.every(item =>
             isUnlocked(item.type, item.ids)
         );
 
+        // 取得済み
         if (isComplete()) {
+            // クラスを付与
             target.classList.add("get");
+
+            // ファイルの場合
+            if (target.classList.contains("file")) {
+                // クリックイベント
+                target.addEventListener("click", () => {
+                    // ダイアログ表示
+                    showDialog("既にダウンロード済みのファイルです。");
+                });
+            }
+
             return;
         }
 
@@ -345,36 +342,12 @@ function renderEvidenceDetail(item, title, detail, acquireItem) {
     renderDetailTitle(title, item, "evidence");
 
     detail.innerHTML = item.detail.join("<br>");
+
+    // スクロールを戻す
     detail.scrollTo(0, 0);
 
+    // キーワードを設定
     setKeyword(detail, acquireItem);
-
-    // --------------------------------------------------
-    // 【ストーリー進行】
-    // --------------------------------------------------
-
-    const targetSpecial = detail.querySelector(".dummyLink");
-
-    if (targetSpecial) {
-        targetSpecial.addEventListener("click", async () => {
-            // ノイズON
-            startGlitch();
-
-            // ダイアログ1
-            const res = await showDialog("既にインストールされています。");
-
-            // ダイアログ2
-            if (res == 0) {
-                // ノイズOFF
-                stopGlitch();
-
-                await showThinkDialog([
-                    "既にインストールされてる……？",
-                    "なぜ……？",
-                ]);
-            }
-        });
-    }
 }
 
 /**
