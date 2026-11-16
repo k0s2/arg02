@@ -39,6 +39,7 @@ import {
 import {
     isUnlocked,
     getItemTitle,
+    getItemDetail,
     flagOn,
     isFlagOn,
 } from "../../data/save.js";
@@ -331,15 +332,23 @@ function renderDetailTitle(title, item, type) {
  * @returns {void}
  */
 function renderEvidenceDetail(item, title, detail, acquireItem) {
+    // 無効なアイテム
     if (item === undefined) {
+        // 初期化
         title.innerHTML = "";
         detail.innerHTML = "";
         return;
     }
 
+    // タイトル
     renderDetailTitle(title, item, "evidence");
 
-    detail.innerHTML = item.detail.join("<br>");
+    // 文章
+    detail.innerHTML = getItemDetail(
+        "evidence",
+        item.id,
+        item.detail
+    ).join("<br>");
 
     // スクロールを戻す
     detail.scrollTo(0, 0);
@@ -357,17 +366,28 @@ function renderEvidenceDetail(item, title, detail, acquireItem) {
  * @returns {void}
  */
 function renderPersonDetail(item, title, detail, acquireItem) {
+    // 無効なアイテム
     if (item === undefined) {
+        // 初期化
         title.innerHTML = "";
         detail.innerHTML = "";
         return;
     }
 
+    // タイトル
     renderDetailTitle(title, item, "person");
 
-    detail.innerHTML = item.detail.join("<br>");
+    // 文章
+    detail.innerHTML = getItemDetail(
+        "person",
+        item.id,
+        item.detail
+    ).join("<br>");
+
+    // スクロールを戻す
     detail.scrollTo(0, 0);
 
+    // キーワードを設定
     setKeyword(detail, acquireItem);
 }
 

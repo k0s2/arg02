@@ -102,7 +102,7 @@ export default [
 
             {
                 id: "201",
-                name: "アーカイブ {date(-3)}",
+                name: 'アーカイブ {date(-3, "yyyy/mm/dd")}',
                 note: "立花との、最初のやりとり",
                 detail: [
                     '<span class="mailTitle">谷戸俊道　t.yato@a-mail.co.jp</span>',

@@ -127,45 +127,80 @@ export function getItemCategory(type, id) {
 // ====================================================================================================
 
 /**
- * 取得時点の日付・時刻でタイトルを生成
- * @param {string} title 元のタイトル
- * @returns {string|undefined} 生成したタイトル
+ * 取得時点の日付で文章を生成
+ * @param {string} text 元の文章
+ * @param {Date} acquiredAt 取得日時
+ * @returns {string|undefined} 生成した文章
  */
-function createAcquiredTitle(title) {
+function formatAcquiredText(text, acquiredAt) {
 
-    // 動的な日付指定がなければ保存しない
-    if (!/\{date\([+-]?\d+\)\}/.test(title)) {
+    // 日付指定がなければ保存しない
+    if (!/\{date(?:\([+-]?\d+(?:,\s*["'][^"']+["'])?\))?\}/.test(text)) {
         return undefined;
     }
 
-    // 取得時点の日時
-    const acquiredAt = new Date();
-
-    // 日付・時刻を整形
-    const formatDate = (date) => {
-        const pad = (value) => {
-            return String(value).padStart(2, "0");
-        };
-
-        return (
-            `${date.getFullYear()}/`
-            + `${pad(date.getMonth() + 1)}/`
-            + `${pad(date.getDate())}`
-        );
-    };
-
     // 日付指定を置換
-    return title.replace(
-        /\{date\(([+-]?\d+)\)\}/g,
-        (match, offset) => {
+    return text.replace(
+        /\{date(?:\(([+-]?\d+)?(?:,\s*["']([^"']+)["'])?\))?\}/g,
+        (match, offset, format) => {
             const date = new Date(acquiredAt);
 
             // 指定日数を加算
-            date.setDate(date.getDate() + Number(offset));
+            date.setDate(date.getDate() + Number(offset || 0));
 
-            return formatDate(date);
+            // 表示形式
+            const values = {
+                yyyy: String(date.getFullYear()),
+                yy: String(date.getFullYear()).slice(-2),
+                mm: String(date.getMonth() + 1).padStart(2, "0"),
+                m: String(date.getMonth() + 1),
+                dd: String(date.getDate()).padStart(2, "0"),
+                d: String(date.getDate()),
+            };
+
+            // 形式を指定していない場合
+            const pattern = format || "yyyy/mm/dd";
+
+            return pattern.replace(
+                /yyyy|yy|mm|m|dd|d/g,
+                token => values[token]
+            );
         }
     );
+
+}
+
+/**
+ * 取得時点の日付でタイトルを生成
+ * @param {string} title 元のタイトル
+ * @param {Date} acquiredAt 取得日時
+ * @returns {string|undefined} 生成したタイトル
+ */
+function createAcquiredTitle(title, acquiredAt) {
+    return formatAcquiredText(title, acquiredAt);
+}
+
+/**
+ * 取得時点の日付で詳細本文を生成
+ * @param {Array} detail 元の詳細本文
+ * @param {Date} acquiredAt 取得日時
+ * @returns {Array|undefined} 生成した詳細本文
+ */
+function createAcquiredDetail(detail, acquiredAt) {
+
+    // 各文章の日付を置換
+    const formatted = detail.map(text =>
+        formatAcquiredText(text, acquiredAt) ?? text
+    );
+
+    // 日付指定がなければ保存しない
+    if (!detail.some(text =>
+        /\{date(?:\([+-]?\d+(?:,\s*["'][^"']+["'])?\))?\}/.test(text)
+    )) {
+        return undefined;
+    }
+
+    return formatted;
 
 }
 
@@ -184,9 +219,13 @@ export function acquireItem(type, id) {
         return false;
     }
 
-    // 取得時点のタイトルを生成
-    const title = createAcquiredTitle(item.name);
+    // 取得時点の日時
+    const acquiredAt = new Date();
 
-    // セーブデータに解放状態とタイトルを登録
-    return unlockItem(type, id, title);
+    // 取得時点のタイトルと詳細を生成
+    const title = createAcquiredTitle(item.name, acquiredAt);
+    const detail = createAcquiredDetail(item.detail, acquiredAt);
+
+    // セーブデータに解放状態と置換結果を登録
+    return unlockItem(type, id, title, detail);
 }

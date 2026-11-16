@@ -14,6 +14,9 @@ const SAVE_KEY = "remains13_save";
 
 function createInitialSave() {
     return {
+        // 起動日
+        date: null,
+
         // 進行フラグ
         flag: [],
 
@@ -141,9 +144,10 @@ export function getUnreadIds(type) {
  * @param {string} type データの種類
  * @param {number|string} id アイテムID
  * @param {string|undefined} title 保存するタイトル
+ * @param {Array|undefined} detail 保存する詳細本文
  * @returns {boolean} 新規解放されたか
  */
-export function unlockItem(type, id, title) {
+export function unlockItem(type, id, title, detail) {
     const records = saveData[type];
 
     // 対応していない種類なら処理しない
@@ -165,6 +169,11 @@ export function unlockItem(type, id, title) {
     // タイトルが指定されている場合
     if (title !== undefined) {
         record.title = title;
+    }
+
+    // 詳細本文が指定されている場合
+    if (detail !== undefined) {
+        record.detail = detail;
     }
 
     records.push(record);
@@ -274,6 +283,25 @@ export function getItemTitle(type, id, defaultTitle) {
     const target = records.find(item => item.id == id);
 
     return target?.title || defaultTitle;
+}
+
+/**
+ * アイテムの表示詳細を取得
+ * @param {string} type データの種類
+ * @param {number|string} id アイテムID
+ * @param {Array} defaultDetail 通常の詳細本文
+ * @returns {Array} 表示する詳細本文
+ */
+export function getItemDetail(type, id, defaultDetail) {
+    const records = saveData[type];
+
+    if (!Array.isArray(records)) {
+        return defaultDetail;
+    }
+
+    const target = records.find(item => item.id == id);
+
+    return target?.detail ?? defaultDetail;
 }
 
 // ====================================================================================================
