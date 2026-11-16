@@ -96,12 +96,14 @@ export async function executeInference(
     // 不一致
     if (results.length == 0) {
         // 【証拠】名
-        let nameEvidence = getItemData("evidence", selectedEvidenceId).name;
-        nameEvidence = getItemTitle("evidence", selectedEvidenceId, nameEvidence);
+        const nameEvidence = formatDateText(
+            getItemData("evidence", selectedEvidenceId).name
+        );
 
         // 【人物】名
-        let namePerson = formatDateText(getItemData("person", selectedPersonId).name);
-        namePerson = formatDateText(getItemTitle("person", selectedPersonId, namePerson));
+        const namePerson = formatDateText(
+            getItemData("person", selectedPersonId).name
+        );
 
         // ダイアログ表示
         const res = await showDialog("「" + nameEvidence + "」と「" + namePerson + "」の組み合わせから、得られる情報は無さそうだ。");
@@ -152,7 +154,9 @@ export async function executeInference(
                 }
 
                 // ダイアログ表示
-                const res = await showThinkDialog(rule.dialog);
+                const res = await showThinkDialog(
+                    rule.dialog.map(formatDateText)
+                );
 
                 // 【ストーリー進行】チュートリアル
                 if (res == 0) {
