@@ -2,7 +2,7 @@
 /* フォント */
 /* -------------------------------------------------- */
 
-/* なのゴシック */
+/* アプリ明朝 */
 @font-face {
     font-family: "appliMincho";
     src: url("../font/AppliMincho.otf");
@@ -12,6 +12,11 @@
 @font-face {
     font-family: "smartFont";
     src: url("../font/SmartFontUI.otf");
+}
+
+/* デフォルト */
+* {
+    font-family: "appliMincho";
 }
 
 /* -------------------------------------------------- */
@@ -116,64 +121,48 @@ header {
     h1 {
 
         margin: 8px 0;
+        min-height: 1em;
         font-family: "smartFont" !important;
         line-height: 1;
         letter-spacing: 0.1em;
 
+        span {
+            font-family: inherit !important;
+            font-size: 0.5em;
+        }
+
     }
 
-    /* リンクボタン */
+    /* ボタンラッパー */
     .buttons {
 
         display: flex;
         align-items: center;
         gap: 32px;
 
-        /* リンク */
-        a {
+        /* ボタン */
+        button {
 
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100%;
             padding: 0 16px;
+            background: none;
+            border: none;
             box-sizing: border-box;
             color: var(--color-main);
-            font-weight: bold;
+            font-family: "smartFont" !important;
             text-align: center;
             transition: color 0.25s;
 
-            /* 非活性 */
-            &:not([href]) {
-                color: #444;
-            }
-
-            /* アクティブ */
-            &.active {
-                opacity: 1;
-                border-bottom: solid 4px currentColor;
-                color: var(--color-focus-1);
-            }
-
             /* ホバー */
             @media (hover: hover) {
-                &[href]:hover {
+                &:hover {
                     color: var(--color-focus-1);
                 }
             }
 
-        }
-
-        /* セパレーター */
-        .separator {
-            content: "";
-            display: inline-block;
-            width: 1px;
-            height: 40px;
-            border-right: 1px solid var(--color-main);
-            transform: rotate(30deg);
-            vertical-align: middle;
-            opacity: 0.6;
         }
 
     }
@@ -264,7 +253,7 @@ main {
     10%,
     30%,
     50% {
-        background-color: var(--color-main);
+        background-color: var(--color-focus-1);
     }
 
     100% {}

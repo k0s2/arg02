@@ -1,0 +1,131 @@
+#top {
+    background-image: url("../../image/bg-top.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    color: #fff;
+
+    /* メインコンテンツ */
+    main {
+        .contents {
+
+            margin: 0 auto;
+            width: 920px;
+            max-width: 100%;
+
+            /* タイトル */
+            h1 {
+                display: flex;
+                flex-direction: column;
+                margin: 24px 0;
+                font-size: 80px;
+                text-align: center;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+                word-break: keep-all;
+
+                /* スマホ用 */
+                @media (max-width: 779px) {
+                    font-size: 60px;
+                }
+            }
+
+            /* 見出し */
+            h2 {
+                border-bottom: solid 1px #fff;
+                margin: 0 0 1rem 0;
+            }
+
+            /* ボックス */
+            .box {
+
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(10px);
+                padding: 1em;
+
+                /* ボタンエリア */
+                &.buttonArea {
+                    display: grid;
+                    justify-content: center;
+                    gap: 16px;
+                }
+
+                /* 間隔 */
+                &+& {
+                    margin-top: 8px;
+                }
+
+                /* ボタン／リンク */
+                button,
+                a {
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background: #fff;
+                    border: none;
+                    border-radius: 100px;
+                    padding: 4px 16px;
+                    color: #000;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: background-color 0.25s, color 0.25s;
+
+                    /* ホバー */
+                    @media (hover: hover) {
+                        &:hover {
+                            background: var(--color-main);
+                            color: #fff;
+                        }
+                    }
+
+                    /* ENTER */
+                    &#button-start {
+                        font-size: 24px;
+                    }
+
+                }
+
+                /* 段落 */
+                p {
+
+                    margin: 0;
+
+                    /* 間隔 */
+                    &+p {
+                        margin-top: 1em;
+                    }
+                }
+
+                /* リンク */
+                .links {
+
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+
+                    /* リンクボタン */
+                    a {
+
+                        position: relative;
+
+                        /* アイコン */
+                        &::before {
+                            content: "";
+                            display: inline-block;
+                            width: 16px;
+                            height: 16px;
+                            margin-right: 4px;
+                            background-color: currentColor;
+                            mask: url("../../image/icon-link.svg") center / contain no-repeat;
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    }
+}
