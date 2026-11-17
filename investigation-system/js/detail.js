@@ -304,6 +304,7 @@ function setKeyword(detailElement, acquireItem) {
  * @returns {void}
  */
 function renderDetailTitle(title, item, type) {
+
     // 初期化
     title.innerHTML = "";
 
@@ -318,6 +319,29 @@ function renderDetailTitle(title, item, type) {
 
     // 要素を追加
     title.appendChild(category);
+
+}
+
+/**
+ * HTMLファイルを取得
+ * @param {Object} item 表示するデータ
+ * @param {string} type データの種類
+ * @returns {Promise<string>} HTML本文
+ */
+async function loadDetailHtml(item, type) {
+
+    const path = `../data/html/${type}/${item.id}.html`;
+
+    const response = await fetch(path);
+
+    if (!response.ok) {
+        throw new Error(`詳細HTMLの読み込みに失敗しました: ${path}`);
+    }
+
+    const html = await response.text();
+
+    return formatDateText(html);
+
 }
 
 /**
@@ -326,12 +350,19 @@ function renderDetailTitle(title, item, type) {
  * @param {HTMLElement} title タイトル要素
  * @param {HTMLElement} detail 詳細本文
  * @param {Function} acquireItem アイテム解放関数
- * @returns {void}
+ * @param {number} sequence 表示処理番号
+ * @returns {Promise<void>}
  */
-function renderEvidenceDetail(item, title, detail, acquireItem) {
+async function renderEvidenceDetail(
+    item,
+    title,
+    detail,
+    acquireItem,
+    sequence
+) {
+
     // 無効なアイテム
     if (item === undefined) {
-        // 初期化
         title.innerHTML = "";
         detail.innerHTML = "";
         return;
@@ -340,14 +371,23 @@ function renderEvidenceDetail(item, title, detail, acquireItem) {
     // タイトル
     renderDetailTitle(title, item, "evidence");
 
-    // 文章
-    detail.innerHTML = item.detail.map(formatDateText).join("<br>");
+    // HTML取得
+    const html = await loadDetailHtml(item, "evidence");
+
+    // 別の項目に切り替わっていたら中止
+    if (sequence !== transitionSequence) {
+        return;
+    }
+
+    // 本文
+    detail.innerHTML = html;
 
     // スクロールを戻す
     detail.scrollTo(0, 0);
 
     // キーワードを設定
     setKeyword(detail, acquireItem);
+
 }
 
 /**
@@ -356,12 +396,19 @@ function renderEvidenceDetail(item, title, detail, acquireItem) {
  * @param {HTMLElement} title タイトル要素
  * @param {HTMLElement} detail 詳細本文
  * @param {Function} acquireItem アイテム解放関数
- * @returns {void}
+ * @param {number} sequence 表示処理番号
+ * @returns {Promise<void>}
  */
-function renderPersonDetail(item, title, detail, acquireItem) {
+async function renderPersonDetail(
+    item,
+    title,
+    detail,
+    acquireItem,
+    sequence
+) {
+
     // 無効なアイテム
     if (item === undefined) {
-        // 初期化
         title.innerHTML = "";
         detail.innerHTML = "";
         return;
@@ -370,44 +417,59 @@ function renderPersonDetail(item, title, detail, acquireItem) {
     // タイトル
     renderDetailTitle(title, item, "person");
 
-    // 文章
-    detail.innerHTML = item.detail.map(formatDateText).join("<br>");
+    // HTML取得
+    const html = await loadDetailHtml(item, "person");
+
+    // 別の項目に切り替わっていたら中止
+    if (sequence !== transitionSequence) {
+        return;
+    }
+
+    // 本文
+    detail.innerHTML = html;
 
     // スクロールを戻す
     detail.scrollTo(0, 0);
 
     // キーワードを設定
     setKeyword(detail, acquireItem);
+
 }
 
 /**
  * 【証拠】の詳細を描画
  * @param {Object|undefined} item 表示するデータ
- * @returns {void}
+ * @param {number} sequence 表示処理番号
+ * @returns {Promise<void>}
  */
-function renderEvidenceDetailView(item) {
-    // 【証拠】の詳細を表示
-    renderEvidenceDetail(
+function renderEvidenceDetailView(item, sequence) {
+
+    return renderEvidenceDetail(
         item,
         evidenceTitle,
         evidenceDetail,
-        acquireItem
+        acquireItem,
+        sequence
     );
+
 }
 
 /**
  * 【人物】の詳細を描画
  * @param {Object|undefined} item 表示するデータ
- * @returns {void}
+ * @param {number} sequence 表示処理番号
+ * @returns {Promise<void>}
  */
-function renderPersonDetailView(item) {
-    // 【人物】の詳細を表示
-    renderPersonDetail(
+function renderPersonDetailView(item, sequence) {
+
+    return renderPersonDetail(
         item,
         personTitle,
         personDetail,
-        acquireItem
+        acquireItem,
+        sequence
     );
+
 }
 
 // ====================================================================================================
@@ -742,9 +804,20 @@ async function slideInDetail(panel, side, state, sequence) {
  * @param {Function} renderFunction 描画関数
  * @returns {void}
  */
-function updateDetailContent(panel, item, renderFunction) {
+async function updateDetailContent(
+    panel,
+    item,
+    renderFunction,
+    sequence
+) {
+
     // 詳細を描画
-    renderFunction(item);
+    await renderFunction(item, sequence);
+
+    // 古い処理なら終了
+    if (sequence !== transitionSequence) {
+        return;
+    }
 
     // 表示状態を更新
     if (item === undefined) {
@@ -755,6 +828,7 @@ function updateDetailContent(panel, item, renderFunction) {
 
     // 推理ボタンを更新
     updateInferenceButton();
+
 }
 
 /**
@@ -825,16 +899,17 @@ async function runDetailTransition(
     // 詳細内容を更新
     // ----------------------------------------------
 
+    await updateDetailContent(
+        panel,
+        item,
+        renderFunction,
+        sequence
+    );
+
     // 古い処理なら終了
     if (!isCurrentTransition(sequence)) {
         return;
     }
-
-    updateDetailContent(
-        panel,
-        item,
-        renderFunction
-    );
 
     // ----------------------------------------------
     // 詳細を閉じる
@@ -984,12 +1059,15 @@ export function selectPerson(id) {
  * 詳細を初期化
  * @returns {void}
  */
-export function initializeDetails() {
+export async function initializeDetails() {
     // ----------------------------------------------
     // 【証拠】
     // ----------------------------------------------
 
-    renderEvidenceDetailView(getEvidence(selectedEvidenceId));
+    await renderEvidenceDetailView(
+        getEvidence(selectedEvidenceId),
+        transitionSequence
+    );
 
     if (selectedEvidenceId === null) {
         evidencePanel.classList.add("empty");
@@ -999,7 +1077,10 @@ export function initializeDetails() {
     // 【人物】
     // ----------------------------------------------
 
-    renderPersonDetailView(getPerson(selectedPersonId));
+    await renderPersonDetailView(
+        getPerson(selectedPersonId),
+        transitionSequence
+    );
 
     if (selectedPersonId === null) {
         personPanel.classList.add("empty");
