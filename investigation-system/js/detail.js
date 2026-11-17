@@ -16,7 +16,7 @@ import {
 
 import {
     showDialog,
-} from "../../template/dialog/controler.js";
+} from "../../template/dialog/controller.js";
 
 // --------------------------------------------------
 // リスト

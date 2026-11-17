@@ -1,0 +1,98 @@
+/* ログイン */
+#login {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(#224, var(--color-bg));
+    color: var(--color-main);
+
+    /* フォント */
+    * {
+        font-family: "smartFont";
+    }
+
+    /* 見出し */
+    h1 {
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        margin: 0 0 48px;
+
+        span {
+            font-size: 0.5em;
+        }
+
+    }
+
+    /* ラッパー */
+    .loginWrapper {
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+        opacity: 1;
+        transition: opacity 0.25s;
+
+        /* 非表示 */
+        &.hidden {
+            opacity: 0;
+        }
+
+        /* トップテキスト */
+        .topText {
+            font-size: 24px;
+            text-align: center;
+        }
+
+        /* 左右割付 */
+        .justified {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 16px;
+            width: 100%;
+        }
+
+        /* ボタン */
+        button {
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            width: 100%;
+            background: var(--color-main);
+            border: solid 1px var(--color-main);
+            color: var(--color-bg);
+            font-size: 16px;
+            transition:
+                color 0.25s,
+                background-color 0.25s;
+
+            /* ホバー */
+            @media (hover: hover) {
+                &:hover {
+                    color: var(--color-main);
+                    background: var(--color-bg);
+                }
+            }
+
+        }
+
+        /* ログインメッセージ */
+        p {
+            font-family: "appliMincho";
+        }
+
+        /* ゲージ */
+        .loadGauge {}
+
+    }
+
+}

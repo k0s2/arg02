@@ -20,10 +20,96 @@ body#investigation-system {
     /* メイン */
     /* -------------------------------------------------- */
 
-    main {
+    /* メインラッパー */
+    #mainWrapper {
+
         display: flex;
-        padding: 16px 0;
-        overflow: hidden;
+        flex: 1;
+        flex-direction: column;
+
+        /* チュートリアル領域 */
+        #tutorialWrapper {
+
+            display: grid;
+            grid-template-rows: minmax(0, 1fr);
+            overflow: hidden;
+            transition: grid-template-rows 0.25s ease;
+
+            /* 非表示 */
+            &.hidden {
+                grid-template-rows: minmax(0, 0fr);
+            }
+
+            /* チュートリアルバー */
+            .tutorial {
+
+                display: flex;
+                align-items: center;
+                padding: 4px 8px;
+                background: var(--color-font);
+                color: var(--color-bg);
+                transition: background-color 0.25s;
+
+                /* タイトル */
+                .title {
+                    opacity: 0.5;
+                    margin-right: 16px;
+                    font-family: "smartFont" !important;
+                }
+
+                /* 段落 */
+                p {
+
+                    margin: 0;
+                    opacity: 1;
+                    transition: opacity 0.25s;
+
+                    /* 非表示 */
+                    &.hidden {
+                        opacity: 0;
+                    }
+
+                }
+
+                body.loaded &.update {
+                    animation: update 2.0s ease;
+                }
+
+            }
+
+        }
+
+        /* メイン領域 */
+        #mainContents {
+            display: flex;
+            flex: 1;
+            padding: 16px 0;
+            overflow: hidden;
+        }
+
     }
+
+}
+
+/* -------------------------------------------------- */
+/* アニメーション */
+/* -------------------------------------------------- */
+
+/* 更新アニメ */
+@keyframes update {
+
+    0%,
+    20%,
+    40% {
+        background-color: var(--color-font);
+    }
+
+    10%,
+    30%,
+    50% {
+        background-color: var(--color-focus-1);
+    }
+
+    100% {}
 
 }

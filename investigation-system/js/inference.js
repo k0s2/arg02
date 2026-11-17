@@ -18,7 +18,7 @@ import {
 import {
     showDialog,
     showThinkDialog,
-} from "../../template/dialog/controler.js";
+} from "../../template/dialog/controller.js";
 
 // --------------------------------------------------
 // データ
