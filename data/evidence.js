@@ -9,17 +9,14 @@ export default [
         name: "祖母の葬式",
         items: [
 
+            // 古びた便箋
             {
                 id: "001",
                 name: "古びた便箋",
                 note: "祖母の遺品整理で見つかった便箋",
-                detail: [
-                    'ばあちゃんの葬式が終わって、遺品整理をしてたら出てきた便箋だ。',
-                    '「<button class="keyword" getPerson="002">亮介</button>」という名前が書かれている。',
-                    '開封された跡があるから、ばあちゃんはこれを読んでいたのだろう。',
-                ],
             },
 
+            // 祖父の遺した手紙
             {
                 id: "002",
                 name: "祖父の遺した手紙",
@@ -42,6 +39,7 @@ export default [
                 ],
             },
 
+            // 立花という人物
             {
                 id: "003",
                 name: "立花という人物",
@@ -65,6 +63,7 @@ export default [
         name: "地名・施設",
         items: [
 
+            // 風路山
             {
                 id: "301",
                 name: "風路山",
@@ -76,6 +75,7 @@ export default [
                 ],
             },
 
+            // ペンション・グアルディアーノ
             {
                 id: "302",
                 name: "ペンション・グアルディアーノ",
@@ -100,12 +100,13 @@ export default [
         name: "立花とのメール",
         items: [
 
+            // アーカイブ
             {
                 id: "201",
-                name: 'アーカイブ {date(-3, "yyyy/mm/dd")}',
-                note: "立花との、最初のやりとり",
+                name: '最初のやり取り',
+                note: "立花との、最初のやり取り",
                 detail: [
-                    '<span class="mailTitle">谷戸俊道　t.yato@a-mail.co.jp</span>',
+                    '<span class="mailTitle">谷戸俊道　t.yato@a-mail.co.jp　[{date(-3, "yyyy/mm/dd")} 13:21]</span>',
                     '初めまして、あなたの甥の谷戸俊道です。',
                     '個人の連絡先が分からなかったので、お店のメールアドレス宛に連絡させていただきました。',
                     '',
@@ -115,7 +116,7 @@ export default [
 
                     // --------------------------------------------------
 
-                    '<span class="mailTitle">立花幸男　snow-man@a-mail.co.jp</span>',
+                    '<span class="mailTitle">立花幸男　snow-man@a-mail.co.jp　[{date(-3, "yyyy/mm/dd")} 13:34]</span>',
                     '個人アカウントで返信する。',
                     '',
                     '手紙の内容を安易に出さなかったのは正解だ。',
@@ -129,12 +130,12 @@ export default [
 
                     // --------------------------------------------------
 
-                    '<span class="mailTitle">谷戸俊道　t.yato@a-mail.co.jp</span>',
+                    '<span class="mailTitle">谷戸俊道　t.yato@a-mail.co.jp　[{date(-3, "yyyy/mm/dd")} 13:35]</span>',
                     'はい。どうしても。',
 
                     // --------------------------------------------------
 
-                    '<span class="mailTitle">立花幸男　snow-man@a-mail.co.jp</span>',
+                    '<span class="mailTitle">立花幸男　snow-man@a-mail.co.jp　[{date(-3, "yyyy/mm/dd")} 14:02]</span>',
                     '俺が警察から持ち出した情報を送る。',
                     '',
                     'それと、現役時代に使っていた捜査システムも送ろう。',
@@ -146,15 +147,18 @@ export default [
                 ],
             },
 
+            // 風路山変死事案・概要
             {
                 id: "202",
                 name: "風路山変死事案・概要",
-                note: "立花から送られてきた、警察の極秘情報",
+                note: "立花から送られてきた、警察の極秘情報の概要",
                 detail: [
+                    '事案に際して作成された警察資料は、以下の通り。',
+                    '●<button class="keyword" getEvidence="401">実況見分調書</button>',
+                    '●<button class="keyword" getEvidence="402"></button>',
+                    '●<button class="keyword" getEvidence="403"></button>',
                     '',
-                    '',
-                    '',
-                    '発見された死体は以下の通り。',
+                    '現場で発見された死体は、以下の通り。',
                     '●<button class="keyword" getPerson="401">６０代男性</button>',
                     '●<button class="keyword" getPerson="402">年齢不明・男性</button>',
                     '●<button class="keyword" getPerson="403">年齢不明・男性</button>',
@@ -162,6 +166,62 @@ export default [
                     '●<button class="keyword" getPerson="405">年齢不明・女性</button>',
                     '●<button class="keyword" getPerson="406">年齢不明・女性</button>',
                     '●<button class="keyword" getPerson="407">年齢不明・性別不明</button>',
+                ],
+            },
+
+        ],
+    },
+
+    // --------------------------------------------------
+    // 警察資料
+    // --------------------------------------------------
+
+    {
+        id: "4",
+        name: "警察資料",
+        items: [
+
+            // 実況見分調書
+            {
+                id: "401",
+                name: '実況見分調書',
+                note: "",
+                detail: [
+                    '現場は、<button class="keyword" getEvidence="302">ペンション・グアルディアーノ</button>とその周辺。',
+                    'ペンションオーナー「<button class="keyword" getPerson="202">花山　芳次</button>」の許可を得て、実況見分を実施。',
+                    '',
+                    '<table>',
+                    '  <tr>',
+                    '    <th>作成日</th>',
+                    '    <td>{date(-1825, "yyyy")}/08/09</td>',
+                    '    <th>見分者</th>',
+                    '    <td>司法警察員巡査長　立花幸男</td>',
+                    '  </tr>',
+                    '  <tr>',
+                    '    <th>見分日時</th>',
+                    '    <td colspan="3">{date(-1825, "yyyy")}/08/09　午前18時34分から午前20時30分までの間（天候　晴れ）</td>',
+                    '  </tr>',
+                    '  <tr>',
+                    '    <th>発生日時</th>',
+                    '    <td colspan="3">{date(-1825, "yyyy")}/08/06　午前07時04分頃（天候　曇り）</td>',
+                    '  </tr>',
+                    '</table>',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                ],
+            },
+
+            // ペンション宿泊記録
+            {
+                id: "402",
+                name: 'ペンション宿泊記録',
+                note: "",
+                detail: [
+                    '',
+
                 ],
             },
 
