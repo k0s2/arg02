@@ -96,6 +96,13 @@
             border: solid 1px var(--color-line);
             overflow-y: auto;
 
+            /* 段落 */
+            p {
+                &:first-child {
+                    margin-top: 0;
+                }
+            }
+
             /* キーワード */
             button {
 
@@ -184,17 +191,40 @@
 
             /* テーブル */
             table {
+
                 width: 100%;
+                table-layout: auto;
                 border-collapse: collapse;
 
+                /* セル */
                 th,
                 td {
                     border: 1px solid var(--color-line);
                     padding: 8px;
                 }
 
+                /* セル：ヘッダー */
                 th {
                     text-align: left;
+                }
+
+                /* 宿泊記録 */
+                &.table-booking {
+
+                    text-align: right;
+
+                    /* セル */
+                    tr>* {
+
+                        white-space: nowrap;
+
+                        /* 「ご予約名」 */
+                        &:nth-child(3) {
+                            width: 100%;
+                        }
+
+                    }
+
                 }
 
             }

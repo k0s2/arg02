@@ -204,7 +204,7 @@
             &.new {
                 &::after {
                     opacity: 1;
-                    animation: new-color 0.25s ease-in-out infinite alternate;
+                    animation: new-color 1s ease-in-out infinite alternate;
                 }
             }
 
@@ -344,6 +344,6 @@
     }
 
     to {
-        color: var(--color-focus-2);
+        color: transparent;
     }
 }
