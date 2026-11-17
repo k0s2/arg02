@@ -154,7 +154,7 @@ export default [
                     '',
                     '',
                     '',
-                    '発見された遺体は以下の通り。',
+                    '発見された死体は以下の通り。',
                     '●<button class="keyword" getPerson="401">６０代男性</button>',
                     '●<button class="keyword" getPerson="402">年齢不明・男性</button>',
                     '●<button class="keyword" getPerson="403">年齢不明・男性</button>',

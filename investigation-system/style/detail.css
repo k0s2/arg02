@@ -1,3 +1,7 @@
+:root {
+    --color-get: #caf;
+}
+
 /* -------------------------------------------------- */
 /* パネル */
 /* -------------------------------------------------- */
@@ -113,6 +117,7 @@
 
                 /* 獲得済み */
                 &.get {
+                    color: var(--color-get);
                     cursor: initial;
                 }
 
@@ -139,7 +144,7 @@
 
                     /* 獲得済み */
                     &.get {
-                        color: #a8f;
+                        color: var(--color-get);
                         text-decoration: underline;
                         transition: color 0.25s;
 

@@ -114,14 +114,14 @@ export default [
                 name: "死体#001",
                 note: "６０代・男性",
                 detail: [
-                    '死亡推定時刻：　{date(-1825, "yyyy/08/06")}',
+                    '【死亡推定時刻】{date(-1825, "yyyy")}/08/06 15:33',
                 ],
             },
 
             {
                 id: "402",
                 name: "死体#002",
-                note: "",
+                note: "年齢不明・男性",
                 detail: [
                     '',
                 ],
@@ -130,7 +130,7 @@ export default [
             {
                 id: "403",
                 name: "死体#003",
-                note: "",
+                note: "年齢不明・男性",
                 detail: [
                     '',
                 ],
@@ -139,7 +139,7 @@ export default [
             {
                 id: "404",
                 name: "死体#004",
-                note: "",
+                note: "年齢不明・男性",
                 detail: [
                     '',
                 ],
@@ -148,7 +148,7 @@ export default [
             {
                 id: "405",
                 name: "死体#005",
-                note: "",
+                note: "年齢不明・女性",
                 detail: [
                     '',
                 ],
@@ -157,7 +157,7 @@ export default [
             {
                 id: "406",
                 name: "死体#006",
-                note: "",
+                note: "年齢不明・男性",
                 detail: [
                     '',
                 ],
@@ -166,7 +166,7 @@ export default [
             {
                 id: "407",
                 name: "死体#007",
-                note: "",
+                note: "年齢不明・性別不明",
                 detail: [
                     '',
                 ],
