@@ -82,6 +82,11 @@
             height: auto;
             transition: height 0.25s ease;
 
+            /* 間隔 */
+            &+& {
+                margin-top: 2px;
+            }
+
             /* タイトル */
             .groupTitle {
 
@@ -241,6 +246,7 @@
 /* NEWアイコン */
 /* -------------------------------------------------- */
 
+/* 共通 */
 .itemList ul li,
 .itemGroup .groupTitle {
 
@@ -257,28 +263,27 @@
         font-size: 12px;
         font-weight: bold;
         pointer-events: none;
-        transition: opacity 0.25s ease;
+        transition: opacity 0.25s ease, color 0.25s;
     }
 
 }
 
+/* アコーディオン */
 .itemGroup .groupTitle {
+
     &::after {
         top: 50%;
         right: 12px;
         transform: translateY(-50%);
-        text-shadow:
-            2px 2px 0 var(--color-line),
-            -2px 2px 0 var(--color-line),
-            2px -2px 0 var(--color-line),
-            -2px -2px 0 var(--color-line),
-            2px 0px 0 var(--color-line),
-            0px 2px 0 var(--color-line),
-            -2px 0px 0 var(--color-line),
-            0px -2px 0 var(--color-line);
     }
+
+    &:hover::after {
+        color: var(--color-line);
+    }
+
 }
 
+/* アニメーション */
 .itemList ul li.new,
 .itemGroup:has(.new) .groupTitle {
     &::after {
