@@ -66,8 +66,6 @@
 
     border-top: solid 1px var(--color-line);
     border-bottom: solid 1px var(--color-line);
-    overflow-x: hidden;
-    overflow-y: auto;
     scroll-behavior: smooth;
 
     &,
@@ -82,7 +80,6 @@
         .itemGroup {
 
             height: auto;
-            overflow: clip;
             transition: height 0.25s ease;
 
             /* タイトル */
@@ -91,13 +88,10 @@
                 display: flex;
                 align-items: center;
                 gap: 8px;
-
                 padding: 4px 16px;
                 background: var(--color-line);
                 color: var(--color-font);
                 cursor: pointer;
-                list-style: none;
-
                 transition:
                     background-color 0.25s,
                     color 0.25s;
@@ -109,21 +103,15 @@
 
                 /* 開閉アイコン */
                 &::before {
-
                     content: "";
                     flex-shrink: 0;
-
                     width: 7px;
                     height: 7px;
-
                     border-top: 2px solid currentColor;
                     border-right: 2px solid currentColor;
-
                     transform: rotate(45deg);
                     transform-origin: center;
-
                     transition: transform 0.25s ease;
-
                 }
 
                 /* 展開時 */
@@ -177,36 +165,11 @@
         /* アイテム */
         li {
 
-            position: relative;
             height: auto;
-            overflow: clip;
             transition:
                 height 0.25s ease,
                 opacity 0.25s ease,
                 transform 0.25s ease;
-
-            /* 新規 */
-            &::after {
-                content: "NEW";
-                position: absolute;
-                top: 2px;
-                right: 4px;
-                border-radius: 8px;
-                opacity: 0;
-                color: var(--color-focus-1);
-                font-size: 12px;
-                font-weight: bold;
-                pointer-events: none;
-                transition: opacity 0.25s ease;
-            }
-
-            /* 未読 */
-            &.new {
-                &::after {
-                    opacity: 1;
-                    animation: new-color 1s ease-in-out infinite alternate;
-                }
-            }
 
             /* 空 */
             &.empty {
@@ -274,6 +237,58 @@
 
 }
 
+/* -------------------------------------------------- */
+/* NEWアイコン */
+/* -------------------------------------------------- */
+
+.itemList ul li,
+.itemGroup .groupTitle {
+
+    position: relative;
+
+    &::after {
+        content: "NEW";
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        border-radius: 8px;
+        opacity: 0;
+        color: var(--color-focus-1);
+        font-size: 12px;
+        font-weight: bold;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+    }
+
+}
+
+.itemGroup .groupTitle {
+    &::after {
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+        text-shadow:
+            2px 2px 0 var(--color-line),
+            -2px 2px 0 var(--color-line),
+            2px -2px 0 var(--color-line),
+            -2px -2px 0 var(--color-line),
+            2px 0px 0 var(--color-line),
+            0px 2px 0 var(--color-line),
+            -2px 0px 0 var(--color-line),
+            0px -2px 0 var(--color-line);
+    }
+}
+
+.itemList ul li.new,
+.itemGroup:has(.new) .groupTitle {
+    &::after {
+        opacity: 1;
+        animation: new-color 1s ease-in-out infinite alternate;
+    }
+}
+
+/* -------------------------------------------------- */
+
 /* 新規追加時の初期高さ */
 @starting-style {
 
@@ -340,10 +355,10 @@
 /* 新規アイテム */
 @keyframes new-color {
     from {
-        color: var(--color-focus-1);
+        opacity: 1;
     }
 
     to {
-        color: transparent;
+        opacity: 0;
     }
 }
