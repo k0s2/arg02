@@ -18,32 +18,57 @@
 
 <body id="login">
 
-    <h1>
-        INVESTIGATION SYSTEM
-        <span>ver.1.2.0</span>
-    </h1>
+    <div class="loginStage">
 
-    <div id="login-input" class="loginWrapper">
+        <h1>
+            INVESTIGATION SYSTEM
+            <span>ver.1.2.0</span>
+        </h1>
 
-        <div class="justified">
-            <span>DATA BASE</span><input value="CASE-KAZAMICHI" readonly tabindex="-1">
+        <div class="loginPanels">
+
+            <div id="login-input" class="loginWrapper">
+
+                <div class="justified">
+                    <span>DATA BASE</span><input value="CASE-KAZAMICHI" readonly tabindex="-1">
+                </div>
+
+                <div class="justified">
+                    <span>USER</span><input value="T.Y." readonly tabindex="-1">
+                </div>
+
+                <div class="justified">
+                    <span>PASSWORD</span><input type="password">
+                </div>
+
+                <button id="button-login">LOG IN</button>
+
+            </div>
+
+            <div id="login-message" class="loginWrapper hidden">
+
+                <p>
+                    パスワードが一致しなかったため、<br>
+                    読み込み専用モードで起動します。
+                </p>
+
+                <div class="loadGauge">
+
+                    <div class="loadInfo">
+                        <span>NOW LOADING</span>
+                        <span class="loadPercent">0%</span>
+                    </div>
+
+                    <div class="loadTrack">
+                        <div class="loadProgress"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="justified">
-            <span>USER</span><input value="T.Y." readonly tabindex="-1">
-        </div>
-
-        <div class="justified">
-            <span>PASSWORD</span><input>
-        </div>
-
-        <button id="button-login">LOG IN</button>
-
-    </div>
-
-    <div id="login-message" class="loginWrapper hidden">
-        <p>パスワードが一致しなかったため、読み込み専用モードで起動します。</p>
-        <div class="loadGauge"></div>
     </div>
 
 </body>
