@@ -1,6 +1,106 @@
 body#investigation-system {
 
     /* -------------------------------------------------- */
+    /* ヘッダー */
+    /* -------------------------------------------------- */
+
+    header {
+
+        padding: 8px 16px;
+
+        /* タイトル */
+        h1 {
+
+            margin: 0;
+            min-height: 1em;
+            font-family: "smartFont" !important;
+            letter-spacing: 0.1em;
+
+            span {
+                font-family: inherit !important;
+                font-size: 0.5em;
+            }
+
+        }
+
+        /* ステータス */
+        .status {
+
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            /* フォント */
+            >* {
+                color: var(--color-main);
+                font-family: "smartFont" !important;
+            }
+
+            /* ユーザー */
+            .user {
+
+                width: 10em;
+                padding: 4px;
+                border: solid 1px var(--color-line);
+
+                /* 見出し */
+                .title {
+                    font-size: 0.5em;
+                    opacity: 0.75;
+                }
+
+                /* ユーザー名 */
+                .name {
+
+                    text-align: right;
+
+                    /* モード */
+                    .mode {
+                        font-size: 12px;
+                        opacity: 0.75;
+
+                        /* READ ONLY */
+                        &.readOnly {
+                            color: #f88;
+                        }
+                    }
+
+                }
+
+            }
+
+
+            /* ボタン */
+            a {
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 4px 8px;
+                height: stretch;
+                background: var(--color-main);
+                border: solid 1px var(--color-main);
+                color: var(--color-bg);
+                font-size: 16px;
+                transition:
+                    color 0.25s,
+                    background-color 0.25s;
+
+                /* ホバー */
+                @media (hover: hover) {
+                    &:hover {
+                        color: var(--color-main);
+                        background: var(--color-bg);
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
+    /* -------------------------------------------------- */
     /* メイン */
     /* -------------------------------------------------- */
 

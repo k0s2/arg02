@@ -49,8 +49,8 @@ function hideDialog() {
     // ダイアログ外の操作を有効化
     // --------------------------------------------------
 
-    document.querySelector("main").inert = false;
     document.querySelector("header").inert = false;
+    document.querySelector("main").inert = false;
     document.querySelector("footer").inert = false;
 }
 
@@ -162,8 +162,8 @@ export async function showDialog(message, title = "", buttons = null, mode = 0) 
         // ダイアログ外の操作を無効化
         // --------------------------------------------------
 
-        document.querySelector("main").inert = true;
         document.querySelector("header").inert = true;
+        document.querySelector("main").inert = true;
         document.querySelector("footer").inert = true;
 
         // --------------------------------------------------
