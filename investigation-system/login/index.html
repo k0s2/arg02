@@ -6,10 +6,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="../style/common.css" />
+    <link rel="stylesheet" href="../../common/style/common.css" />
+    <link rel="stylesheet" href="../style/base.css" />
     <link rel="stylesheet" href="./style/base.css" />
 
-    <script type="module" src="../js/common.js"></script>
+    <script type="module" src="../../common/js/common.js"></script>
     <script type="module" src="./js/controller.js"></script>
 
     <title>タイトル未定</title>
@@ -37,24 +38,33 @@
                 <div id="login-input" class="loginWrapper">
 
                     <div class="justified">
-                        <label>DATA BASE</label>
+
+                        <div class="label">DATA BASE</div>
+
                         <div class="inputWrapper locked">
                             <input value="CASE-KAZAMICHI" readonly tabindex="-1">
                         </div>
+
                     </div>
 
                     <div class="justified">
-                        <label>USER</label>
+
+                        <div class="label">USER</div>
+
                         <div class="inputWrapper locked">
                             <input value="T.Y." readonly tabindex="-1">
                         </div>
+
                     </div>
 
                     <div class="justified">
-                        <label>PASSWORD</label>
+
+                        <div class="label">PASSWORD</div>
+
                         <div class="inputWrapper">
                             <input type="password">
                         </div>
+
                     </div>
 
                     <button id="button-login">LOG IN</button>

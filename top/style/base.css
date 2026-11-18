@@ -1,5 +1,5 @@
 #top {
-    background-image: url("../../image/bg-top.jpg");
+    background-image: url("../../common/image/bg-top.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -118,7 +118,7 @@
                             height: 16px;
                             margin-right: 4px;
                             background-color: currentColor;
-                            mask: url("../../image/icon-link.svg") center / contain no-repeat;
+                            mask: url("../../common/image/icon-link.svg") center / contain no-repeat;
                         }
 
                     }

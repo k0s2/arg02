@@ -3,7 +3,7 @@
 // ====================================================================================================
 
 // ダイアログ
-import { showDialog, showAlert } from "../../template/dialog/controller.js";
+import { showDialog, showAlert } from "../../common/template/dialog/controller.js";
 
 // ====================================================================================================
 // イベントを設定

@@ -7,33 +7,7 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    background: var(--color-bg);
     color: var(--color-main);
-
-    /* 背景グリッド */
-    &::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        opacity: 0.15;
-        background-image:
-            linear-gradient(var(--login-grid) 1px, transparent 1px),
-            linear-gradient(90deg, var(--login-grid) 1px, transparent 1px);
-        background-size: 40px 40px;
-    }
-
-    /* 背景光 */
-    &::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        pointer-events: none;
-        background: radial-gradient(ellipse at center,
-                #224 0%,
-                transparent 75%);
-    }
 
     /* 全体 */
     .loginStage {
@@ -154,7 +128,7 @@
             }
 
             /* ラベル */
-            label {
+            .label {
                 font-family: "smartFont";
                 font-size: 12px;
                 opacity: 0.75;
@@ -190,7 +164,7 @@
                         width: 16px;
                         height: 16px;
                         background: var(--color-main);
-                        mask: url("../../image/icon-lock.svg") center / contain no-repeat;
+                        mask: url("../../../common/image/icon-lock.svg") center / contain no-repeat;
                         transform: translateY(-50%);
                         pointer-events: none;
                         z-index: 1;

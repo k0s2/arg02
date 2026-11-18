@@ -7,16 +7,16 @@
 // --------------------------------------------------
 
 // 【証拠】
-import evidenceData from "../../../data/evidence.js";
+import evidenceData from "../../../common/data/evidence.js";
 
 // 【人物】
-import personData from "../../../data/person.js";
+import personData from "../../../common/data/person.js";
 
 // セーブ
 import {
     unlockItem,
     getGameStartDate,
-} from "../../../data/save.js";
+} from "../../../common/data/save.js";
 
 // ====================================================================================================
 // データ取得

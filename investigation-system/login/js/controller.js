@@ -126,7 +126,7 @@ buttonLogin.addEventListener("click", async () => {
 
     await wait(FADE_TIME);
 
-    location.href = "../investigation-system/";
+    location.href = "../terminal/";
 
 });
 

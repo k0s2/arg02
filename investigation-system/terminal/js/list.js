@@ -12,17 +12,17 @@ import {
 } from "./data.js";
 
 // 【証拠】
-import evidenceData from "../../../data/evidence.js";
+import evidenceData from "../../../common/data/evidence.js";
 
 // 【人物】
-import personData from "../../../data/person.js";
+import personData from "../../../common/data/person.js";
 
 // セーブ
 import {
     getUnlockedIds,
     getUnreadIds,
     markRead,
-} from "../../../data/save.js";
+} from "../../../common/data/save.js";
 
 // ====================================================================================================
 // 要素取得

@@ -9,7 +9,7 @@
 import {
     setTutorial,
     hideTutorial,
-} from "../../js/common.js";
+} from "../../../common/js/common.js";
 
 // --------------------------------------------------
 // ダイアログ
@@ -18,7 +18,7 @@ import {
 import {
     showDialog,
     showThinkDialog,
-} from "../../template/dialog/controller.js";
+} from "../../../common/template/dialog/controller.js";
 
 // --------------------------------------------------
 // データ
@@ -31,13 +31,13 @@ import {
 } from "./data.js";
 
 // 【推理】データ
-import inferenceData from "../../data/inference.js";
+import inferenceData from "../../../common/data/inference.js";
 
 // セーブ
 import {
     flagOn,
     isFlagOn,
-} from "../../data/save.js";
+} from "../../../common/data/save.js";
 
 // ====================================================================================================
 // 【推理】処理
