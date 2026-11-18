@@ -31,7 +31,7 @@ body#investigation-system {
 
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 16px;
 
             /* フォント */
             >* {
@@ -42,20 +42,22 @@ body#investigation-system {
             /* ユーザー */
             .user {
 
-                width: 10em;
-                padding: 4px;
-                border: solid 1px var(--color-line);
+                width: 15em;
+                font-size: 12px;
 
                 /* 見出し */
                 .title {
-                    font-size: 0.5em;
-                    opacity: 0.75;
+                    font-size: 0.75em;
                 }
 
                 /* ユーザー名 */
                 .name {
 
-                    text-align: right;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 4px 8px;
+                    border: solid 1px var(--color-line);
 
                     /* モード */
                     .mode {
@@ -80,7 +82,6 @@ body#investigation-system {
                 align-items: center;
                 justify-content: center;
                 padding: 4px 8px;
-                height: stretch;
                 background: var(--color-main);
                 border: solid 1px var(--color-main);
                 color: var(--color-bg);
