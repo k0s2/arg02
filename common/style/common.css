@@ -166,10 +166,24 @@ header {
             font-family: "smartFont" !important;
         }
 
+        /* ユーザー */
+        .user {
+
+            display: flex;
+            align-items: center;
+            opacity: 0.75;
+
+            /* 見出し */
+            span {
+                margin-right: 8px;
+                font-size: 0.5em;
+            }
+
+        }
+
         /* モード */
         .mode {
             font-size: 12px;
-            font-weight: bold;
             opacity: 0.75;
 
             /* READ ONLY */
