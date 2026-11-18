@@ -47,12 +47,6 @@ import {
 
 async function initializeController() {
 
-    // リスト
-    initializeLists(
-        selectEvidence,
-        selectPerson
-    );
-
     // ハッシュから選択IDを取得
     const params = new URLSearchParams(location.hash.slice(1));
 
@@ -69,6 +63,14 @@ async function initializeController() {
         personId !== null
         && isUnlocked("person", [personId])
     ) ? personId : null;
+
+    // リスト
+    initializeLists(
+        selectEvidence,
+        selectPerson,
+        selectedEvidenceId,
+        selectedPersonId
+    );
 
     // 詳細を初期化
     await initializeDetails(

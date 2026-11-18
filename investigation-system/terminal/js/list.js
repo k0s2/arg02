@@ -77,6 +77,32 @@ function getInitialOpenGroupIds(groups, type) {
 
 }
 
+/**
+ * 項目が属するグループIDを取得
+ * @param {Object[]} groups グループデータ
+ * @param {string|null} selectedId 選択中の項目ID
+ * @returns {string|null} グループID
+ */
+function getItemGroupId(groups, selectedId) {
+
+    if (selectedId === null) {
+        return null;
+    }
+
+    const group = groups.find((group) => {
+
+        return group.items.some((item) => {
+            return String(item.id) === String(selectedId);
+        });
+
+    });
+
+    return group !== undefined
+        ? String(group.id)
+        : null;
+
+}
+
 // ====================================================================================================
 // リスト項目生成
 // ====================================================================================================
@@ -386,20 +412,67 @@ function renderPersonList(
  * リストを初期化
  * @param {Function} selectEvidence 【証拠】選択関数
  * @param {Function} selectPerson 【人物】選択関数
+ * @param {string|null} selectedEvidenceId 選択中の【証拠】ID
+ * @param {string|null} selectedPersonId 選択中の【人物】ID
  * @returns {void}
  */
-export function initializeLists(selectEvidence, selectPerson) {
+export function initializeLists(
+    selectEvidence,
+    selectPerson,
+    selectedEvidenceId = null,
+    selectedPersonId = null
+) {
 
     // 【証拠】
+    const evidenceOpenGroupIds = getInitialOpenGroupIds(
+        evidenceData,
+        "evidence"
+    );
+
+    const evidenceGroupId = getItemGroupId(
+        evidenceData,
+        selectedEvidenceId
+    );
+
+    if (
+        evidenceGroupId !== null
+        && !evidenceOpenGroupIds.includes(evidenceGroupId)
+    ) {
+        evidenceOpenGroupIds.push(evidenceGroupId);
+    }
+
     renderEvidenceList(
-        null,
-        selectEvidence
+        selectedEvidenceId,
+        selectEvidence,
+        evidenceOpenGroupIds,
+        [],
+        evidenceOpenGroupIds
     );
 
     // 【人物】
+    const personOpenGroupIds = getInitialOpenGroupIds(
+        personData,
+        "person"
+    );
+
+    const personGroupId = getItemGroupId(
+        personData,
+        selectedPersonId
+    );
+
+    if (
+        personGroupId !== null
+        && !personOpenGroupIds.includes(personGroupId)
+    ) {
+        personOpenGroupIds.push(personGroupId);
+    }
+
     renderPersonList(
-        null,
-        selectPerson
+        selectedPersonId,
+        selectPerson,
+        personOpenGroupIds,
+        [],
+        personOpenGroupIds
     );
 
 }
