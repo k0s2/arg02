@@ -106,23 +106,27 @@
 
                 display: grid;
                 grid-template-rows: 0fr;
+                color: #afa;
                 opacity: 0;
                 overflow: hidden;
 
                 /* 展開 */
                 &.is-expanded {
                     grid-template-rows: 1fr;
-                    transition: grid-template-rows 500ms ease-out;
+                    transition: grid-template-rows 0.25s ease-out;
                 }
 
                 /* フェードイン */
                 &.is-visible {
                     opacity: 1;
-                    transition: opacity 300ms ease-out;
+                    transition: opacity 0.25s ease-out;
                 }
 
                 /* 段落 */
                 >p {
+                    margin-top: 1em;
+                    border-top: solid 1px currentColor;
+                    padding-top: 1em;
                     min-height: 0;
                     overflow: hidden;
                 }
