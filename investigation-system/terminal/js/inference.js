@@ -106,7 +106,10 @@ export async function executeInference(
         );
 
         // ダイアログ表示
-        const res = await showDialog("「" + nameEvidence + "」と「" + namePerson + "」の組み合わせから、得られる情報は無さそうだ。");
+        const res = await showDialog(
+            "「" + nameEvidence + "」と「" + namePerson + "」の組み合わせから、得られる情報は無さそうだ。",
+            "メモ"
+        );
 
         // 「閉じる」押下後
         if (res == 0) {
@@ -154,8 +157,9 @@ export async function executeInference(
                 }
 
                 // ダイアログ表示
-                const res = await showThinkDialog(
-                    rule.dialog.map(formatDateText)
+                const res = await showDialog(
+                    rule.dialog.map(formatDateText),
+                    "メモ"
                 );
 
                 // 【ストーリー進行】チュートリアル
@@ -173,7 +177,10 @@ export async function executeInference(
             }
             else {
                 // ダイアログ表示
-                showThinkDialog("この組み合わせから得られる情報は、もう無さそうだ。");
+                showDialog(
+                    "この組み合わせから得られる情報は、もう無さそうだ。",
+                    "メモ"
+                );
             }
 
         });
