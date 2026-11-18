@@ -44,7 +44,7 @@ async function fadeOut(element) {
 function resetLogin() {
 
     // 画面状態
-    document.body.classList.remove("leaving");
+    document.querySelector("main").classList.remove("leaving");
 
     areaInput.classList.remove("hidden");
     areaMessage.classList.add("hidden");
@@ -122,7 +122,7 @@ buttonLogin.addEventListener("click", async () => {
     await wait(500);
 
     // 画面遷移
-    document.body.classList.add("leaving");
+    document.querySelector("main").classList.add("leaving");
 
     await wait(FADE_TIME);
 

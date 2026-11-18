@@ -1,265 +1,268 @@
 /* ログイン */
 #login {
+    main {
 
-    --login-grid: #22c;
+        --login-grid: #22c;
 
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    color: var(--color-main);
-
-    /* 全体 */
-    .loginStage {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: min(60%, 400px);
-    }
-
-    /* タイトル */
-    .loginHeader {
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        padding: 0;
-        margin-bottom: 40px;
-        background: transparent;
-        color: var(--color-main);
-
-        .systemLabel {
-            font-family: "smartFont";
-            font-size: clamp(20px, 5vw, 28px);
-            letter-spacing: 0.1em;
-            text-align: center;
-        }
-
-        .systemVersion {
-            margin-top: 12px;
-            font-family: "smartFont";
-            font-size: 12px;
-            opacity: 0.75;
-        }
-
-    }
-
-    /* パネル */
-    .loginPanel {
-        box-sizing: border-box;
-        width: 100%;
-        padding: 24px;
-        border: solid 1px var(--color-line);
-        background: var(--color-bg-alpha);
-        box-shadow: 0 0 24px #0004;
-    }
-
-    /* パネルヘッダー */
-    .panelHeader {
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 8px;
-        padding-bottom: 12px;
-        margin-bottom: 24px;
-        border-bottom: solid 1px var(--color-line);
-        font-family: "smartFont";
-        font-size: 12px;
-        letter-spacing: 0.05em;
-
-        .systemStatus {
-            font-size: 10px;
-            color: #8f8;
-        }
-
-    }
-
-    /* 表示切り替え */
-    .loginPanels {
-
-        display: grid;
-        width: 100%;
-
-        >.loginWrapper {
-            grid-area: 1 / 1;
-        }
-
-    }
-
-    /* ログイン・メッセージ */
-    .loginWrapper {
-
-        display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 20px;
-        width: 100%;
-        opacity: 1;
-        visibility: visible;
-        transition:
-            opacity 0.25s,
-            visibility 0s;
+        position: relative;
+        margin: 0 auto;
+        color: var(--color-main);
+        transition: opacity 0.25s;
 
-        /* 非表示 */
-        &.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transition:
-                opacity 0.25s,
-                visibility 0s 0.25s;
+        /* 全体 */
+        .loginStage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: min(60%, 400px);
         }
 
-        /* 入力エリア */
-        &#login-input {
+        /* タイトル */
+        .loginHeader {
 
-            display: grid;
-            grid-template-columns: max-content minmax(0, 1fr);
-            column-gap: 16px;
-            row-gap: 20px;
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            width: 100%;
+            padding: 0;
+            margin-bottom: 40px;
+            background: transparent;
+            color: var(--color-main);
 
-            /* 行 */
-            .justified {
-                display: contents;
+            .systemLabel {
+                font-family: "smartFont";
+                font-size: clamp(20px, 5vw, 28px);
+                letter-spacing: 0.1em;
+                text-align: center;
             }
 
-            /* ラベル */
-            .label {
+            .systemVersion {
+                margin-top: 12px;
                 font-family: "smartFont";
                 font-size: 12px;
                 opacity: 0.75;
             }
 
-            /* インプット：ラッパー */
-            .inputWrapper {
-
-                position: relative;
-                min-width: 0;
-
-                input {
-                    box-sizing: border-box;
-                    width: 100%;
-                    padding: 8px 10px;
-                    border: solid 1px var(--color-line);
-                    border-radius: 0;
-                    background: #080818;
-                    color: var(--color-font);
-                    font-family: "appliMincho";
-                    font-size: 14px;
-                }
-
-                /* 表示専用 */
-                &.locked {
-
-                    /* 鍵アイコン */
-                    &::after {
-                        content: "";
-                        position: absolute;
-                        top: 50%;
-                        right: 10px;
-                        width: 16px;
-                        height: 16px;
-                        background: var(--color-main);
-                        mask: url("../../../common/image/icon-lock.svg") center / contain no-repeat;
-                        transform: translateY(-50%);
-                        pointer-events: none;
-                        z-index: 1;
-                    }
-
-                    input {
-                        padding-right: 32px;
-                        color: var(--color-main);
-                    }
-
-                }
-
-            }
-
-            /* ボタン */
-            button {
-                grid-column: 1 / -1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                padding: 8px;
-                background: var(--color-main);
-                border: solid 1px var(--color-main);
-                color: var(--color-bg);
-                font-family: "smartFont";
-                font-size: 14px;
-                letter-spacing: 0.1em;
-                transition:
-                    color 0.25s,
-                    background-color 0.25s;
-
-                @media (hover: hover) {
-                    &:hover {
-                        color: var(--color-main);
-                        background: var(--color-bg);
-                    }
-                }
-
-                &:disabled {
-                    opacity: 0.5;
-                }
-            }
-
         }
 
-        /* メッセージ */
-        p {
+        /* パネル */
+        .loginPanel {
+            box-sizing: border-box;
             width: 100%;
-            margin: 8px 0;
-            font-family: "appliMincho";
-            font-size: 14px;
-            line-height: 1.8;
-            text-align: center;
+            padding: 24px;
+            border: solid 1px var(--color-line);
+            background: var(--color-bg-alpha);
+            box-shadow: 0 0 24px #0004;
         }
 
-        /* ローディングゲージ */
-        .loadGauge {
+        /* パネルヘッダー */
+        .panelHeader {
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+            border-bottom: solid 1px var(--color-line);
+            font-family: "smartFont";
+            font-size: 12px;
+            letter-spacing: 0.05em;
+
+            .systemStatus {
+                font-size: 10px;
+                color: #8f8;
+            }
+
+        }
+
+        /* 表示切り替え */
+        .loginPanels {
+
+            display: grid;
+            width: 100%;
+
+            >.loginWrapper {
+                grid-area: 1 / 1;
+            }
+
+        }
+
+        /* ログイン・メッセージ */
+        .loginWrapper {
 
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
             width: 100%;
-            max-width: 320px;
-            margin: 8px auto 0;
+            opacity: 1;
+            visibility: visible;
+            transition:
+                opacity 0.25s,
+                visibility 0s;
 
-            .loadInfo {
+            /* 非表示 */
+            &.hidden {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transition:
+                    opacity 0.25s,
+                    visibility 0s 0.25s;
+            }
+
+            /* 入力エリア */
+            &#login-input {
+
+                display: grid;
+                grid-template-columns: max-content minmax(0, 1fr);
+                column-gap: 16px;
+                row-gap: 20px;
+                align-items: center;
+
+                /* 行 */
+                .justified {
+                    display: contents;
+                }
+
+                /* ラベル */
+                .label {
+                    font-family: "smartFont";
+                    font-size: 12px;
+                    opacity: 0.75;
+                }
+
+                /* インプット：ラッパー */
+                .inputWrapper {
+
+                    position: relative;
+                    min-width: 0;
+
+                    input {
+                        box-sizing: border-box;
+                        width: 100%;
+                        padding: 8px 10px;
+                        border: solid 1px var(--color-line);
+                        border-radius: 0;
+                        background: #080818;
+                        color: var(--color-font);
+                        font-family: "appliMincho";
+                        font-size: 14px;
+                    }
+
+                    /* 表示専用 */
+                    &.locked {
+
+                        /* 鍵アイコン */
+                        &::after {
+                            content: "";
+                            position: absolute;
+                            top: 50%;
+                            right: 10px;
+                            width: 16px;
+                            height: 16px;
+                            background: var(--color-main);
+                            mask: url("../../../common/image/icon-lock.svg") center / contain no-repeat;
+                            transform: translateY(-50%);
+                            pointer-events: none;
+                            z-index: 1;
+                        }
+
+                        input {
+                            padding-right: 32px;
+                            color: var(--color-main);
+                        }
+
+                    }
+
+                }
+
+                /* ボタン */
+                button {
+                    grid-column: 1 / -1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
+                    padding: 8px;
+                    background: var(--color-main);
+                    border: solid 1px var(--color-main);
+                    color: var(--color-bg);
+                    font-family: "smartFont";
+                    font-size: 14px;
+                    letter-spacing: 0.1em;
+                    transition:
+                        color 0.25s,
+                        background-color 0.25s;
+
+                    @media (hover: hover) {
+                        &:hover {
+                            color: var(--color-main);
+                            background: var(--color-bg);
+                        }
+                    }
+
+                    &:disabled {
+                        opacity: 0.5;
+                    }
+                }
+
+            }
+
+            /* メッセージ */
+            p {
+                width: 100%;
+                margin: 0 0 32px;
+                font-family: "appliMincho";
+                font-size: 14px;
+                line-height: 1.8;
+                text-align: center;
+            }
+
+            /* ローディングゲージ */
+            .loadGauge {
+
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
+                gap: 8px;
                 width: 100%;
-                font-family: "smartFont";
-                font-size: 12px;
-            }
+                max-width: 320px;
 
-            .loadTrack {
-                width: 100%;
-                height: 4px;
-                overflow: hidden;
-                background: #22334a;
-            }
+                .loadInfo {
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                    font-family: "smartFont";
+                    font-size: 12px;
+                }
 
-            .loadProgress {
-                width: 0%;
-                height: 100%;
-                background: var(--color-main);
+                .loadTrack {
+                    width: 100%;
+                    height: 4px;
+                    overflow: hidden;
+                    background: #22334a;
+                }
+
+                .loadProgress {
+                    width: 0%;
+                    height: 100%;
+                    background: var(--color-main);
+                }
+
             }
 
         }
 
-    }
+        /* 画面遷移 */
+        &.leaving {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-    /* 画面遷移 */
-    &.leaving {
-        opacity: 0;
-        pointer-events: none;
     }
-
 }
