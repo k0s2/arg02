@@ -315,6 +315,7 @@ export function isAddInfoUnlocked(type, id, targetId) {
  * @returns {boolean} 新規解放されたか
  */
 export function completeInference(evidenceId, personId) {
+
     // 【証拠】を取得
     const evidence = saveData.evidence.find(
         item => item.id == evidenceId
@@ -326,13 +327,17 @@ export function completeInference(evidenceId, personId) {
     );
 
     // 対象が存在しない場合
-    if (
-        !evidence
-        || !evidence.addInfo
-        || !person
-        || !person.addInfo
-    ) {
+    if (!evidence || !person) {
         return false;
+    }
+
+    // addInfoが存在しない場合は初期化
+    if (!evidence.addInfo || typeof evidence.addInfo !== "object") {
+        evidence.addInfo = {};
+    }
+
+    if (!person.addInfo || typeof person.addInfo !== "object") {
+        person.addInfo = {};
     }
 
     // 既に推理済みの場合
@@ -343,15 +348,6 @@ export function completeInference(evidenceId, personId) {
         return false;
     }
 
-    // addInfoが存在しない場合は追加
-    if (!evidence.addInfo || typeof evidence.addInfo !== "object") {
-        evidence.addInfo = {};
-    }
-
-    if (!person.addInfo || typeof person.addInfo !== "object") {
-        person.addInfo = {};
-    }
-
     // 追記情報を解放
     evidence.addInfo[personId] = true;
     person.addInfo[evidenceId] = true;
@@ -360,6 +356,7 @@ export function completeInference(evidenceId, personId) {
     save();
 
     return true;
+
 }
 
 // ====================================================================================================
