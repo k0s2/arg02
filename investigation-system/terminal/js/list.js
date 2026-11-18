@@ -152,6 +152,7 @@ function createListItem(item, selectedId, type, selectFunction) {
  * @param {Function} selectFunction 選択時に呼び出す関数
  * @param {string[]} openGroupIds 展開するグループID
  * @param {Array<number|string>} animatedIds アニメーションさせるアイテムID
+ * @param {string[]} previousOpenGroupIds 再描画前に展開していたグループID
  * @returns {void}
  */
 function renderGroupedList(
@@ -161,12 +162,16 @@ function renderGroupedList(
     selectedId,
     selectFunction,
     openGroupIds,
-    animatedIds
+    animatedIds,
+    previousOpenGroupIds
 ) {
 
     list.innerHTML = "";
 
     const unlockedIds = getUnlockedIds(type);
+
+    // アニメーション付きで展開するグループ
+    const groupsToOpen = [];
 
     let hasItems = false;
 
@@ -210,7 +215,16 @@ function renderGroupedList(
 
             // 展開状態
             if (openGroupIds.includes(String(group.id))) {
-                groupElement.open = true;
+
+                // 再描画前から展開していたグループは即時展開
+                if (previousOpenGroupIds.includes(String(group.id))) {
+                    groupElement.open = true;
+                }
+                // 新たに展開するグループは後から開く
+                else {
+                    groupsToOpen.push(groupElement);
+                }
+
             }
 
             items.forEach((item) => {
@@ -255,6 +269,19 @@ function renderGroupedList(
 
     }
 
+    // 新たに展開するグループをアニメーション付きで開く
+    if (groupsToOpen.length > 0) {
+
+        requestAnimationFrame(() => {
+
+            groupsToOpen.forEach((group) => {
+                group.open = true;
+            });
+
+        });
+
+    }
+
 }
 
 // ====================================================================================================
@@ -267,21 +294,28 @@ function renderGroupedList(
  * @param {Function} selectFunction 選択時に呼び出す関数
  * @param {string[]|undefined} openGroupIds 展開するグループID
  * @param {string[]|undefined} animatedIds アニメーションさせる【証拠】ID
+ * @param {string[]|undefined} previousOpenGroupIds 再描画前に展開していたグループID
  * @returns {void}
  */
 function renderEvidenceList(
     selectedId,
     selectFunction,
     openGroupIds,
-    animatedIds
+    animatedIds,
+    previousOpenGroupIds
 ) {
 
     if (openGroupIds === undefined) {
         openGroupIds = getInitialOpenGroupIds(evidenceData, "evidence");
+        previousOpenGroupIds = openGroupIds;
     }
 
     if (animatedIds === undefined) {
         animatedIds = [];
+    }
+
+    if (previousOpenGroupIds === undefined) {
+        previousOpenGroupIds = [];
     }
 
     renderGroupedList(
@@ -291,7 +325,8 @@ function renderEvidenceList(
         selectedId,
         selectFunction,
         openGroupIds,
-        animatedIds
+        animatedIds,
+        previousOpenGroupIds
     );
 
 }
@@ -306,21 +341,28 @@ function renderEvidenceList(
  * @param {Function} selectFunction 選択時に呼び出す関数
  * @param {string[]|undefined} openGroupIds 展開するグループID
  * @param {string[]|undefined} animatedIds アニメーションさせる【人物】ID
+ * @param {string[]|undefined} previousOpenGroupIds 再描画前に展開していたグループID
  * @returns {void}
  */
 function renderPersonList(
     selectedId,
     selectFunction,
     openGroupIds,
-    animatedIds
+    animatedIds,
+    previousOpenGroupIds
 ) {
 
     if (openGroupIds === undefined) {
         openGroupIds = getInitialOpenGroupIds(personData, "person");
+        previousOpenGroupIds = openGroupIds;
     }
 
     if (animatedIds === undefined) {
         animatedIds = [];
+    }
+
+    if (previousOpenGroupIds === undefined) {
+        previousOpenGroupIds = [];
     }
 
     renderGroupedList(
@@ -330,7 +372,8 @@ function renderPersonList(
         selectedId,
         selectFunction,
         openGroupIds,
-        animatedIds
+        animatedIds,
+        previousOpenGroupIds
     );
 
 }
@@ -403,7 +446,11 @@ function getUpdatedOpenGroupIds(groups, items, openGroupIds) {
  */
 export function addEvidence(items, selectedId, selectFunction) {
 
-    const openGroupIds = getOpenGroupIds(evidenceList);
+    // 再描画前の展開状態を取得
+    const previousOpenGroupIds = getOpenGroupIds(evidenceList);
+
+    // 展開状態を複製
+    const openGroupIds = [...previousOpenGroupIds];
 
     // 取得したアイテムが属するグループを展開
     getUpdatedOpenGroupIds(evidenceData, items, openGroupIds);
@@ -416,7 +463,8 @@ export function addEvidence(items, selectedId, selectFunction) {
         selectedId,
         selectFunction,
         openGroupIds,
-        animatedIds
+        animatedIds,
+        previousOpenGroupIds
     );
 
 }
@@ -430,7 +478,11 @@ export function addEvidence(items, selectedId, selectFunction) {
  */
 export function addPerson(items, selectedId, selectFunction) {
 
-    const openGroupIds = getOpenGroupIds(personList);
+    // 再描画前の展開状態を取得
+    const previousOpenGroupIds = getOpenGroupIds(personList);
+
+    // 展開状態を複製
+    const openGroupIds = [...previousOpenGroupIds];
 
     // 取得したアイテムが属するグループを展開
     getUpdatedOpenGroupIds(personData, items, openGroupIds);
@@ -443,7 +495,8 @@ export function addPerson(items, selectedId, selectFunction) {
         selectedId,
         selectFunction,
         openGroupIds,
-        animatedIds
+        animatedIds,
+        previousOpenGroupIds
     );
 
 }
