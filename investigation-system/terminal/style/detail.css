@@ -98,26 +98,33 @@
 
             /* 段落 */
             p {
-
                 margin: 0;
+            }
 
-                /* 間隔 */
-                &+& {
-                    margin-top: 1em;
+            /* 追加情報 */
+            .addInfo {
+
+                display: grid;
+                grid-template-rows: 0fr;
+                opacity: 0;
+                overflow: hidden;
+
+                /* 展開 */
+                &.is-expanded {
+                    grid-template-rows: 1fr;
+                    transition: grid-template-rows 500ms ease-out;
                 }
 
-                /* 追加情報 */
-                &.addInfo {
-                    border-top: solid 1px #afa;
-                    padding-top: 1em;
-                    color: #afa;
-                    overflow: hidden;
-                    transition: opacity 0.25s;
+                /* フェードイン */
+                &.is-visible {
+                    opacity: 1;
+                    transition: opacity 300ms ease-out;
+                }
 
-                    /* 非表示 */
-                    &[hidden] {
-                        opacity: 0;
-                    }
+                /* 段落 */
+                >p {
+                    min-height: 0;
+                    overflow: hidden;
                 }
 
             }

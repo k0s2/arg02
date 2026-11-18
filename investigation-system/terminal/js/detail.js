@@ -347,14 +347,104 @@ function setAdditionalInfo(detailElement, type, id) {
     targets.forEach((target) => {
 
         // 解放状態を確認
-        const isUnlocked = isAddInfoUnlocked(
+        const unlocked = isAddInfoUnlocked(
             type,
             id,
             target.id
         );
 
         // 表示状態
-        target.hidden = !isUnlocked;
+        target.hidden = !unlocked;
+
+        // 解放済みなら展開・表示状態にする
+        if (unlocked) {
+            target.classList.add("is-expanded", "is-visible");
+        } else {
+            target.classList.remove("is-expanded", "is-visible");
+        }
+
+    });
+
+}
+
+/**
+ * CSSトランジションの終了を待機
+ * @param {HTMLElement} target 対象要素
+ * @param {string} propertyName 対象プロパティ
+ * @returns {Promise<void>}
+ */
+async function waitForTransition(target, propertyName) {
+
+    // 次のフレームまで待機
+    await new Promise(resolve => {
+        requestAnimationFrame(resolve);
+    });
+
+    // スタイルを反映
+    getComputedStyle(target).getPropertyValue(propertyName);
+
+    // 対象プロパティのトランジションを取得
+    const transitions = target.getAnimations().filter(animation =>
+        animation.transitionProperty === propertyName
+    );
+
+    // トランジションがなければ終了
+    if (transitions.length === 0) {
+        return;
+    }
+
+    // 終了を待機
+    await Promise.all(
+        transitions.map(animation =>
+            animation.finished.catch(() => { })
+        )
+    );
+
+}
+
+/**
+ * スクロール完了を待機
+ * @param {HTMLElement} detailElement 詳細本文
+ * @param {number} targetScrollTop スクロール先
+ * @returns {Promise<void>}
+ */
+function waitForDetailScroll(detailElement, targetScrollTop) {
+
+    return new Promise(resolve => {
+
+        let previousScrollTop = detailElement.scrollTop;
+        let stableFrames = 0;
+
+        const checkScroll = () => {
+
+            const currentScrollTop = detailElement.scrollTop;
+
+            // スクロール先に到達
+            if (Math.abs(currentScrollTop - targetScrollTop) < 1.5) {
+                resolve();
+                return;
+            }
+
+            // スクロールが停止したか確認
+            if (Math.abs(currentScrollTop - previousScrollTop) < 0.5) {
+                stableFrames++;
+            } else {
+                stableFrames = 0;
+            }
+
+            // 停止していれば終了
+            if (stableFrames >= 4) {
+                resolve();
+                return;
+            }
+
+            previousScrollTop = currentScrollTop;
+
+            requestAnimationFrame(checkScroll);
+
+        };
+
+        requestAnimationFrame(checkScroll);
 
     });
 
@@ -364,68 +454,52 @@ function setAdditionalInfo(detailElement, type, id) {
  * 追記情報をアニメーション表示
  * @param {HTMLElement} target 対象要素
  * @param {HTMLElement} detailElement 詳細本文
- * @returns {void}
+ * @returns {Promise<void>}
  */
-function animateAdditionalInfo(target, detailElement) {
+async function animateAdditionalInfo(target, detailElement) {
 
     // 表示
     target.hidden = false;
 
-    // 表示後のサイズを取得
-    const style = getComputedStyle(target);
-    const rect = target.getBoundingClientRect();
+    // 高さを展開
+    target.classList.add("is-expanded");
 
-    const paddingTop = parseFloat(style.paddingTop);
-    const paddingBottom = parseFloat(style.paddingBottom);
-    const borderTop = parseFloat(style.borderTopWidth);
-    const borderBottom = parseFloat(style.borderBottomWidth);
+    await waitForTransition(
+        target,
+        "grid-template-rows"
+    );
 
-    const endHeight = style.boxSizing === "border-box"
-        ? rect.height
-        : rect.height
-        - paddingTop
-        - paddingBottom
-        - borderTop
-        - borderBottom;
-
-    const endMargin = parseFloat(style.marginTop);
-
-    // スクロール先
+    // 追加要素へスクロール
     const scrollTop =
         target.getBoundingClientRect().top
         - detailElement.getBoundingClientRect().top
         + detailElement.scrollTop;
 
-    // スクロール
+    const maxScrollTop =
+        detailElement.scrollHeight - detailElement.clientHeight;
+
+    const targetScrollTop = Math.min(
+        Math.max(scrollTop, 0),
+        maxScrollTop
+    );
+
     detailElement.scrollTo({
-        top: scrollTop,
+        top: targetScrollTop,
         behavior: "smooth",
     });
 
-    // 展開アニメーション
-    const animation = target.animate(
-        [
-            {
-                height: "0px",
-                marginTop: "0px",
-                opacity: 0,
-            },
-            {
-                height: `${endHeight}px`,
-                marginTop: `${endMargin}px`,
-                opacity: 1,
-            },
-        ],
-        {
-            duration: 500,
-            easing: "ease-out",
-        }
+    await waitForDetailScroll(
+        detailElement,
+        targetScrollTop
     );
 
-    // アニメーション終了
-    animation.finished.then(() => {
-        animation.cancel();
-    }).catch(() => { });
+    // フェードイン
+    target.classList.add("is-visible");
+
+    await waitForTransition(
+        target,
+        "opacity"
+    );
 
 }
 
@@ -618,7 +692,7 @@ async function renderPersonDetail(
 /**
  * 【証拠】の詳細を描画
  * @param {Object|undefined} item 表示するデータ
- * @param {number} sequence 表示処理番号
+ * @param {number} sequence 処理番号
  * @returns {Promise<void>}
  */
 function renderEvidenceDetailView(item, sequence) {
@@ -636,7 +710,7 @@ function renderEvidenceDetailView(item, sequence) {
 /**
  * 【人物】の詳細を描画
  * @param {Object|undefined} item 表示するデータ
- * @param {number} sequence 表示処理番号
+ * @param {number} sequence 処理番号
  * @returns {Promise<void>}
  */
 function renderPersonDetailView(item, sequence) {
