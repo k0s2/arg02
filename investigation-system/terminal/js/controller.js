@@ -45,6 +45,9 @@ import {
 // 初期化
 // ====================================================================================================
 
+/**
+ * 初期化処理（非同期処理につき関数可）
+ */
 async function initializeController() {
 
     // ハッシュから選択IDを取得
@@ -89,4 +92,5 @@ async function initializeController() {
 
 }
 
+// 初期化処理を呼び出し
 initializeController();
