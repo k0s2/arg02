@@ -98,9 +98,21 @@
 
             /* 段落 */
             p {
-                &:first-child {
-                    margin-top: 0;
+
+                margin: 0;
+
+                /* 間隔 */
+                &+& {
+                    margin-top: 1em;
                 }
+
+                /* 追加情報 */
+                &.addInfo {
+                    border-top: solid 1px #afa;
+                    padding-top: 1em;
+                    color: #afa;
+                }
+
             }
 
             /* キーワード */
