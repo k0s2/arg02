@@ -282,6 +282,87 @@ export function markRead(type, id) {
 }
 
 // ====================================================================================================
+// 追記情報
+// ====================================================================================================
+
+/**
+ * 追記情報が解放済みか確認
+ * @param {string} type データの種類
+ * @param {string} id アイテムID
+ * @param {string} targetId 組み合わせる相手のID
+ * @returns {boolean} 解放済みか
+ */
+export function isAddInfoUnlocked(type, id, targetId) {
+
+    const records = saveData[type];
+
+    // 対応していない種類なら処理しない
+    if (!Array.isArray(records)) {
+        return false;
+    }
+
+    // 対象アイテムを取得
+    const target = records.find(item => item.id == id);
+
+    return target?.addInfo?.[targetId] === true;
+
+}
+
+/**
+ * 推理成功時に追記情報を解放
+ * @param {string} evidenceId 【証拠】ID
+ * @param {string} personId 【人物】ID
+ * @returns {boolean} 新規解放されたか
+ */
+export function completeInference(evidenceId, personId) {
+    // 【証拠】を取得
+    const evidence = saveData.evidence.find(
+        item => item.id == evidenceId
+    );
+
+    // 【人物】を取得
+    const person = saveData.person.find(
+        item => item.id == personId
+    );
+
+    // 対象が存在しない場合
+    if (
+        !evidence
+        || !evidence.addInfo
+        || !person
+        || !person.addInfo
+    ) {
+        return false;
+    }
+
+    // 既に推理済みの場合
+    if (
+        evidence.addInfo[personId] === true
+        && person.addInfo[evidenceId] === true
+    ) {
+        return false;
+    }
+
+    // addInfoが存在しない場合は追加
+    if (!evidence.addInfo || typeof evidence.addInfo !== "object") {
+        evidence.addInfo = {};
+    }
+
+    if (!person.addInfo || typeof person.addInfo !== "object") {
+        person.addInfo = {};
+    }
+
+    // 追記情報を解放
+    evidence.addInfo[personId] = true;
+    person.addInfo[evidenceId] = true;
+
+    // 保存
+    save();
+
+    return true;
+}
+
+// ====================================================================================================
 // フラグ
 // ====================================================================================================
 

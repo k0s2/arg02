@@ -47,6 +47,7 @@ import {
 // セーブ
 import {
     isUnlocked,
+    isAddInfoUnlocked,
     flagOn,
     isFlagOn,
 } from "../../../common/data/save.js";
@@ -327,6 +328,75 @@ function setKeyword(detailElement, acquireItem) {
 }
 
 // ====================================================================================================
+// 追記情報
+// ====================================================================================================
+
+/**
+ * 追記情報の表示状態を設定
+ * @param {HTMLElement} detailElement 詳細本文
+ * @param {string} type データの種類
+ * @param {string} id アイテムID
+ * @returns {void}
+ */
+function setAdditionalInfo(detailElement, type, id) {
+
+    // 追記情報を取得
+    const targets = detailElement.querySelectorAll(".addInfo");
+
+    // 要素ごとに処理
+    targets.forEach((target) => {
+
+        // 解放状態を確認
+        const isUnlocked = isAddInfoUnlocked(
+            type,
+            id,
+            target.id
+        );
+
+        // 表示状態
+        target.hidden = !isUnlocked;
+
+    });
+
+}
+
+/**
+ * 推理成功後に追記情報を反映
+ * @param {string} evidenceId 【証拠】ID
+ * @param {string} personId 【人物】ID
+ * @returns {void}
+ */
+export function updateAdditionalInfo(evidenceId, personId) {
+
+    // 【証拠】詳細
+    if (selectedEvidenceId === evidenceId) {
+
+        const target = evidenceDetail.querySelector(
+            `.addInfo[id="${personId}"]`
+        );
+
+        if (target) {
+            target.hidden = false;
+        }
+
+    }
+
+    // 【人物】詳細
+    if (selectedPersonId === personId) {
+
+        const target = personDetail.querySelector(
+            `.addInfo[id="${evidenceId}"]`
+        );
+
+        if (target) {
+            target.hidden = false;
+        }
+
+    }
+
+}
+
+// ====================================================================================================
 // 詳細表示
 // ====================================================================================================
 
@@ -416,6 +486,9 @@ async function renderEvidenceDetail(
     // 本文
     detail.innerHTML = html;
 
+    // 追記情報
+    setAdditionalInfo(detail, "evidence", item.id);
+
     // スクロールを戻す
     detail.scrollTo(0, 0);
 
@@ -461,6 +534,9 @@ async function renderPersonDetail(
 
     // 本文
     detail.innerHTML = html;
+
+    // 追記情報
+    setAdditionalInfo(detail, "person", item.id);
 
     // スクロールを戻す
     detail.scrollTo(0, 0);
@@ -1057,7 +1133,7 @@ function transitionDetail(
  * @param {boolean} restoring リロード時の復元か
  * @returns {Promise<void>}
  */
-export function selectEvidence(id, restoring = false) {
+export async function selectEvidence(id, restoring = false) {
 
     // リロード時の復元
     if (restoring) {
@@ -1072,22 +1148,17 @@ export function selectEvidence(id, restoring = false) {
         cancelAllDetailAnimations();
 
         // アニメーションなしで詳細を描画
-        return renderEvidenceDetailView(
+        await renderEvidenceDetailView(
             getEvidence(selectedEvidenceId),
             sequence
-        ).then(() => {
-
-            if (!isCurrentTransition(sequence)) {
-                return;
-            }
-
-            evidencePanel.classList.remove("empty");
-
-            // 両パネルの最終レイアウトを即時反映
-            updateRestoredDetailLayout();
-            updateInferenceButton();
-
-        });
+        );
+        if (!isCurrentTransition(sequence)) {
+            return;
+        }
+        evidencePanel.classList.remove("empty");
+        // 両パネルの最終レイアウトを即時反映
+        updateRestoredDetailLayout();
+        updateInferenceButton();
     }
 
     // ●アクティブ変更
@@ -1132,7 +1203,7 @@ export function selectEvidence(id, restoring = false) {
  * @param {boolean} restoring リロード時の復元か
  * @returns {Promise<void>}
  */
-export function selectPerson(id, restoring = false) {
+export async function selectPerson(id, restoring = false) {
 
     // リロード時の復元
     if (restoring) {
@@ -1147,22 +1218,17 @@ export function selectPerson(id, restoring = false) {
         cancelAllDetailAnimations();
 
         // アニメーションなしで詳細を描画
-        return renderPersonDetailView(
+        await renderPersonDetailView(
             getPerson(selectedPersonId),
             sequence
-        ).then(() => {
-
-            if (!isCurrentTransition(sequence)) {
-                return;
-            }
-
-            personPanel.classList.remove("empty");
-
-            // 両パネルの最終レイアウトを即時反映
-            updateRestoredDetailLayout();
-            updateInferenceButton();
-
-        });
+        );
+        if (!isCurrentTransition(sequence)) {
+            return;
+        }
+        personPanel.classList.remove("empty");
+        // 両パネルの最終レイアウトを即時反映
+        updateRestoredDetailLayout();
+        updateInferenceButton();
     }
 
     // ●アクティブ変更

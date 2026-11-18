@@ -17,7 +17,6 @@ import {
 
 import {
     showDialog,
-    showThinkDialog,
 } from "../../../common/template/dialog/controller.js";
 
 // --------------------------------------------------
@@ -35,9 +34,16 @@ import inferenceData from "../../../common/data/inference.js";
 
 // セーブ
 import {
+    completeInference,
+    isAddInfoUnlocked,
     flagOn,
     isFlagOn,
 } from "../../../common/data/save.js";
+
+// 詳細
+import {
+    updateAdditionalInfo,
+} from "./detail.js";
 
 // ====================================================================================================
 // 【推理】処理
@@ -50,7 +56,7 @@ import {
  * @param {Function} acquireItem アイテム解放関数
  * @param {Function} addEvidence 【証拠】追加関数
  * @param {Function} addPerson 【人物】追加関数
- * @returns {void}
+ * @returns {Promise<void>}
  */
 export async function executeInference(
     selectedEvidenceId,
@@ -59,6 +65,7 @@ export async function executeInference(
     addEvidence,
     addPerson
 ) {
+
     // --------------------------------------------------
     // どちらかが未選択なら処理しない
     // --------------------------------------------------
@@ -77,24 +84,29 @@ export async function executeInference(
     // 【推理】条件の照合
     // ----------------------------------------------
 
-    // 条件ごとに処理
     const results = inferenceData.filter((rule) => {
+
         // 【証拠】の不一致
         if (rule.evidenceId !== selectedEvidenceId) {
             return false;
         }
 
-        // 【【人物】】の不一致
+        // 【人物】の不一致
         if (rule.personId !== selectedPersonId) {
             return false;
         }
 
         // 条件の一致
         return true;
+
     });
 
+    // ----------------------------------------------
     // 不一致
-    if (results.length == 0) {
+    // ----------------------------------------------
+
+    if (results.length === 0) {
+
         // 【証拠】名
         const nameEvidence = formatDateText(
             getItemData("evidence", selectedEvidenceId).name
@@ -113,79 +125,125 @@ export async function executeInference(
 
         // 「閉じる」押下後
         if (res == 0) {
+
             // 【ストーリー進行】チュートリアル
             if (isFlagOn("tutorial-3") == false) {
                 flagOn("tutorial-2");
                 setTutorial(2);
             }
+
         }
 
-        // 処理を中断
         return;
     }
 
     // ----------------------------------------------
-    // 解放処理
+    // 推理済みか確認
+    // ----------------------------------------------
+
+    if (
+        isAddInfoUnlocked(
+            "evidence",
+            selectedEvidenceId,
+            selectedPersonId
+        )
+    ) {
+
+        // ダイアログ表示
+        await showDialog(
+            "この組み合わせから得られる情報は、もう無さそうだ。",
+            "メモ"
+        );
+
+        return;
+    }
+
+    // ----------------------------------------------
+    // 追記情報を解放
+    // ----------------------------------------------
+
+    completeInference(
+        selectedEvidenceId,
+        selectedPersonId
+    );
+
+    // 詳細画面に反映
+    updateAdditionalInfo(
+        selectedEvidenceId,
+        selectedPersonId
+    );
+
+    // ----------------------------------------------
+    // アイテム解放
     // ----------------------------------------------
 
     const newEvidence = [];
     const newPersons = [];
 
-    results.forEach((rule) => {
+    // 条件ごとに処理
+    for (const rule of results) {
 
-        if (!Array.isArray(rule.newInfo)) {
-            return;
+        // 新しい情報がある場合
+        if (Array.isArray(rule.newInfo)) {
+
+            for (const info of rule.newInfo) {
+
+                const item = getItemData(info.type, info.id);
+
+                // アイテムを解放
+                const unlocked = acquireItem(
+                    info.type,
+                    info.id,
+                    false
+                );
+
+                // 新規解放された場合
+                if (unlocked) {
+
+                    // 【証拠】
+                    if (info.type === "evidence") {
+                        newEvidence.push(item);
+                    }
+
+                    // 【人物】
+                    if (info.type === "person") {
+                        newPersons.push(item);
+                    }
+
+                }
+
+            }
+
         }
 
-        rule.newInfo.forEach(async (info) => {
+        // ------------------------------------------
+        // ダイアログ表示
+        // ------------------------------------------
 
-            const item = getItemData(info.type, info.id);
+        if (Array.isArray(rule.dialog)) {
 
-            // アイテムを解放
-            const unlocked = acquireItem(info.type, info.id, false);
+            const res = await showDialog(
+                rule.dialog.map(formatDateText),
+                "メモ"
+            );
 
-            // 新規解放された場合
-            if (unlocked) {
-                // 【証拠】
-                if (info.type === "evidence") {
-                    newEvidence.push(item);
-                }
+            // 【ストーリー進行】チュートリアル
+            if (res == 0) {
 
-                // 【人物】
-                if (info.type === "person") {
-                    newPersons.push(item);
-                }
-
-                // ダイアログ表示
-                const res = await showDialog(
-                    rule.dialog.map(formatDateText),
-                    "メモ"
-                );
-
-                // 【ストーリー進行】チュートリアル
-                if (res == 0) {
-                    if (isFlagOn("tutorial-5") == false) {
-                        flagOn("tutorial-1");
-                        flagOn("tutorial-2");
-                        flagOn("tutorial-3");
-                        flagOn("tutorial-4");
-                        flagOn("tutorial-5");
-                        hideTutorial();
-                    }
+                if (isFlagOn("tutorial-5") == false) {
+                    flagOn("tutorial-1");
+                    flagOn("tutorial-2");
+                    flagOn("tutorial-3");
+                    flagOn("tutorial-4");
+                    flagOn("tutorial-5");
+                    hideTutorial();
                 }
 
             }
-            else {
-                // ダイアログ表示
-                showDialog(
-                    "この組み合わせから得られる情報は、もう無さそうだ。",
-                    "メモ"
-                );
-            }
 
-        });
+        }
 
-    });
+    }
 
     // ----------------------------------------------
     // リスト描画
