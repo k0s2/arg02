@@ -111,6 +111,13 @@
                     border-top: solid 1px #afa;
                     padding-top: 1em;
                     color: #afa;
+                    overflow: hidden;
+                    transition: opacity 0.25s;
+
+                    /* 非表示 */
+                    &[hidden] {
+                        opacity: 0;
+                    }
                 }
 
             }

@@ -361,6 +361,75 @@ function setAdditionalInfo(detailElement, type, id) {
 }
 
 /**
+ * 追記情報をアニメーション表示
+ * @param {HTMLElement} target 対象要素
+ * @param {HTMLElement} detailElement 詳細本文
+ * @returns {void}
+ */
+function animateAdditionalInfo(target, detailElement) {
+
+    // 表示
+    target.hidden = false;
+
+    // 表示後のサイズを取得
+    const style = getComputedStyle(target);
+    const rect = target.getBoundingClientRect();
+
+    const paddingTop = parseFloat(style.paddingTop);
+    const paddingBottom = parseFloat(style.paddingBottom);
+    const borderTop = parseFloat(style.borderTopWidth);
+    const borderBottom = parseFloat(style.borderBottomWidth);
+
+    const endHeight = style.boxSizing === "border-box"
+        ? rect.height
+        : rect.height
+        - paddingTop
+        - paddingBottom
+        - borderTop
+        - borderBottom;
+
+    const endMargin = parseFloat(style.marginTop);
+
+    // スクロール先
+    const scrollTop =
+        target.getBoundingClientRect().top
+        - detailElement.getBoundingClientRect().top
+        + detailElement.scrollTop;
+
+    // スクロール
+    detailElement.scrollTo({
+        top: scrollTop,
+        behavior: "smooth",
+    });
+
+    // 展開アニメーション
+    const animation = target.animate(
+        [
+            {
+                height: "0px",
+                marginTop: "0px",
+                opacity: 0,
+            },
+            {
+                height: `${endHeight}px`,
+                marginTop: `${endMargin}px`,
+                opacity: 1,
+            },
+        ],
+        {
+            duration: 500,
+            easing: "ease-out",
+        }
+    );
+
+    // アニメーション終了
+    animation.finished.then(() => {
+        animation.cancel();
+    }).catch(() => { });
+
+}
+
+/**
  * 推理成功後に追記情報を反映
  * @param {string} evidenceId 【証拠】ID
  * @param {string} personId 【人物】ID
@@ -375,8 +444,8 @@ export function updateAdditionalInfo(evidenceId, personId) {
             `.addInfo[id="${personId}"]`
         );
 
-        if (target) {
-            target.hidden = false;
+        if (target && target.hidden) {
+            animateAdditionalInfo(target, evidenceDetail);
         }
 
     }
@@ -388,8 +457,8 @@ export function updateAdditionalInfo(evidenceId, personId) {
             `.addInfo[id="${evidenceId}"]`
         );
 
-        if (target) {
-            target.hidden = false;
+        if (target && target.hidden) {
+            animateAdditionalInfo(target, personDetail);
         }
 
     }

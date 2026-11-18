@@ -353,7 +353,7 @@ export function completeInference(evidenceId, personId) {
     person.addInfo[evidenceId] = true;
 
     // 保存
-    save();
+    // save();
 
     return true;
 
