@@ -8,7 +8,7 @@
 
 import {
     setTutorial,
-} from "../../js/common.js";
+} from "../../../js/common.js";
 
 // --------------------------------------------------
 // ダイアログ
@@ -16,7 +16,7 @@ import {
 
 import {
     showDialog,
-} from "../../template/dialog/controller.js";
+} from "../../../template/dialog/controller.js";
 
 // --------------------------------------------------
 // リスト
@@ -49,7 +49,7 @@ import {
     isUnlocked,
     flagOn,
     isFlagOn,
-} from "../../data/save.js";
+} from "../../../data/save.js";
 
 // ====================================================================================================
 // 要素取得

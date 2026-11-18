@@ -38,17 +38,23 @@
 
                     <div class="justified">
                         <label>DATA BASE</label>
-                        <input value="CASE-KAZAMICHI" readonly tabindex="-1">
+                        <div class="inputWrapper locked">
+                            <input value="CASE-KAZAMICHI" readonly tabindex="-1">
+                        </div>
                     </div>
 
                     <div class="justified">
                         <label>USER</label>
-                        <input value="T.Y." readonly tabindex="-1">
+                        <div class="inputWrapper locked">
+                            <input value="T.Y." readonly tabindex="-1">
+                        </div>
                     </div>
 
                     <div class="justified">
                         <label>PASSWORD</label>
-                        <input type="password">
+                        <div class="inputWrapper">
+                            <input type="password">
+                        </div>
                     </div>
 
                     <button id="button-login">LOG IN</button>
@@ -56,10 +62,6 @@
                 </div>
 
                 <div id="login-message" class="loginWrapper hidden">
-
-                    <div class="panelDescription">
-                        SYSTEM INITIALIZATION
-                    </div>
 
                     <p>
                         パスワードが一致しなかったため、<br>
