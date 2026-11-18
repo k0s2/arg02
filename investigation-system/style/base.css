@@ -16,4 +16,9 @@ body {
         background-size: 40px 40px;
     }
 
+    /* フォント引き継ぎ */
+    * {
+        font-family: inherit;
+    }
+
 }

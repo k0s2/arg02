@@ -330,7 +330,7 @@ function renderDetailTitle(title, item, type) {
  */
 async function loadDetailHtml(item, type) {
 
-    const path = `../data/html/${type}/${item.id}.html`;
+    const path = `../../common/data/html/${type}/${item.id}.html`;
 
     const response = await fetch(path);
 
