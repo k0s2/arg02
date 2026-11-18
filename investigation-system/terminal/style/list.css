@@ -9,7 +9,6 @@
     position: relative;
     flex-direction: column;
     width: 20%;
-    overflow: auto;
 }
 
 /* パネル：左 */
@@ -62,9 +61,10 @@
 
 }
 
-/* 【証拠】リスト */
+/* リスト */
 .itemList {
 
+    overflow: auto;
     border-top: solid 1px var(--color-line);
     border-bottom: solid 1px var(--color-line);
     scroll-behavior: smooth;

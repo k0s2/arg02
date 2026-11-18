@@ -461,6 +461,9 @@ async function animateAdditionalInfo(target, detailElement) {
     // 表示
     target.hidden = false;
 
+    // 文字色を変更
+    target.classList.add("is-updated");
+
     // 高さを展開
     target.classList.add("is-expanded");
 

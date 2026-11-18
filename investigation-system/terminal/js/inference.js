@@ -84,19 +84,19 @@ export async function executeInference(
     // 【推理】条件の照合
     // ----------------------------------------------
 
-    const results = inferenceData.filter((rule) => {
+    // 証拠と人物の組み合わせが一致するデータ
+    const matchedResults = inferenceData.filter((rule) => {
 
         // 【証拠】の不一致
-        if (rule.evidenceId !== selectedEvidenceId) {
+        if (rule.evidence.id !== selectedEvidenceId) {
             return false;
         }
 
         // 【人物】の不一致
-        if (rule.personId !== selectedPersonId) {
+        if (rule.person.id !== selectedPersonId) {
             return false;
         }
 
-        // 条件の一致
         return true;
 
     });
@@ -105,7 +105,7 @@ export async function executeInference(
     // 不一致
     // ----------------------------------------------
 
-    if (results.length === 0) {
+    if (matchedResults.length === 0) {
 
         // 【証拠】名
         const nameEvidence = formatDateText(
@@ -133,6 +133,40 @@ export async function executeInference(
             }
 
         }
+
+        return;
+    }
+
+    // ----------------------------------------------
+    // 追加情報の取得状況を確認
+    // ----------------------------------------------
+
+    const results = matchedResults.filter((rule) => {
+
+        // 【証拠】の追加情報
+        const evidenceUnlocked = (rule.evidence.addInfoFrom ?? []).every(
+            (id) => isAddInfoUnlocked("evidence", rule.evidence.id, id)
+        );
+
+        // 【人物】の追加情報
+        const personUnlocked = (rule.person.addInfoFrom ?? []).every(
+            (id) => isAddInfoUnlocked("person", rule.person.id, id)
+        );
+
+        return evidenceUnlocked && personUnlocked;
+
+    });
+
+    // ----------------------------------------------
+    // 必要な追加情報が不足している
+    // ----------------------------------------------
+
+    if (results.length === 0) {
+
+        await showDialog(
+            "推理するには、まだ確認が必要な情報があるようだ。",
+            "メモ"
+        );
 
         return;
     }
