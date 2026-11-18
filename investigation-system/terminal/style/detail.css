@@ -105,14 +105,14 @@
             .addInfo {
 
                 display: grid;
-                grid-template-rows: 0fr;
-                color: #afa;
+                grid-template-rows: minmax(0, 0fr);
+                color: #cfc;
                 opacity: 0;
                 overflow: hidden;
 
                 /* 展開 */
                 &.is-expanded {
-                    grid-template-rows: 1fr;
+                    grid-template-rows: minmax(0, 1fr);
                     transition: grid-template-rows 0.25s ease-out;
                 }
 
