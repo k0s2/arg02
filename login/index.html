@@ -20,47 +20,63 @@
 
     <div class="loginStage">
 
-        <h1>
-            INVESTIGATION SYSTEM
-            <span>ver.1.2.0</span>
-        </h1>
+        <header class="loginHeader">
+            <div class="systemLabel">INVESTIGATION SYSTEM</div>
+            <div class="systemVersion">ver.1.2.0</div>
+        </header>
 
-        <div class="loginPanels">
+        <div class="loginPanel">
 
-            <div id="login-input" class="loginWrapper">
-
-                <div class="justified">
-                    <span>DATA BASE</span><input value="CASE-KAZAMICHI" readonly tabindex="-1">
-                </div>
-
-                <div class="justified">
-                    <span>USER</span><input value="T.Y." readonly tabindex="-1">
-                </div>
-
-                <div class="justified">
-                    <span>PASSWORD</span><input type="password">
-                </div>
-
-                <button id="button-login">LOG IN</button>
-
+            <div class="panelHeader">
+                <span>STATUS</span>
+                <span class="systemStatus">● SYSTEM ONLINE</span>
             </div>
 
-            <div id="login-message" class="loginWrapper hidden">
+            <div class="loginPanels">
 
-                <p>
-                    パスワードが一致しなかったため、<br>
-                    読み込み専用モードで起動します。
-                </p>
+                <div id="login-input" class="loginWrapper">
 
-                <div class="loadGauge">
-
-                    <div class="loadInfo">
-                        <span>NOW LOADING</span>
-                        <span class="loadPercent">0%</span>
+                    <div class="justified">
+                        <label>DATA BASE</label>
+                        <input value="CASE-KAZAMICHI" readonly tabindex="-1">
                     </div>
 
-                    <div class="loadTrack">
-                        <div class="loadProgress"></div>
+                    <div class="justified">
+                        <label>USER</label>
+                        <input value="T.Y." readonly tabindex="-1">
+                    </div>
+
+                    <div class="justified">
+                        <label>PASSWORD</label>
+                        <input type="password">
+                    </div>
+
+                    <button id="button-login">LOG IN</button>
+
+                </div>
+
+                <div id="login-message" class="loginWrapper hidden">
+
+                    <div class="panelDescription">
+                        SYSTEM INITIALIZATION
+                    </div>
+
+                    <p>
+                        パスワードが一致しなかったため、<br>
+                        読み込み専用モードで起動します。
+                    </p>
+
+                    <div class="loadGauge">
+
+                        <div class="loadInfo">
+                            <span>NOW LOADING</span>
+                            <span class="loadPercent">0%</span>
+                        </div>
+
+                        <div class="loadTrack">
+                            <div class="loadProgress"></div>
+                        </div>
+
                     </div>
 
                 </div>

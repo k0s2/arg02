@@ -3,7 +3,6 @@
 // ====================================================================================================
 
 const buttonLogin = document.getElementById("button-login");
-const heading = document.querySelector("#login h1");
 const areaInput = document.getElementById("login-input");
 const areaMessage = document.getElementById("login-message");
 
@@ -47,7 +46,6 @@ function resetLogin() {
     // 画面状態
     document.body.classList.remove("leaving");
 
-    heading.classList.remove("hidden");
     areaInput.classList.remove("hidden");
     areaMessage.classList.add("hidden");
 
