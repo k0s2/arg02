@@ -26,6 +26,14 @@ import {
 } from "./detail.js";
 
 // --------------------------------------------------
+// セーブ
+// --------------------------------------------------
+
+import {
+    isUnlocked,
+} from "../../../common/data/save.js";
+
+// --------------------------------------------------
 // 【推理】
 // --------------------------------------------------
 
@@ -37,20 +45,46 @@ import {
 // 初期化
 // ====================================================================================================
 
-// リスト
-initializeLists(
-    selectEvidence,
-    selectPerson
-);
+async function initializeController() {
 
-// 詳細
-initializeDetails();
+    // リスト
+    initializeLists(
+        selectEvidence,
+        selectPerson
+    );
 
-// 【推理】
-initializeInference(
-    getSelectedEvidenceId,
-    getSelectedPersonId,
-    acquireItem,
-    addEvidence,
-    addPerson
-);
+    // ハッシュから選択IDを取得
+    const params = new URLSearchParams(location.hash.slice(1));
+
+    const evidenceId = params.get("evidence");
+    const personId = params.get("person");
+
+    // 解放状態を確認
+    const selectedEvidenceId = (
+        evidenceId !== null
+        && isUnlocked("evidence", [evidenceId])
+    ) ? evidenceId : null;
+
+    const selectedPersonId = (
+        personId !== null
+        && isUnlocked("person", [personId])
+    ) ? personId : null;
+
+    // 詳細を初期化
+    await initializeDetails(
+        selectedEvidenceId,
+        selectedPersonId
+    );
+
+    // 【推理】
+    initializeInference(
+        getSelectedEvidenceId,
+        getSelectedPersonId,
+        acquireItem,
+        addEvidence,
+        addPerson
+    );
+
+}
+
+initializeController();
