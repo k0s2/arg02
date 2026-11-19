@@ -263,7 +263,7 @@ function renderGroupedList(
                 );
 
                 // 新規取得アニメーション
-                if (animatedIds.includes(item.id)) {
+                if (!isNewGroup && animatedIds.includes(item.id)) {
                     li.classList.add("slide-in");
                 }
 
