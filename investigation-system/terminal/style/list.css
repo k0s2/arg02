@@ -64,7 +64,7 @@
 /* リスト */
 .itemList {
 
-    overflow: auto;
+    overflow: hidden auto;
     border-top: solid 1px var(--color-line);
     border-bottom: solid 1px var(--color-line);
     scroll-behavior: smooth;
@@ -140,7 +140,7 @@
             /* 開閉アニメーション */
             &::details-content {
                 block-size: 0;
-                overflow: clip;
+                overflow: hidden clip;
                 content-visibility: hidden;
                 transition:
                     block-size 0.25s ease,
