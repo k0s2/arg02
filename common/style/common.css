@@ -104,6 +104,8 @@ button {
 
     --color-focus-1: rgb(70, 220, 255);
     --color-focus-2: rgb(65, 170, 200);
+
+    --color-hover: rgb(65, 170, 200, 0.25);
 }
 
 /* -------------------------------------------------- */
@@ -133,7 +135,8 @@ footer {
 
     display: flex;
     justify-content: space-between;
-    padding: 8px 16px;
+    height: 40px;
+    padding: 0 16px;
     background: #000;
     color: var(--color-main);
     font-family: "appliMincho";
@@ -152,14 +155,6 @@ main {
 }
 
 /* -------------------------------------------------- */
-/* ヘッダー */
-/* -------------------------------------------------- */
-
-header {
-    height: 48px;
-}
-
-/* -------------------------------------------------- */
 /* フッター */
 /* -------------------------------------------------- */
 
@@ -167,12 +162,15 @@ footer {
 
     justify-content: space-between;
     align-items: center;
-    height: 40px;
+
+    /* 内部要素 */
+    >* {
+        font-size: 12px !important;
+    }
 
     /* 注意書き */
     p {
         margin: 0 0 0 auto;
-        font-size: 12px;
     }
 
 }

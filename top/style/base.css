@@ -1,9 +1,9 @@
 #top {
+
     background-image: url("../../common/image/bg-top.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-
     color: #fff;
 
     /* メインコンテンツ */
@@ -19,7 +19,7 @@
             .contents {
 
                 margin: 0 auto;
-                width: 920px;
+                width: 800px;
                 max-width: 100%;
 
                 /* タイトル */
@@ -127,4 +127,5 @@
 
         }
     }
+
 }

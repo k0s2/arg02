@@ -348,7 +348,7 @@
         isolation: isolate;
         width: 120px;
         aspect-ratio: 1;
-        background: var(--color-bg-alpha);
+        background: none;
         border: solid 1px var(--color-line);
         border-radius: 100%;
         opacity: 1;
@@ -366,7 +366,7 @@
         /* ホバー */
         @media (hover: hover) {
             &:hover {
-                border-color: var(--color-focus-1);
+                background-color: var(--color-hover);
             }
         }
 

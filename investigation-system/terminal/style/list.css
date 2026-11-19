@@ -81,6 +81,8 @@
         .itemGroup {
 
             height: auto;
+            border-top: solid 1px var(--color-line);
+            border-bottom: solid 1px var(--color-line);
 
             /* 間隔 */
             &+& {
@@ -162,7 +164,6 @@
 
                     height: auto;
                     transition:
-                        height 0.25s ease,
                         opacity 0.25s ease,
                         transform 0.25s ease;
 
@@ -196,13 +197,12 @@
                         text-align: left;
                         transition:
                             background-color 0.25s,
-                            border-color 0.25s,
                             color 0.25s;
 
                         /* ホバー */
                         @media (hover: hover) {
                             &:hover {
-                                border-color: var(--color-focus-1);
+                                background-color: var(--color-hover);
                             }
                         }
 
@@ -261,7 +261,7 @@
 
 }
 
-/* アコーディオン */
+/* アコーディオンボタン */
 .itemGroup .groupTitle {
 
     &::after {
