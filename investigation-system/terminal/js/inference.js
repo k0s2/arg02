@@ -164,7 +164,7 @@ export async function executeInference(
     if (results.length === 0) {
 
         await showDialog(
-            "推理するには、まだ確認が必要な情報があるようだ。",
+            "何かが足りない気がする……",
             "メモ"
         );
 

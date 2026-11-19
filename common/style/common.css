@@ -79,13 +79,14 @@ button {
 /* ==================================================================================================== */
 
 :root {
-    --color-bg: #112;
-    --color-bg-alpha: #10102080;
+    --color-bg: rgb(20, 20, 35);
+    --color-bg-alpha: rgba(20, 20, 35, 0.5);
 
     --color-main: rgb(50, 170, 255);
     --color-font: rgb(220, 220, 255);
 
-    --color-line: #448;
+    --color-line: rgb(70, 70, 140);
+    --color-line-alpha: rgba(70, 70, 140, 0.25);
 
     --color-focus-1: rgb(70, 220, 255);
     --color-focus-2: rgb(65, 170, 200);

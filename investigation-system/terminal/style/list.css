@@ -77,6 +77,8 @@
     /* グループラッパー */
     .groups {
 
+        padding: 8px;
+
         /* グループ */
         .itemGroup {
 
@@ -254,7 +256,7 @@
     position: relative;
 
     &::after {
-        content: "NEW";
+        content: "";
         position: absolute;
         top: 2px;
         right: 4px;
@@ -288,6 +290,7 @@
 .itemList ul li.new,
 .itemGroup:has(.new) .groupTitle {
     &::after {
+        content: "NEW";
         opacity: 1;
         animation: new-color 1s ease-in-out infinite alternate;
     }

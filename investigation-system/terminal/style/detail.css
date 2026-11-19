@@ -97,8 +97,13 @@
             overflow-y: auto;
 
             /* 段落 */
-            p {
+            >p {
                 margin: 0;
+
+                /* 間隔 */
+                &+* {
+                    margin-top: 1em;
+                }
             }
 
             /* 追加情報 */
@@ -239,7 +244,8 @@
 
                 /* セル：ヘッダー */
                 th {
-                    text-align: left;
+                    text-align: center;
+                    background: var(--color-line-alpha);
                 }
 
                 /* 宿泊記録 */
@@ -247,14 +253,24 @@
 
                     text-align: right;
 
-                    /* セル */
-                    tr>* {
+                    /* 行 */
+                    tr {
 
-                        white-space: nowrap;
+                        /* 先頭行 */
+                        &:first-child {
+                            text-align: left;
+                        }
 
-                        /* 「ご予約名」 */
-                        &:nth-child(3) {
-                            width: 100%;
+                        /* セル */
+                        >* {
+
+                            white-space: nowrap;
+
+                            /* 「ご予約名」 */
+                            &:nth-child(3) {
+                                width: 100%;
+                            }
+
                         }
 
                     }
