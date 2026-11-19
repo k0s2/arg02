@@ -78,11 +78,21 @@
     .groups {
 
         /* グループ */
-        .itemGroup {
+        details.itemGroup {
 
             height: auto;
             border-top: solid 1px var(--color-line);
             border-bottom: solid 1px var(--color-line);
+
+            /* 最初の要素 */
+            &:nth-first-child(1 of :not([hidden])) {
+                border-top: none;
+            }
+
+            /* 最後の要素 */
+            &:nth-last-child(1 of :not([hidden])) {
+                border-bottom: none;
+            }
 
             /* 間隔 */
             &+& {
