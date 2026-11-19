@@ -8,118 +8,101 @@
 
     /* メインコンテンツ */
     main {
-        .contents {
 
-            margin: 0 auto;
-            width: 920px;
-            max-width: 100%;
+        /* ラッパー */
+        .wrapper {
 
-            /* タイトル */
-            h1 {
-                display: flex;
-                flex-direction: column;
-                margin: 40px 0;
-                font-size: 80px;
-                text-align: center;
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-                word-break: keep-all;
+            flex: 1;
+            overflow: auto;
 
-                /* スマホ用 */
-                @media (max-width: 779px) {
-                    font-size: 60px;
-                }
-            }
+            /* コンテンツ */
+            .contents {
 
-            /* 見出し */
-            h2 {
-                border-bottom: solid 1px #fff;
-                margin: 0 0 1rem 0;
-                padding-bottom: 8px;
-                line-height: 1;
-            }
+                margin: 0 auto;
+                width: 920px;
+                max-width: 100%;
 
-            /* ボックス */
-            .box {
-
-                background: rgba(0, 0, 0, 0.5);
-                backdrop-filter: blur(10px);
-                padding: 1em;
-
-                /* ボタンエリア */
-                &.buttonArea {
-                    display: grid;
-                    justify-content: center;
-                    gap: 16px;
-                }
-
-                /* 間隔 */
-                &+& {
-                    margin-top: 8px;
-                }
-
-                /* ボタン／リンク */
-                button,
-                a {
-
+                /* タイトル */
+                h1 {
                     display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    background: #fff;
-                    border: none;
-                    border-radius: 100px;
-                    padding: 4px 16px;
-                    color: #000;
-                    font-size: 16px;
-                    cursor: pointer;
-                    transition: background-color 0.25s, color 0.25s;
+                    flex-direction: column;
+                    margin: 40px 0;
+                    font-size: 80px;
+                    text-align: center;
+                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+                    word-break: keep-all;
 
-                    /* ホバー */
-                    @media (hover: hover) {
-                        &:hover {
-                            background: var(--color-main);
-                            color: #fff;
+                    /* スマホ用 */
+                    @media (max-width: 779px) {
+                        font-size: 60px;
+                    }
+                }
+
+                /* 見出し */
+                h2 {
+                    border-bottom: solid 1px #fff;
+                    margin: 0 0 1rem 0;
+                    padding-bottom: 8px;
+                    line-height: 1;
+                }
+
+                /* ボックス */
+                .box {
+
+                    background: rgba(0, 0, 0, 0.5);
+                    backdrop-filter: blur(10px);
+                    margin-bottom: 8px;
+                    padding: 1em;
+
+                    /* ボタンエリア */
+                    &.buttonArea {
+
+                        display: grid;
+                        justify-content: center;
+                        gap: 16px;
+
+                        /* 「ゲームを開始する」ボタン */
+                        #button-start {
+                            padding: 8px 32px;
+                            font-size: 24px;
+                        }
+
+                    }
+
+                    /* 段落 */
+                    p {
+
+                        margin: 0;
+
+                        /* 間隔 */
+                        &+p {
+                            margin-top: 1em;
                         }
                     }
 
-                    /* ENTER */
-                    &#button-start {
-                        font-size: 24px;
-                    }
+                    /* リンク */
+                    .links {
 
-                }
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px;
 
-                /* 段落 */
-                p {
+                        /* リンクボタン */
+                        a {
 
-                    margin: 0;
+                            position: relative;
 
-                    /* 間隔 */
-                    &+p {
-                        margin-top: 1em;
-                    }
-                }
+                            /* アイコン */
+                            &::before {
+                                content: "";
+                                display: inline-block;
+                                width: 16px;
+                                height: 16px;
+                                margin-right: 4px;
+                                background-color: currentColor;
+                                mask: url("../../common/image/icon-link.svg") center / contain no-repeat;
+                            }
 
-                /* リンク */
-                .links {
-
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 8px;
-
-                    /* リンクボタン */
-                    a {
-
-                        position: relative;
-
-                        /* アイコン */
-                        &::before {
-                            content: "";
-                            display: inline-block;
-                            width: 16px;
-                            height: 16px;
-                            margin-right: 4px;
-                            background-color: currentColor;
-                            mask: url("../../common/image/icon-link.svg") center / contain no-repeat;
                         }
 
                     }

@@ -20,15 +20,6 @@ html {
 }
 
 /* -------------------------------------------------- */
-/* スクロールバー変更 */
-/* -------------------------------------------------- */
-
-* {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-font) transparent;
-}
-
-/* -------------------------------------------------- */
 /* デフォルト修正 */
 /* -------------------------------------------------- */
 
@@ -59,7 +50,30 @@ input {
     position: relative;
     z-index: 1;
     outline: solid 2px #4f4;
-    outline-offset: 4px;
+    outline-offset: 2px;
+}
+
+/* ボタン／リンク */
+button,
+a {
+
+    background: #fff;
+    border: none;
+    border-radius: 100px;
+    padding: 4px 16px;
+    color: #000;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.25s, color 0.25s;
+
+    /* ホバー */
+    @media (hover: hover) {
+        &:hover {
+            background: var(--color-main);
+            color: #fff;
+        }
+    }
+
 }
 
 /* ボタン */
@@ -119,7 +133,7 @@ footer {
 
     display: flex;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: 8px 16px;
     background: #000;
     color: var(--color-main);
     font-family: "appliMincho";
@@ -143,7 +157,7 @@ main {
 
 footer {
 
-    justify-content: right;
+    justify-content: space-between;
 
     /* 注意書き */
     p {

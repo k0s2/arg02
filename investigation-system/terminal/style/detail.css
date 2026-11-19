@@ -145,8 +145,10 @@
             /* キーワード */
             button {
 
+                display: inline-block;
                 background: none;
                 border: none;
+                border-radius: 8px;
                 margin: 0;
                 padding: 0;
                 color: currentColor;

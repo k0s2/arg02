@@ -49,14 +49,21 @@ function hideDialog() {
     // ダイアログ外の操作を有効化
     // --------------------------------------------------
 
-    document.querySelector("header").inert = false;
-    document.querySelector("main").inert = false;
-    document.querySelector("footer").inert = false;
+    selectors.forEach((selector) => {
+        const element = document.querySelector(selector);
+        if (element) {
+            element.inert = false;
+        }
+    });
+
 }
 
 // ====================================================================================================
 // 共通メソッド
 // ====================================================================================================
+
+// 操作制限を切り替える対象要素
+const selectors = ["header", "main", "footer"];
 
 /**
  * ダイアログを表示
@@ -162,9 +169,12 @@ export async function showDialog(message, title = "", buttons = null, mode = 0) 
         // ダイアログ外の操作を無効化
         // --------------------------------------------------
 
-        document.querySelector("header").inert = true;
-        document.querySelector("main").inert = true;
-        document.querySelector("footer").inert = true;
+        selectors.forEach((selector) => {
+            const element = document.querySelector(selector);
+            if (element) {
+                element.inert = true;
+            }
+        });
 
         // --------------------------------------------------
         // 閉じるボタン
