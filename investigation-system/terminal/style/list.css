@@ -84,7 +84,6 @@
         .itemGroup {
 
             height: auto;
-            transition: height 0.25s ease;
 
             /* 間隔 */
             &+& {
