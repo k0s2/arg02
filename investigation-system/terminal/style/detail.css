@@ -116,7 +116,7 @@
 
                 /* 新規 */
                 &.is-updated {
-                    color: #cfc;
+                    color: var(--color-focus-1);
                 }
 
                 /* 展開 */
@@ -161,6 +161,11 @@
                     &:not(.get):hover {
                         color: var(--color-main);
                     }
+                }
+
+                /* タブフォーカス */
+                &:focus-visible {
+                    outline-offset: 4px;
                 }
 
                 /* 獲得済み */

@@ -26,10 +26,10 @@
                 h1 {
                     display: flex;
                     flex-direction: column;
-                    margin: 40px 0;
+                    margin: 32px 0;
                     font-size: 80px;
                     text-align: center;
-                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+                    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
                     word-break: keep-all;
 
                     /* スマホ用 */
@@ -38,12 +38,26 @@
                     }
                 }
 
-                /* 見出し */
-                h2 {
-                    border-bottom: solid 1px #fff;
-                    margin: 0 0 1rem 0;
-                    padding-bottom: 8px;
-                    line-height: 1;
+                /* ボタンエリア */
+                .area-button {
+
+                    display: grid;
+                    justify-content: center;
+                    gap: 16px;
+                    margin-bottom: 24px;
+
+                    /* 内部要素 */
+                    >* {
+                        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+                    }
+
+                    /* 「ゲームを開始する」ボタン */
+                    #button-start {
+                        padding: 8px 32px;
+                        font-size: 24px;
+                        text-align: center;
+                    }
+
                 }
 
                 /* ボックス */
@@ -51,22 +65,15 @@
 
                     background: rgba(0, 0, 0, 0.5);
                     backdrop-filter: blur(10px);
-                    margin-bottom: 8px;
+                    margin-bottom: 16px;
                     padding: 1em;
 
-                    /* ボタンエリア */
-                    &.buttonArea {
-
-                        display: grid;
-                        justify-content: center;
-                        gap: 16px;
-
-                        /* 「ゲームを開始する」ボタン */
-                        #button-start {
-                            padding: 8px 32px;
-                            font-size: 24px;
-                        }
-
+                    /* 見出し */
+                    h2 {
+                        border-bottom: solid 1px #fff;
+                        margin: 0 0 1rem 0;
+                        padding-bottom: 8px;
+                        line-height: 1;
                     }
 
                     /* 段落 */
@@ -78,6 +85,13 @@
                         &+p {
                             margin-top: 1em;
                         }
+                    }
+
+                    /* 画像 */
+                    img {
+                        margin: 1em auto;
+                        width: 70%;
+                        text-align: center;
                     }
 
                     /* リンク */

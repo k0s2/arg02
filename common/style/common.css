@@ -50,7 +50,7 @@ input {
     position: relative;
     z-index: 1;
     outline: solid 2px #4f4;
-    outline-offset: 2px;
+    outline-offset: -2px;
 }
 
 /* ボタン／リンク */
@@ -152,16 +152,26 @@ main {
 }
 
 /* -------------------------------------------------- */
+/* ヘッダー */
+/* -------------------------------------------------- */
+
+header {
+    height: 48px;
+}
+
+/* -------------------------------------------------- */
 /* フッター */
 /* -------------------------------------------------- */
 
 footer {
 
     justify-content: space-between;
+    align-items: center;
+    height: 40px;
 
     /* 注意書き */
     p {
-        margin: 8px 0;
+        margin: 0 0 0 auto;
         font-size: 12px;
     }
 
