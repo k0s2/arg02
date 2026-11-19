@@ -85,7 +85,7 @@
             border-bottom: solid 1px var(--color-line);
 
             /* 最初の要素 */
-            &:nth-first-child(1 of :not([hidden])) {
+            &:nth-child(1 of :not([hidden])) {
                 border-top: none;
             }
 
