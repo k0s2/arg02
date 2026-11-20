@@ -106,6 +106,12 @@
                 }
             }
 
+            /* リスト */
+            ul {
+                margin-top: 0;
+                padding-inline-start: 24px;
+            }
+
             /* 追加情報 */
             .addInfo {
 
