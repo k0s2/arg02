@@ -81,22 +81,11 @@
         details.itemGroup {
 
             height: auto;
-            border-top: solid 1px var(--color-line);
             border-bottom: solid 1px var(--color-line);
-
-            /* 最初の要素 */
-            &:nth-child(1 of :not([hidden])) {
-                border-top: none;
-            }
 
             /* 最後の要素 */
             &:nth-last-child(1 of :not([hidden])) {
                 border-bottom: none;
-            }
-
-            /* 間隔 */
-            &+& {
-                margin-top: 2px;
             }
 
             /* 開閉アニメーション */
@@ -155,7 +144,7 @@
                 /* ホバー */
                 @media (hover: hover) {
                     &:hover {
-                        background-color: var(--color-focus-1);
+                        background-color: var(--color-hover-2);
                         color: var(--color-bg);
                     }
                 }

@@ -30,6 +30,7 @@ import {
 // --------------------------------------------------
 
 import {
+    isFlagOn,
     isUnlocked,
 } from "../../../common/data/save.js";
 
@@ -49,6 +50,12 @@ import {
  * 初期化処理（非同期処理につき関数可）
  */
 async function initializeController() {
+    // 読み書き可能モード
+    if (isFlagOn("releaseModeReadWrite")) {
+        const accessMode = document.getElementById("accessMode");
+        accessMode.classList.remove("readOnly");
+        accessMode.textContent = "[READ WRITE]"
+    }
 
     // ハッシュから選択IDを取得
     const params = new URLSearchParams(location.hash.slice(1));
@@ -89,7 +96,6 @@ async function initializeController() {
         addEvidence,
         addPerson
     );
-
 }
 
 // 初期化処理を呼び出し
