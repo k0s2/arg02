@@ -556,20 +556,30 @@ export function updateAdditionalInfo(evidenceId, personId) {
 function renderDetailTitle(title, item, type) {
 
     // 初期化
-    title.innerHTML = "";
+    title.replaceChildren();
 
     // 項目名
-    const name = document.createTextNode(formatDateText(item.name));
+    const name = document.createElement("span");
+    name.textContent = formatDateText(item.name ?? "");
     title.appendChild(name);
 
+    // ルビ
+    if (item.ruby) {
+        const ruby = document.createElement("span");
+        ruby.className = "ruby";
+        ruby.textContent = `(${item.ruby})`;
+        name.appendChild(ruby);
+    }
+
     // カテゴリー
-    const category = document.createElement("span");
-    category.className = "category";
-    category.textContent = getItemCategory(type, item.id);
+    const categoryText = getItemCategory(type, item.id);
 
-    // 要素を追加
-    title.appendChild(category);
-
+    if (categoryText) {
+        const category = document.createElement("span");
+        category.className = "category";
+        category.textContent = categoryText;
+        title.appendChild(category);
+    }
 }
 
 /**
