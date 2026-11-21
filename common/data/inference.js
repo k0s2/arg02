@@ -22,6 +22,8 @@ export default [
         dialog: [
             'そうだ。これはじいちゃんが残した手紙だ。',
             '宛名も無いし、家族だし、読んでもいいよな？',
+            '',
+            '<span class="getInfo">【証拠】「祖父の遺した手紙」を入手</span>',
         ]
     },
 
@@ -43,6 +45,10 @@ export default [
         dialog: [
             '母さんの旧姓も「立花」だ。',
             '何か知ってるかもしれない。訊いてみよう。',
+            '',
+            '<span class="getInfo">【人物】「立花　幸男」を入手</span>',
+            '<span class="updateInfo">【証拠】「立花という人物」を更新</span>',
+            '<span class="updateInfo">【人物】「谷戸　道江」を更新</span>',
         ]
     },
 
@@ -64,6 +70,8 @@ export default [
         dialog: [
             'この「谷戸様」は、じいちゃんのことだろう。',
             'もう一人いるみたいだが、誰だ？',
+            '',
+            '<span class="getInfo">【証拠】「102号室」を入手</span>',
         ]
     },
 
@@ -81,6 +89,8 @@ export default [
         },
         dialog: [
             'じいちゃんと立花さんは、登山仲間だったようだ。',
+            '',
+            '<span class="updateInfo">【人物】「立花　幸男」を更新</span>',
         ]
     },
 
@@ -95,6 +105,8 @@ export default [
         },
         dialog: [
             'じいちゃんと同室だったのは、登山仲間の立花さんだ。',
+            '',
+            '<span class="updateInfo">【証拠】「102号室」を更新</span>',
         ]
     },
 
@@ -108,6 +120,8 @@ export default [
         },
         dialog: [
             '「山崎　芳次」は、ペンション・グアルディアーノの元オーナーで、じいちゃんと立花さんの、共通の知人のようだ。',
+            '',
+            '<span class="updateInfo">【人物】「山崎　芳次」を更新</span>',
         ]
     },
 

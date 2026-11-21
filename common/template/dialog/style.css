@@ -28,12 +28,10 @@
 
     /* セクション */
     >section {
-        background: #fff;
-
         padding: 24px;
-
+        max-width: 70%;
+        background: #fff;
         color: #000;
-
         transform: scale(1.0);
         transition: opacity 0.25s, transform 0.25s;
 
@@ -42,6 +40,7 @@
             width: 100%;
         }
 
+        /* 見出し */
         h1 {
             border-bottom: solid 1px #000;
 
@@ -54,6 +53,39 @@
             text-align: center;
         }
 
+        /* 文章 */
+        p {
+
+            /* スパン */
+            span {
+
+                display: inline-block;
+                box-sizing: border-box;
+                padding: 8px 0;
+                width: 100%;
+                color: #000;
+                text-align: center;
+
+                /* 間隔 */
+                &+& {
+                    margin-top: 8px;
+                }
+
+            }
+
+            /* 情報獲得 */
+            span.getInfo {
+                background: #afa;
+            }
+
+            /* 情報更新 */
+            span.updateInfo {
+                background: #fca;
+            }
+
+        }
+
+        /* ボタン */
         .buttons {
             display: flex;
             flex-direction: row;

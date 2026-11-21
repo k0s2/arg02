@@ -139,7 +139,12 @@ buttonLogin.addEventListener("click", async () => {
     if (document.getElementById("input-password").value == dataConst.willWord) {
         // ReatWriteモード解放
         // flagOn("releaseModeReadWrite");
-        document.getElementById("message").innerHTML =
+
+        // メッセージ変更
+        const targetMessage = document.getElementById("message");
+        targetMessage.classList.remove("c-red");
+        targetMessage.classList.add("c-green");
+        targetMessage.innerHTML =
             "パスワードが一致しました。<br>"
             + "読み書き可能モードで起動します。";
     }

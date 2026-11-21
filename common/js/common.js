@@ -88,17 +88,26 @@ export function setInnerHtml(texts) {
         return texts;
     }
 
+    // 改行フラグ
+    let isBreak = true;
+
     // 文字列の生成
     let res = "";
 
     // 配列を改行区切りで結合
     texts.forEach(text => {
         // 改行
-        if (res != "") {
+        if (isBreak) {
             res += '<br>';
         }
 
         res += text;
+
+        // 改行フラグ
+        isBreak = (
+            !text.startsWith("<span")
+            && !text.endsWith("</span>")
+        );
     })
 
     // 生成した文字列を返す

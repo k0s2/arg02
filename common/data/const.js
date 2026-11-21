@@ -1,3 +1,3 @@
 export default {
-    willWord: "",
+    willWord: "guardiano",
 }

@@ -163,6 +163,7 @@
 
                     height: auto;
                     transition:
+                        height 0.25s ease,
                         opacity 0.25s ease,
                         transform 0.25s ease;
 
@@ -207,8 +208,17 @@
 
                         /* アクティブ */
                         &.active {
+
                             background-color: var(--color-font);
                             color: var(--color-bg);
+
+                            /* ホバー */
+                            @media (hover: hover) {
+                                &:hover {
+                                    background-color: var(--color-font-alpha);
+                                }
+                            }
+
                         }
 
                         /* 名称 */

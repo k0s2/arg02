@@ -101,15 +101,10 @@
                 margin: 0;
 
                 /* 間隔 */
-                &+* {
+                &+*,
+                *+& {
                     margin-top: 1em;
                 }
-            }
-
-            /* リスト */
-            ul {
-                margin-top: 0;
-                padding-inline-start: 24px;
             }
 
             /* 追加情報 */
