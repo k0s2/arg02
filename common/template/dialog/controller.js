@@ -9,11 +9,25 @@
 import { loadTemplate, setInnerHtml } from "../../js/common.js";
 
 // ====================================================================================================
-// ダイアログを閉じる
+// 初期化
 // ====================================================================================================
 
-// ダイアログ要素
-let resultContainer = null;
+// --------------------------------------------------
+// テンプレート
+// --------------------------------------------------
+
+// 読み込み
+let resultContainer = await loadTemplate(
+    import.meta.url,
+    null
+);
+
+// ====================================================================================================
+// ダイアログ表示
+// ====================================================================================================
+
+// 操作制限を切り替える対象要素
+const selectors = ["header", "main", "footer"];
 
 /**
  * ダイアログを閉じる
@@ -36,9 +50,6 @@ function hideDialog() {
 
         // イベントリスナーを解除
         target.removeEventListener("transitionend", onTransitionEnd);
-
-        // 対象のダイアログ要素を削除
-        currentContainer.remove();
     };
     target.addEventListener("transitionend", onTransitionEnd);
 
@@ -58,13 +69,6 @@ function hideDialog() {
 
 }
 
-// ====================================================================================================
-// 共通メソッド
-// ====================================================================================================
-
-// 操作制限を切り替える対象要素
-const selectors = ["header", "main", "footer"];
-
 /**
  * ダイアログを表示
  * @param {String} message 確認文章
@@ -74,16 +78,6 @@ const selectors = ["header", "main", "footer"];
  */
 export async function showDialog(message, title = "", buttons = null, mode = 0) {
     return new Promise(async (resolve) => {
-
-        // --------------------------------------------------
-        // テンプレート
-        // --------------------------------------------------
-
-        // 読み込み
-        resultContainer = await loadTemplate(
-            import.meta.url,
-            null
-        );
 
         // --------------------------------------------------
         // モード
@@ -180,14 +174,19 @@ export async function showDialog(message, title = "", buttons = null, mode = 0) 
         // 閉じるボタン
         // --------------------------------------------------
 
+        // ボタン配置位置を取得
+        const targetButtons = resultContainer.querySelector(".buttons");
+
+        // 初期化
+        while (targetButtons.firstChild) {
+            targetButtons.removeChild(targetButtons.firstChild);
+        }
+
         // ●設定値なし
         if (!buttons) {
             // 「閉じる」ボタンのみにする
             buttons = ["閉じる"];
         }
-
-        // ボタン配置位置を取得
-        const targetButtons = resultContainer.querySelector(".buttons");
 
         // 設定値ごとに処理
         buttons.forEach((text, index) => {
