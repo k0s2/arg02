@@ -311,9 +311,15 @@ function setKeyword(detailElement, acquireItem) {
 
             });
 
-            // すべて取得済みなら取得済み表示
+            // 取得済み表示
             if (isComplete()) {
                 target.classList.add("get");
+
+                // ファイルの場合
+                if (target.classList.contains("file")) {
+                    // ダイアログ表示
+                    showDialog("既にダウンロード済みのファイルです。");
+                }
             }
 
             // 【ストーリー進行】チュートリアル

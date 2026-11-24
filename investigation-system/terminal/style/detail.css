@@ -119,6 +119,7 @@
                 display: grid;
                 grid-template-rows: minmax(0, 0fr);
                 opacity: 0;
+                margin: 0 !important;
                 overflow: hidden;
 
                 /* 新規 */
@@ -140,7 +141,6 @@
 
                 /* 段落 */
                 >p {
-                    margin-top: 1em;
                     border-top: solid 1px currentColor;
                     padding-top: 1em;
                     min-height: 0;
