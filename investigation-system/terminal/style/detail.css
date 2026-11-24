@@ -127,6 +127,12 @@
                 }
             }
 
+            /* 水平線 */
+            hr {
+                border-color: var(--color-line);
+                opacity: 0.5;
+            }
+
             /* 追加情報 */
             .addInfo {
 
