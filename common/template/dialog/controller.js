@@ -12,15 +12,24 @@ import { loadTemplate, setInnerHtml } from "../../js/common.js";
 // 初期化
 // ====================================================================================================
 
+// ダイアログ要素
+let resultContainer = null;
+
 // --------------------------------------------------
 // テンプレート
 // --------------------------------------------------
 
-// 読み込み
-let resultContainer = await loadTemplate(
-    import.meta.url,
-    null
-);
+/**
+ * テンプレート読み込み
+ */
+async function loadDialogTemplate() {
+    // 読み込み
+    resultContainer = await loadTemplate(
+        import.meta.url,
+        null
+    );
+}
+
 
 // ====================================================================================================
 // ダイアログ表示
@@ -78,6 +87,12 @@ function hideDialog() {
  */
 export async function showDialog(message, title = "", buttons = null, mode = 0) {
     return new Promise(async (resolve) => {
+
+        // --------------------------------------------------
+        // テンプレート読み込み
+        // --------------------------------------------------
+
+        await loadDialogTemplate();
 
         // --------------------------------------------------
         // モード
@@ -176,11 +191,6 @@ export async function showDialog(message, title = "", buttons = null, mode = 0) 
 
         // ボタン配置位置を取得
         const targetButtons = resultContainer.querySelector(".buttons");
-
-        // 初期化
-        while (targetButtons.firstChild) {
-            targetButtons.removeChild(targetButtons.firstChild);
-        }
 
         // ●設定値なし
         if (!buttons) {
